@@ -1,0 +1,44 @@
+# Demo configuration for the hierarchical fall detection app.
+# You can tune these values without editing app_main.py.
+
+window:
+  title: "Hierarchical Fall Detection Demo"
+  display_width: 960
+  display_height: 540
+
+camera:
+  # Change to 1, 2, ... if your main webcam is not camera 0.
+  webcam_id: 0
+
+models:
+  yolo_model_path: "yolov8m-pose.pt"
+  binary_checkpoint_path: "phase1_2d_baseline/checkpoints/best_model_2d_binary.pt"
+  action_checkpoint_path: "phase1_2d_baseline/checkpoints/best_model_2d_action.pt"
+
+  # true = use GPU if CUDA is available
+  # false = force CPU
+  use_cuda: true
+
+prediction:
+  # Must match the sequence length used during training.
+  sequence_length: 60
+
+  # Increase this value to reduce false Fall alarms.
+  # Decrease this value to make Fall detection more sensitive.
+  fall_threshold: 0.85
+
+  # Fall must be predicted this many consecutive times before warning.
+  # Increase this to reduce false alarms.
+  # Decrease this to make warning faster.
+  fall_confirm_count: 10
+
+  action_names:
+    - "Sitting"
+    - "Sleeping"
+    - "Standing"
+    - "Walking"
+
+ui:
+  show_fall_warning_on_video: true
+  draw_pose: true
+  draw_bbox: true

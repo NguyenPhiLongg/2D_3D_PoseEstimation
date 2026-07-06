@@ -1,0 +1,57 @@
+{
+    "task": "action",
+    "model_type": "CNN_LSTM_3D_same_as_2D_phase1",
+    "input_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\data\\4_normalized_3d",
+    "num_csv_files": 5409,
+    "train_videos": 1953,
+    "test_videos": 489,
+    "train_sequences": 11232,
+    "test_sequences": 2979,
+    "input_dim": 59,
+    "sequence_length": 60,
+    "stride": 15,
+    "batch_size": 64,
+    "epochs": 30,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "best_epoch": 17,
+    "best_f1": 0.9074909936021959,
+    "final_test_loss": 0.2682350670463009,
+    "final_test_accuracy": 0.9382343068143673,
+    "final_test_macro_f1": 0.9074909936021959,
+    "classification_report": "              precision    recall  f1-score   support\n\n     Sitting       0.93      0.84      0.88       638\n    Sleeping       0.95      0.95      0.95       544\n    Standing       0.73      0.91      0.81       306\n     Walking       0.99      0.98      0.99      1491\n\n    accuracy                           0.94      2979\n   macro avg       0.90      0.92      0.91      2979\nweighted avg       0.94      0.94      0.94      2979\n",
+    "confusion_matrix": [
+        [
+            538,
+            25,
+            71,
+            4
+        ],
+        [
+            24,
+            517,
+            3,
+            0
+        ],
+        [
+            19,
+            0,
+            278,
+            9
+        ],
+        [
+            0,
+            0,
+            29,
+            1462
+        ]
+    ],
+    "class_names": [
+        "Sitting",
+        "Sleeping",
+        "Standing",
+        "Walking"
+    ],
+    "checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase2_3d_upgrade\\checkpoints\\best_model_3d_action.pt",
+    "normalization": "per_frame_xyz_mean_std"
+}

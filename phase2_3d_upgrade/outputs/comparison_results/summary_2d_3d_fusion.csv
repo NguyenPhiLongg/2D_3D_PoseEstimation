@@ -1,0 +1,7 @@
+Task,Model,Model Type,Normalization,Input Dim,Sequence Length,Stride,Best Epoch,Accuracy,Macro F1,Train Sequences,Test Sequences
+Binary,2D,CNN1D_BiLSTM_2D,per_frame_xy_mean_std,40,60,15,19,0.9238060517681371,0.9149975683385823,21545,5486
+Binary,3D,CNN_LSTM_3D_same_as_2D_phase1,per_frame_xyz_mean_std,59,60,15,23,0.9278048780487805,0.9146428094162992,16022,4100
+Binary,Fusion 2D+3D,CNN_LSTM_FUSION_2D_3D,2d_per_frame_xy_mean_std__3d_precomputed_normalized,99,60,15,24,0.9407317073170731,0.9310405975900132,16022,4100
+Action,2D,CNN1D_BiLSTM_2D,per_frame_xy_mean_std,40,60,15,17,0.9608909608909609,0.9463705013616485,14221,3861
+Action,3D,CNN_LSTM_3D_same_as_2D_phase1,per_frame_xyz_mean_std,59,60,15,17,0.9382343068143673,0.9074909936021959,11232,2979
+Action,Fusion 2D+3D,CNN_LSTM_FUSION_2D_3D,2d_per_frame_xy_mean_std__3d_precomputed_normalized,99,60,15,27,0.9691171534071836,0.9532451333329626,11232,2979

@@ -1,0 +1,39 @@
+{
+    "task": "binary",
+    "model_type": "CNN_LSTM_3D_same_as_2D_phase1",
+    "input_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\data\\4_normalized_3d",
+    "num_csv_files": 5409,
+    "train_videos": 4327,
+    "test_videos": 1082,
+    "train_sequences": 16022,
+    "test_sequences": 4100,
+    "input_dim": 59,
+    "sequence_length": 60,
+    "stride": 15,
+    "batch_size": 64,
+    "epochs": 30,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "best_epoch": 23,
+    "best_f1": 0.9146428094162992,
+    "final_test_loss": 0.2562399393947023,
+    "final_test_accuracy": 0.9278048780487805,
+    "final_test_macro_f1": 0.9146428094162992,
+    "classification_report": "              precision    recall  f1-score   support\n\n    Not_Fall       0.94      0.96      0.95      2827\n        Fall       0.90      0.86      0.88      1273\n\n    accuracy                           0.93      4100\n   macro avg       0.92      0.91      0.91      4100\nweighted avg       0.93      0.93      0.93      4100\n",
+    "confusion_matrix": [
+        [
+            2707,
+            120
+        ],
+        [
+            176,
+            1097
+        ]
+    ],
+    "class_names": [
+        "Not_Fall",
+        "Fall"
+    ],
+    "checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase2_3d_upgrade\\checkpoints\\best_model_3d_binary.pt",
+    "normalization": "per_frame_xyz_mean_std"
+}

@@ -1,0 +1,1847 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2D vs 3D vs Fusion Result Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e5e7eb;
+        }
+
+        .container {
+            max-width: 1550px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            font-size: 34px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #f8fafc;
+            border-left: 5px solid #38bdf8;
+            padding-left: 12px;
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #bae6fd;
+        }
+
+        h4 {
+            margin-bottom: 10px;
+            color: #f8fafc;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 28px;
+        }
+
+        .section {
+            background: #111827;
+            border: 1px solid #263244;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .compact-section {
+            border: 1px solid rgba(56, 189, 248, 0.35);
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-grid.small {
+            grid-template-columns: repeat(6, minmax(140px, 1fr));
+            margin-bottom: 18px;
+        }
+
+        .metric-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .metric-title {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #f8fafc;
+        }
+
+        .metric-subtitle {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #263244;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #1e293b;
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        td {
+            color: #e5e7eb;
+            font-size: 14px;
+        }
+
+        tr:hover td {
+            background: #162033;
+        }
+
+        .compact-table {
+            margin-top: 14px;
+            margin-bottom: 10px;
+        }
+
+        .compact-table th {
+            font-size: 15px;
+            color: #f8fafc;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+        }
+
+        .compact-table td {
+            font-size: 16px;
+            font-weight: 600;
+            padding-top: 18px;
+            padding-bottom: 18px;
+        }
+
+        .compact-table td:first-child {
+            font-weight: 800;
+            color: #f8fafc;
+        }
+
+        .compact-table .best-row td {
+            font-weight: 900;
+            color: #ffffff;
+            background: rgba(34, 197, 94, 0.08);
+        }
+
+        .compact-table .best-row:hover td {
+            background: rgba(34, 197, 94, 0.14);
+        }
+
+        .bar-wrap {
+            height: 8px;
+            background: #334155;
+            border-radius: 999px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #22c55e);
+            border-radius: 999px;
+        }
+
+        .chart-box {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .chart-row {
+            display: grid;
+            grid-template-columns: 180px 1fr 90px;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .chart-label {
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .chart-value {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .chart-bar-bg {
+            height: 20px;
+            background: #334155;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .chart-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #2563eb);
+            border-radius: 999px;
+        }
+
+        .chart-bar.alt {
+            background: linear-gradient(90deg, #22c55e, #84cc16);
+        }
+
+        .model-detail {
+            background: #0f172a;
+            border: 1px solid #263244;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .cm-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 14px;
+            padding-bottom: 6px;
+        }
+
+        .cm-heatmap {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 10px;
+            margin-bottom: 0;
+        }
+
+        .cm-heatmap th,
+        .cm-heatmap td {
+            border-bottom: none;
+        }
+
+        .cm-corner,
+        .cm-header,
+        .cm-row-label {
+            background: #1e293b;
+            color: #e5e7eb;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 12px;
+            padding: 14px;
+            white-space: nowrap;
+        }
+
+        .cm-row-label {
+            min-width: 130px;
+        }
+
+        .cm-heat-cell {
+            min-width: 165px;
+            height: 110px;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid;
+            border-radius: 16px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.18);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .cm-heat-cell:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .cm-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .cm-percent {
+            font-size: 12px;
+            color: #e5e7eb;
+            opacity: 0.9;
+        }
+
+        .cm-tag {
+            display: inline-block;
+            margin-top: 7px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            background: rgba(15, 23, 42, 0.55);
+            color: #f8fafc;
+        }
+
+        .cm-tag.correct {
+            border: 1px solid rgba(34, 197, 94, 0.75);
+        }
+
+        .cm-tag.wrong {
+            border: 1px solid rgba(239, 68, 68, 0.75);
+        }
+
+        .cm-note {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            background: #020617;
+            border: 1px solid #263244;
+            border-radius: 12px;
+            padding: 14px;
+            color: #e5e7eb;
+            overflow-x: auto;
+        }
+
+        .warning {
+            background: #422006;
+            border: 1px solid #854d0e;
+            color: #fde68a;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            color: #64748b;
+            text-align: center;
+            margin: 32px 0 12px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 1100px) {
+            .metric-grid,
+            .metric-grid.small {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .chart-row {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+
+            .chart-value {
+                text-align: left;
+            }
+
+            .cm-heat-cell {
+                min-width: 140px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>2D vs 3D vs Fusion Result Dashboard</h1>
+
+        <div class="subtitle">
+            Generated at: 2026-07-06 11:53:22
+        </div>
+
+        
+    <div class="metric-grid">
+        
+    <div class="metric-card">
+        <div class="metric-title">Best Binary Accuracy</div>
+        <div class="metric-value">Fusion 2D+3D - 94.07%</div>
+        <div class="metric-subtitle">Fall / Not_Fall</div>
+    </div>
+    
+    <div class="metric-card">
+        <div class="metric-title">Best Binary Macro F1</div>
+        <div class="metric-value">Fusion 2D+3D - 93.10%</div>
+        <div class="metric-subtitle">Fall / Not_Fall</div>
+    </div>
+    
+    <div class="metric-card">
+        <div class="metric-title">Best Action Accuracy</div>
+        <div class="metric-value">Fusion 2D+3D - 96.91%</div>
+        <div class="metric-subtitle">Sitting / Sleeping / Standing / Walking</div>
+    </div>
+    
+    <div class="metric-card">
+        <div class="metric-title">Best Action Macro F1</div>
+        <div class="metric-value">Fusion 2D+3D - 95.32%</div>
+        <div class="metric-subtitle">Sitting / Sleeping / Standing / Walking</div>
+    </div>
+    
+    </div>
+    
+
+        
+    <div class="section compact-section">
+        <h2>Compact Metric Tables</h2>
+
+        <h3>Binary Task: Fall / Not_Fall</h3>
+        <table class="compact-table">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Accuracy</th>
+                    <th>Macro F1</th>
+                    <th>Fall Precision</th>
+                    <th>Fall Recall</th>
+                    <th>Fall F1</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr class="">
+            <td>2D Binary</td>
+            <td>0.9238</td>
+            <td>0.9150</td>
+            <td>0.87</td>
+            <td>0.90</td>
+            <td>0.89</td>
+        </tr>
+        
+        <tr class="">
+            <td>3D Binary</td>
+            <td>0.9278</td>
+            <td>0.9146</td>
+            <td>0.90</td>
+            <td>0.86</td>
+            <td>0.88</td>
+        </tr>
+        
+        <tr class="best-row">
+            <td>Fusion 2D+3D Binary</td>
+            <td>0.9407</td>
+            <td>0.9310</td>
+            <td>0.90</td>
+            <td>0.91</td>
+            <td>0.91</td>
+        </tr>
+        
+            </tbody>
+        </table>
+
+        <h3 style="margin-top: 30px;">Action Task: Sitting / Sleeping / Standing / Walking</h3>
+        <table class="compact-table">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Accuracy</th>
+                    <th>Macro F1</th>
+                    <th>Sitting F1</th>
+                    <th>Sleeping F1</th>
+                    <th>Standing F1</th>
+                    <th>Walking F1</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr class="">
+            <td>2D Action</td>
+            <td>0.9609</td>
+            <td>0.9464</td>
+            <td>0.93</td>
+            <td>0.93</td>
+            <td>0.93</td>
+            <td>1.00</td>
+        </tr>
+        
+        <tr class="">
+            <td>3D Action</td>
+            <td>0.9382</td>
+            <td>0.9075</td>
+            <td>0.88</td>
+            <td>0.95</td>
+            <td>0.81</td>
+            <td>0.99</td>
+        </tr>
+        
+        <tr class="best-row">
+            <td>Fusion 2D+3D Action</td>
+            <td>0.9691</td>
+            <td>0.9532</td>
+            <td>0.93</td>
+            <td>0.96</td>
+            <td>0.92</td>
+            <td>1.00</td>
+        </tr>
+        
+            </tbody>
+        </table>
+    </div>
+    
+
+        
+    <div class="section">
+        <h2>Binary Result Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Input</th>
+                    <th>Model</th>
+                    <th>Normalization</th>
+                    <th>Input dim</th>
+                    <th>Seq length</th>
+                    <th>Stride</th>
+                    <th>Best epoch</th>
+                    <th>Accuracy</th>
+                    <th>Macro F1</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr>
+            <td><b>2D</b></td>
+            <td>CNN1D_BiLSTM_2D</td>
+            <td>per_frame_xy_mean_std</td>
+            <td>40</td>
+            <td>60</td>
+            <td>15</td>
+            <td>19</td>
+            <td>
+                <b>92.38%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 92.38%"></div>
+    </div>
+    
+            </td>
+            <td>
+                <b>91.50%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 91.50%"></div>
+    </div>
+    
+            </td>
+        </tr>
+        
+        <tr>
+            <td><b>3D</b></td>
+            <td>CNN_LSTM_3D_same_as_2D_phase1</td>
+            <td>per_frame_xyz_mean_std</td>
+            <td>59</td>
+            <td>60</td>
+            <td>15</td>
+            <td>23</td>
+            <td>
+                <b>92.78%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 92.78%"></div>
+    </div>
+    
+            </td>
+            <td>
+                <b>91.46%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 91.46%"></div>
+    </div>
+    
+            </td>
+        </tr>
+        
+        <tr>
+            <td><b>Fusion 2D+3D</b></td>
+            <td>CNN_LSTM_FUSION_2D_3D</td>
+            <td>2d_per_frame_xy_mean_std__3d_precomputed_normalized</td>
+            <td>99</td>
+            <td>60</td>
+            <td>15</td>
+            <td>24</td>
+            <td>
+                <b>94.07%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 94.07%"></div>
+    </div>
+    
+            </td>
+            <td>
+                <b>93.10%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 93.10%"></div>
+    </div>
+    
+            </td>
+        </tr>
+        
+            </tbody>
+        </table>
+    </div>
+    
+        
+    <div class="section">
+        <h2>Binary Visual Comparison</h2>
+        <div class="chart-box">
+            
+        <div class="chart-row">
+            <div class="chart-label">2D Accuracy</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar" style="width: 92.38%"></div>
+            </div>
+            <div class="chart-value">92.38%</div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-label">2D Macro F1</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar alt" style="width: 91.50%"></div>
+            </div>
+            <div class="chart-value">91.50%</div>
+        </div>
+        
+        <div class="chart-row">
+            <div class="chart-label">3D Accuracy</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar" style="width: 92.78%"></div>
+            </div>
+            <div class="chart-value">92.78%</div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-label">3D Macro F1</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar alt" style="width: 91.46%"></div>
+            </div>
+            <div class="chart-value">91.46%</div>
+        </div>
+        
+        <div class="chart-row">
+            <div class="chart-label">Fusion 2D+3D Accuracy</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar" style="width: 94.07%"></div>
+            </div>
+            <div class="chart-value">94.07%</div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-label">Fusion 2D+3D Macro F1</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar alt" style="width: 93.10%"></div>
+            </div>
+            <div class="chart-value">93.10%</div>
+        </div>
+        
+        </div>
+    </div>
+    
+        
+    <div class="section">
+        <h2>Binary Detailed Results</h2>
+        
+        <div class="model-detail">
+            <h3>Binary - 2D</h3>
+
+            <div class="metric-grid small">
+                
+    <div class="metric-card">
+        <div class="metric-title">Accuracy</div>
+        <div class="metric-value">92.38%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Macro F1</div>
+        <div class="metric-value">91.50%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Best epoch</div>
+        <div class="metric-value">19</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Input dim</div>
+        <div class="metric-value">40</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Train sequences</div>
+        <div class="metric-value">21545</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Test sequences</div>
+        <div class="metric-value">5486</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+            </div>
+
+            <h4>Classification Report</h4>
+            
+    <table>
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-score</th>
+                <th>Support</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td><b>Not_Fall</b></td>
+            <td>0.9515</td>
+            <td>0.9334</td>
+            <td>0.9424</td>
+            <td>3661.0</td>
+        </tr>
+        
+        <tr>
+            <td><b>Fall</b></td>
+            <td>0.8712</td>
+            <td>0.9047</td>
+            <td>0.8876</td>
+            <td>1825.0</td>
+        </tr>
+        
+        </tbody>
+    </table>
+    
+
+            <h4>Confusion Matrix Heatmap</h4>
+            
+    <div class="cm-wrapper">
+        <table class="cm-heatmap">
+            <thead>
+                <tr><th class='cm-corner'>True \ Pred</th><th class='cm-header'>Not_Fall</th><th class='cm-header'>Fall</th></tr>
+            </thead>
+            <tbody>
+                <tr><th class='cm-row-label'>Not_Fall</th>
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.880); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">3417</div>
+                <div class="cm-percent">93.3% of true Not_Fall</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.166); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">244</div>
+                <div class="cm-percent">6.7% of true Not_Fall</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Fall</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.153); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">174</div>
+                <div class="cm-percent">9.5% of true Fall</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.518); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">1651</div>
+                <div class="cm-percent">90.5% of true Fall</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cm-note">
+        Green diagonal cells are correct predictions. Red/orange cells are misclassifications.
+    </div>
+    
+        </div>
+        
+        <div class="model-detail">
+            <h3>Binary - 3D</h3>
+
+            <div class="metric-grid small">
+                
+    <div class="metric-card">
+        <div class="metric-title">Accuracy</div>
+        <div class="metric-value">92.78%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Macro F1</div>
+        <div class="metric-value">91.46%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Best epoch</div>
+        <div class="metric-value">23</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Input dim</div>
+        <div class="metric-value">59</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Train sequences</div>
+        <div class="metric-value">16022</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Test sequences</div>
+        <div class="metric-value">4100</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+            </div>
+
+            <h4>Classification Report</h4>
+            
+    <table>
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-score</th>
+                <th>Support</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td><b>Not_Fall</b></td>
+            <td>0.9400</td>
+            <td>0.9600</td>
+            <td>0.9500</td>
+            <td>2827</td>
+        </tr>
+        
+        <tr>
+            <td><b>Fall</b></td>
+            <td>0.9000</td>
+            <td>0.8600</td>
+            <td>0.8800</td>
+            <td>1273</td>
+        </tr>
+        
+        </tbody>
+    </table>
+    
+
+            <h4>Confusion Matrix Heatmap</h4>
+            
+    <div class="cm-wrapper">
+        <table class="cm-heatmap">
+            <thead>
+                <tr><th class='cm-corner'>True \ Pred</th><th class='cm-header'>Not_Fall</th><th class='cm-header'>Fall</th></tr>
+            </thead>
+            <tbody>
+                <tr><th class='cm-row-label'>Not_Fall</th>
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.880); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">2707</div>
+                <div class="cm-percent">95.8% of true Not_Fall</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.149); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">120</div>
+                <div class="cm-percent">4.2% of true Not_Fall</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Fall</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.162); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">176</div>
+                <div class="cm-percent">13.8% of true Fall</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.464); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">1097</div>
+                <div class="cm-percent">86.2% of true Fall</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cm-note">
+        Green diagonal cells are correct predictions. Red/orange cells are misclassifications.
+    </div>
+    
+        </div>
+        
+        <div class="model-detail">
+            <h3>Binary - Fusion 2D+3D</h3>
+
+            <div class="metric-grid small">
+                
+    <div class="metric-card">
+        <div class="metric-title">Accuracy</div>
+        <div class="metric-value">94.07%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Macro F1</div>
+        <div class="metric-value">93.10%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Best epoch</div>
+        <div class="metric-value">24</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Input dim</div>
+        <div class="metric-value">99</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Train sequences</div>
+        <div class="metric-value">16022</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Test sequences</div>
+        <div class="metric-value">4100</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+            </div>
+
+            <h4>Classification Report</h4>
+            
+    <table>
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-score</th>
+                <th>Support</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td><b>Not_Fall</b></td>
+            <td>0.9598</td>
+            <td>0.9540</td>
+            <td>0.9569</td>
+            <td>2827.0</td>
+        </tr>
+        
+        <tr>
+            <td><b>Fall</b></td>
+            <td>0.8992</td>
+            <td>0.9112</td>
+            <td>0.9052</td>
+            <td>1273.0</td>
+        </tr>
+        
+        </tbody>
+    </table>
+    
+
+            <h4>Confusion Matrix Heatmap</h4>
+            
+    <div class="cm-wrapper">
+        <table class="cm-heatmap">
+            <thead>
+                <tr><th class='cm-corner'>True \ Pred</th><th class='cm-header'>Not_Fall</th><th class='cm-header'>Fall</th></tr>
+            </thead>
+            <tbody>
+                <tr><th class='cm-row-label'>Not_Fall</th>
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.880); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">2697</div>
+                <div class="cm-percent">95.4% of true Not_Fall</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.151); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">130</div>
+                <div class="cm-percent">4.6% of true Not_Fall</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Fall</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.147); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">113</div>
+                <div class="cm-percent">8.9% of true Fall</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.481); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">1160</div>
+                <div class="cm-percent">91.1% of true Fall</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cm-note">
+        Green diagonal cells are correct predictions. Red/orange cells are misclassifications.
+    </div>
+    
+        </div>
+        
+    </div>
+    
+
+        
+    <div class="section">
+        <h2>Action Result Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Input</th>
+                    <th>Model</th>
+                    <th>Normalization</th>
+                    <th>Input dim</th>
+                    <th>Seq length</th>
+                    <th>Stride</th>
+                    <th>Best epoch</th>
+                    <th>Accuracy</th>
+                    <th>Macro F1</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr>
+            <td><b>2D</b></td>
+            <td>CNN1D_BiLSTM_2D</td>
+            <td>per_frame_xy_mean_std</td>
+            <td>40</td>
+            <td>60</td>
+            <td>15</td>
+            <td>17</td>
+            <td>
+                <b>96.09%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 96.09%"></div>
+    </div>
+    
+            </td>
+            <td>
+                <b>94.64%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 94.64%"></div>
+    </div>
+    
+            </td>
+        </tr>
+        
+        <tr>
+            <td><b>3D</b></td>
+            <td>CNN_LSTM_3D_same_as_2D_phase1</td>
+            <td>per_frame_xyz_mean_std</td>
+            <td>59</td>
+            <td>60</td>
+            <td>15</td>
+            <td>17</td>
+            <td>
+                <b>93.82%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 93.82%"></div>
+    </div>
+    
+            </td>
+            <td>
+                <b>90.75%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 90.75%"></div>
+    </div>
+    
+            </td>
+        </tr>
+        
+        <tr>
+            <td><b>Fusion 2D+3D</b></td>
+            <td>CNN_LSTM_FUSION_2D_3D</td>
+            <td>2d_per_frame_xy_mean_std__3d_precomputed_normalized</td>
+            <td>99</td>
+            <td>60</td>
+            <td>15</td>
+            <td>27</td>
+            <td>
+                <b>96.91%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 96.91%"></div>
+    </div>
+    
+            </td>
+            <td>
+                <b>95.32%</b>
+                
+    <div class="bar-wrap">
+        <div class="bar-fill" style="width: 95.32%"></div>
+    </div>
+    
+            </td>
+        </tr>
+        
+            </tbody>
+        </table>
+    </div>
+    
+        
+    <div class="section">
+        <h2>Action Visual Comparison</h2>
+        <div class="chart-box">
+            
+        <div class="chart-row">
+            <div class="chart-label">2D Accuracy</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar" style="width: 96.09%"></div>
+            </div>
+            <div class="chart-value">96.09%</div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-label">2D Macro F1</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar alt" style="width: 94.64%"></div>
+            </div>
+            <div class="chart-value">94.64%</div>
+        </div>
+        
+        <div class="chart-row">
+            <div class="chart-label">3D Accuracy</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar" style="width: 93.82%"></div>
+            </div>
+            <div class="chart-value">93.82%</div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-label">3D Macro F1</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar alt" style="width: 90.75%"></div>
+            </div>
+            <div class="chart-value">90.75%</div>
+        </div>
+        
+        <div class="chart-row">
+            <div class="chart-label">Fusion 2D+3D Accuracy</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar" style="width: 96.91%"></div>
+            </div>
+            <div class="chart-value">96.91%</div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-label">Fusion 2D+3D Macro F1</div>
+            <div class="chart-bar-bg">
+                <div class="chart-bar alt" style="width: 95.32%"></div>
+            </div>
+            <div class="chart-value">95.32%</div>
+        </div>
+        
+        </div>
+    </div>
+    
+        
+    <div class="section">
+        <h2>Action Detailed Results</h2>
+        
+        <div class="model-detail">
+            <h3>Action - 2D</h3>
+
+            <div class="metric-grid small">
+                
+    <div class="metric-card">
+        <div class="metric-title">Accuracy</div>
+        <div class="metric-value">96.09%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Macro F1</div>
+        <div class="metric-value">94.64%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Best epoch</div>
+        <div class="metric-value">17</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Input dim</div>
+        <div class="metric-value">40</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Train sequences</div>
+        <div class="metric-value">14221</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Test sequences</div>
+        <div class="metric-value">3861</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+            </div>
+
+            <h4>Classification Report</h4>
+            
+    <table>
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-score</th>
+                <th>Support</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td><b>Sitting</b></td>
+            <td>0.9410</td>
+            <td>0.9173</td>
+            <td>0.9290</td>
+            <td>991.0</td>
+        </tr>
+        
+        <tr>
+            <td><b>Sleeping</b></td>
+            <td>0.9177</td>
+            <td>0.9489</td>
+            <td>0.9330</td>
+            <td>646.0</td>
+        </tr>
+        
+        <tr>
+            <td><b>Standing</b></td>
+            <td>0.9281</td>
+            <td>0.9239</td>
+            <td>0.9260</td>
+            <td>447.0</td>
+        </tr>
+        
+        <tr>
+            <td><b>Walking</b></td>
+            <td>0.9961</td>
+            <td>0.9989</td>
+            <td>0.9975</td>
+            <td>1777.0</td>
+        </tr>
+        
+        </tbody>
+    </table>
+    
+
+            <h4>Confusion Matrix Heatmap</h4>
+            
+    <div class="cm-wrapper">
+        <table class="cm-heatmap">
+            <thead>
+                <tr><th class='cm-corner'>True \ Pred</th><th class='cm-header'>Sitting</th><th class='cm-header'>Sleeping</th><th class='cm-header'>Standing</th><th class='cm-header'>Walking</th></tr>
+            </thead>
+            <tbody>
+                <tr><th class='cm-row-label'>Sitting</th>
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.538); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">909</div>
+                <div class="cm-percent">91.7% of true Sitting</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.137); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">47</div>
+                <div class="cm-percent">4.7% of true Sitting</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.131); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">31</div>
+                <div class="cm-percent">3.1% of true Sitting</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.121); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">4</div>
+                <div class="cm-percent">0.4% of true Sitting</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Sleeping</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.132); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">32</div>
+                <div class="cm-percent">5.0% of true Sleeping</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.422); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">613</div>
+                <div class="cm-percent">94.9% of true Sleeping</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">1</div>
+                <div class="cm-percent">0.2% of true Sleeping</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">0</div>
+                <div class="cm-percent">0.0% of true Sleeping</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Standing</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.128); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">23</div>
+                <div class="cm-percent">5.1% of true Standing</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.123); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">8</div>
+                <div class="cm-percent">1.8% of true Standing</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.343); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">413</div>
+                <div class="cm-percent">92.4% of true Standing</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.121); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">3</div>
+                <div class="cm-percent">0.7% of true Standing</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Walking</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.121); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">2</div>
+                <div class="cm-percent">0.1% of true Walking</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">0</div>
+                <div class="cm-percent">0.0% of true Walking</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">0</div>
+                <div class="cm-percent">0.0% of true Walking</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.880); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">1775</div>
+                <div class="cm-percent">99.9% of true Walking</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cm-note">
+        Green diagonal cells are correct predictions. Red/orange cells are misclassifications.
+    </div>
+    
+        </div>
+        
+        <div class="model-detail">
+            <h3>Action - 3D</h3>
+
+            <div class="metric-grid small">
+                
+    <div class="metric-card">
+        <div class="metric-title">Accuracy</div>
+        <div class="metric-value">93.82%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Macro F1</div>
+        <div class="metric-value">90.75%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Best epoch</div>
+        <div class="metric-value">17</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Input dim</div>
+        <div class="metric-value">59</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Train sequences</div>
+        <div class="metric-value">11232</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Test sequences</div>
+        <div class="metric-value">2979</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+            </div>
+
+            <h4>Classification Report</h4>
+            
+    <table>
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-score</th>
+                <th>Support</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td><b>Sitting</b></td>
+            <td>0.9300</td>
+            <td>0.8400</td>
+            <td>0.8800</td>
+            <td>638</td>
+        </tr>
+        
+        <tr>
+            <td><b>Sleeping</b></td>
+            <td>0.9500</td>
+            <td>0.9500</td>
+            <td>0.9500</td>
+            <td>544</td>
+        </tr>
+        
+        <tr>
+            <td><b>Standing</b></td>
+            <td>0.7300</td>
+            <td>0.9100</td>
+            <td>0.8100</td>
+            <td>306</td>
+        </tr>
+        
+        <tr>
+            <td><b>Walking</b></td>
+            <td>0.9900</td>
+            <td>0.9800</td>
+            <td>0.9900</td>
+            <td>1491</td>
+        </tr>
+        
+        </tbody>
+    </table>
+    
+
+            <h4>Confusion Matrix Heatmap</h4>
+            
+    <div class="cm-wrapper">
+        <table class="cm-heatmap">
+            <thead>
+                <tr><th class='cm-corner'>True \ Pred</th><th class='cm-header'>Sitting</th><th class='cm-header'>Sleeping</th><th class='cm-header'>Standing</th><th class='cm-header'>Walking</th></tr>
+            </thead>
+            <tbody>
+                <tr><th class='cm-row-label'>Sitting</th>
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.438); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">538</div>
+                <div class="cm-percent">84.3% of true Sitting</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.131); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">25</div>
+                <div class="cm-percent">3.9% of true Sitting</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.152); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">71</div>
+                <div class="cm-percent">11.1% of true Sitting</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.122); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">4</div>
+                <div class="cm-percent">0.6% of true Sitting</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Sleeping</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.131); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">24</div>
+                <div class="cm-percent">4.4% of true Sleeping</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.428); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">517</div>
+                <div class="cm-percent">95.0% of true Sleeping</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.121); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">3</div>
+                <div class="cm-percent">0.6% of true Sleeping</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">0</div>
+                <div class="cm-percent">0.0% of true Sleeping</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Standing</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.128); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">19</div>
+                <div class="cm-percent">6.2% of true Standing</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">0</div>
+                <div class="cm-percent">0.0% of true Standing</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.313); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">278</div>
+                <div class="cm-percent">90.8% of true Standing</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.124); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">9</div>
+                <div class="cm-percent">2.9% of true Standing</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Walking</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">0</div>
+                <div class="cm-percent">0.0% of true Walking</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">0</div>
+                <div class="cm-percent">0.0% of true Walking</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.133); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">29</div>
+                <div class="cm-percent">1.9% of true Walking</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.880); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">1462</div>
+                <div class="cm-percent">98.1% of true Walking</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cm-note">
+        Green diagonal cells are correct predictions. Red/orange cells are misclassifications.
+    </div>
+    
+        </div>
+        
+        <div class="model-detail">
+            <h3>Action - Fusion 2D+3D</h3>
+
+            <div class="metric-grid small">
+                
+    <div class="metric-card">
+        <div class="metric-title">Accuracy</div>
+        <div class="metric-value">96.91%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Macro F1</div>
+        <div class="metric-value">95.32%</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Best epoch</div>
+        <div class="metric-value">27</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Input dim</div>
+        <div class="metric-value">99</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Train sequences</div>
+        <div class="metric-value">11232</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+                
+    <div class="metric-card">
+        <div class="metric-title">Test sequences</div>
+        <div class="metric-value">2979</div>
+        <div class="metric-subtitle"></div>
+    </div>
+    
+            </div>
+
+            <h4>Classification Report</h4>
+            
+    <table>
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-score</th>
+                <th>Support</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td><b>Sitting</b></td>
+            <td>0.9195</td>
+            <td>0.9483</td>
+            <td>0.9336</td>
+            <td>638.0</td>
+        </tr>
+        
+        <tr>
+            <td><b>Sleeping</b></td>
+            <td>0.9790</td>
+            <td>0.9412</td>
+            <td>0.9597</td>
+            <td>544.0</td>
+        </tr>
+        
+        <tr>
+            <td><b>Standing</b></td>
+            <td>0.9331</td>
+            <td>0.9118</td>
+            <td>0.9223</td>
+            <td>306.0</td>
+        </tr>
+        
+        <tr>
+            <td><b>Walking</b></td>
+            <td>0.9947</td>
+            <td>1.0000</td>
+            <td>0.9973</td>
+            <td>1491.0</td>
+        </tr>
+        
+        </tbody>
+    </table>
+    
+
+            <h4>Confusion Matrix Heatmap</h4>
+            
+    <div class="cm-wrapper">
+        <table class="cm-heatmap">
+            <thead>
+                <tr><th class='cm-corner'>True \ Pred</th><th class='cm-header'>Sitting</th><th class='cm-header'>Sleeping</th><th class='cm-header'>Standing</th><th class='cm-header'>Walking</th></tr>
+            </thead>
+            <tbody>
+                <tr><th class='cm-row-label'>Sitting</th>
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.464); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">605</div>
+                <div class="cm-percent">94.8% of true Sitting</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.124); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">10</div>
+                <div class="cm-percent">1.6% of true Sitting</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.128); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">19</div>
+                <div class="cm-percent">3.0% of true Sitting</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.122); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">4</div>
+                <div class="cm-percent">0.6% of true Sitting</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Sleeping</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.134); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">31</div>
+                <div class="cm-percent">5.7% of true Sleeping</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.420); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">512</div>
+                <div class="cm-percent">94.1% of true Sleeping</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">1</div>
+                <div class="cm-percent">0.2% of true Sleeping</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">0</div>
+                <div class="cm-percent">0.0% of true Sleeping</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Standing</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.130); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">22</div>
+                <div class="cm-percent">7.2% of true Standing</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">1</div>
+                <div class="cm-percent">0.3% of true Standing</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.311); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">279</div>
+                <div class="cm-percent">91.2% of true Standing</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.122); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">4</div>
+                <div class="cm-percent">1.3% of true Standing</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            </tr><tr><th class='cm-row-label'>Walking</th>
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">0</div>
+                <div class="cm-percent">0.0% of true Walking</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">0</div>
+                <div class="cm-percent">0.0% of true Walking</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(239, 68, 68, 0.120); border-color: rgba(239, 68, 68, 0.75);">
+                <div class="cm-number">0</div>
+                <div class="cm-percent">0.0% of true Walking</div>
+                <div class="cm-tag wrong">Wrong</div>
+            </td>
+            
+            <td class="cm-heat-cell" style="background: rgba(34, 197, 94, 0.880); border-color: rgba(34, 197, 94, 0.85);">
+                <div class="cm-number">1491</div>
+                <div class="cm-percent">100.0% of true Walking</div>
+                <div class="cm-tag correct">Correct</div>
+            </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cm-note">
+        Green diagonal cells are correct predictions. Red/orange cells are misclassifications.
+    </div>
+    
+        </div>
+        
+    </div>
+    
+
+        <div class="footer">
+            Dashboard generated from training result JSON files.
+        </div>
+    </div>
+</body>
+</html>

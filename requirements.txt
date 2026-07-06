@@ -1,0 +1,33 @@
+# ==========================================
+# FILE REQUIREMENTS - 3D HUMAN POSE NCKH
+# ==========================================
+
+# --- 1. Deep Learning Core ---
+# Lưu ý: Không để phiên bản ở đây để tránh cài nhầm bản CPU. 
+# Xem hướng dẫn cài PyTorch CUDA ở bên dưới.
+torch
+torchvision
+
+# --- 2. Trích xuất tọa độ 2D ---
+ultralytics>=8.0.0       # Chứa mô hình YOLOv8-Pose
+
+# --- 3. Thư viện hỗ trợ PoseFormerV2 (3D Lifting) ---
+einops                   # Dùng để biến đổi tensor trong mạng Transformer
+h5py                     # Đọc/Ghi dữ liệu file dạng .h5 (phổ biến trong Human3.6M)
+scipy                    # Hỗ trợ các phép toán nội suy, xử lý tín hiệu
+
+# --- 4. Xử lý Dữ liệu & Machine Learning ---
+numpy                    # Xử lý mảng và tính toán ma trận
+pandas                   # Đọc, gộp và xử lý file CSV tọa độ
+scikit-learn             # Chia tập Train/Test (train_test_split) và tính Accuracy, F1
+
+# --- 5. Thị giác Máy tính & Giao diện Demo ---
+opencv-python            # Thư viện cv2 để mở Webcam, đọc video mp4 và vẽ khung xương
+
+# --- 6. Trực quan hóa (Vẽ biểu đồ báo cáo) ---
+matplotlib               # Vẽ đồ thị Loss/Accuracy
+seaborn                  # Vẽ ma trận nhầm lẫn (Confusion Matrix) rất đẹp
+
+# --- 7. Công cụ tiện ích (Utilities) ---
+python-dotenv            # Đọc các biến cấu hình từ file .env
+tqdm                     # Hiển thị thanh tiến trình (progress bar) màu mè khi train
