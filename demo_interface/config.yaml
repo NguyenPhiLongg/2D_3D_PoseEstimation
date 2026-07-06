@@ -1,8 +1,8 @@
-# Demo configuration for the hierarchical fall detection app.
+# Demo configuration for the 2D / 3D / Fusion fall detection app.
 # You can tune these values without editing app_main.py.
 
 window:
-  title: "Hierarchical Fall Detection Demo"
+  title: "2D / 3D / Fusion Fall Detection Demo"
   display_width: 960
   display_height: 540
 
@@ -11,15 +11,51 @@ camera:
   webcam_id: 0
 
 models:
+  # YOLOv8-Pose model for extracting 2D keypoints.
   yolo_model_path: "yolov8m-pose.pt"
+
+  # =========================
+  # 2D MODEL CHECKPOINTS
+  # =========================
+  # These are used when demo_mode = "2d".
+  two_d_binary_checkpoint_path: "phase1_2d_baseline/checkpoints/best_model_2d_binary.pt"
+  two_d_action_checkpoint_path: "phase1_2d_baseline/checkpoints/best_model_2d_action.pt"
+
+  # Backward-compatible names for old app_main.py.
   binary_checkpoint_path: "phase1_2d_baseline/checkpoints/best_model_2d_binary.pt"
   action_checkpoint_path: "phase1_2d_baseline/checkpoints/best_model_2d_action.pt"
+
+  # =========================
+  # 3D MODEL CHECKPOINTS
+  # =========================
+  # These are used when demo_mode = "3d".
+  three_d_binary_checkpoint_path: "phase2_3d_upgrade/checkpoints/best_model_3d_binary.pt"
+  three_d_action_checkpoint_path: "phase2_3d_upgrade/checkpoints/best_model_3d_action.pt"
+
+  # =========================
+  # FUSION 2D + 3D CHECKPOINTS
+  # =========================
+  # These are used when demo_mode = "fusion".
+  fusion_binary_checkpoint_path: "phase2_3d_upgrade/checkpoints/best_model_fusion_2d3d_binary.pt"
+  fusion_action_checkpoint_path: "phase2_3d_upgrade/checkpoints/best_model_fusion_2d3d_action.pt"
+
+  # =========================
+  # POSEFORMERV2 CHECKPOINT
+  # =========================
+  # Required for demo_mode = "3d" or "fusion".
+  poseformer_checkpoint_path: "phase2_3d_upgrade/checkpoints/1_3_27_48.7.bin"
 
   # true = use GPU if CUDA is available
   # false = force CPU
   use_cuda: true
 
 prediction:
+  # Select demo mode:
+  # "2d"     = YOLOv8-Pose -> 2D CNN1D-BiLSTM
+  # "3d"     = YOLOv8-Pose -> PoseFormerV2 -> 3D CNN1D-BiLSTM
+  # "fusion" = YOLOv8-Pose -> 2D features + 3D features -> Fusion CNN1D-BiLSTM
+  demo_mode: "fusion"
+
   # Must match the sequence length used during training.
   sequence_length: 60
 
@@ -37,6 +73,17 @@ prediction:
     - "Sleeping"
     - "Standing"
     - "Walking"
+
+features:
+  # Must match the training feature normalization.
+  # 2D uses per-frame x/y mean-std normalization.
+  # 3D uses per-frame x/y/z mean-std normalization.
+  reference_width: 1920.0
+  reference_height: 1080.0
+
+  # Depth scaling for 3D feature processing in demo.
+  # Usually keep this as 1.0.
+  depth_scale: 1.0
 
 ui:
   show_fall_warning_on_video: true

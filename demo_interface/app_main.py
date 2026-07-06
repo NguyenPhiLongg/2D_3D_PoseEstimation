@@ -4,6 +4,7 @@ import cv2
 import tkinter as tk
 from tkinter import filedialog
 from collections import deque
+import copy
 
 import numpy as np
 import torch
@@ -25,18 +26,30 @@ except ImportError as exc:
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 PHASE1_DIR = os.path.join(PROJECT_ROOT, "phase1_2d_baseline")
+PHASE2_DIR = os.path.join(PROJECT_ROOT, "phase2_3d_upgrade")
+PHASE2_INFERENCE_DIR = os.path.join(PHASE2_DIR, "inference")
+
 sys.path.insert(0, PHASE1_DIR)
+sys.path.insert(0, PHASE2_DIR)
+sys.path.insert(0, PHASE2_INFERENCE_DIR)
 
 from model_2d import FallCNNLSTM
+from model_3d import FallCNNLSTM3D
+
+try:
+    from inference.infer_3d_pose import PoseFormerV2Inferencer
+except Exception as exc:
+    PoseFormerV2Inferencer = None
+    POSEFORMER_IMPORT_ERROR = exc
 
 
 # =========================
-# CONFIG LOADER
+# DEFAULT CONFIG
 # =========================
 
 DEFAULT_CONFIG = {
     "window": {
-        "title": "Hierarchical Fall Detection Demo",
+        "title": "2D / 3D / Fusion Fall Detection Demo",
         "display_width": 960,
         "display_height": 540,
     },
@@ -45,15 +58,42 @@ DEFAULT_CONFIG = {
     },
     "models": {
         "yolo_model_path": "yolov8m-pose.pt",
+
+        # 2D checkpoints
         "binary_checkpoint_path": "phase1_2d_baseline/checkpoints/best_model_2d_binary.pt",
         "action_checkpoint_path": "phase1_2d_baseline/checkpoints/best_model_2d_action.pt",
+        "two_d_binary_checkpoint_path": "phase1_2d_baseline/checkpoints/best_model_2d_binary.pt",
+        "two_d_action_checkpoint_path": "phase1_2d_baseline/checkpoints/best_model_2d_action.pt",
+
+        # 3D checkpoints
+        "three_d_binary_checkpoint_path": "phase2_3d_upgrade/checkpoints/best_model_3d_binary.pt",
+        "three_d_action_checkpoint_path": "phase2_3d_upgrade/checkpoints/best_model_3d_action.pt",
+
+        # Fusion checkpoints
+        "fusion_binary_checkpoint_path": "phase2_3d_upgrade/checkpoints/best_model_fusion_2d3d_binary.pt",
+        "fusion_action_checkpoint_path": "phase2_3d_upgrade/checkpoints/best_model_fusion_2d3d_action.pt",
+
+        # PoseFormerV2 checkpoint
+        "poseformer_checkpoint_path": "phase2_3d_upgrade/checkpoints/1_3_27_48.7.bin",
+
         "use_cuda": True,
     },
     "prediction": {
+        # Options:
+        #   "2d"     : YOLO 2D keypoints -> 2D model
+        #   "3d"     : YOLO 2D keypoints -> PoseFormerV2 -> 3D model
+        #   "fusion" : 2D features + 3D features -> Fusion model
+        "demo_mode": "fusion",
+
         "sequence_length": 60,
         "fall_threshold": 0.85,
         "fall_confirm_count": 10,
         "action_names": ["Sitting", "Sleeping", "Standing", "Walking"],
+    },
+    "features": {
+        "reference_width": 1920.0,
+        "reference_height": 1080.0,
+        "depth_scale": 1.0,
     },
     "ui": {
         "show_fall_warning_on_video": True,
@@ -63,27 +103,29 @@ DEFAULT_CONFIG = {
 }
 
 
+# =========================
+# CONFIG LOADER
+# =========================
+
 def deep_update(base, updates):
-    """Recursively update a dictionary."""
     for key, value in updates.items():
         if isinstance(value, dict) and isinstance(base.get(key), dict):
             deep_update(base[key], value)
         else:
             base[key] = value
+
     return base
 
 
 def load_config():
     config_path = os.path.join(PROJECT_ROOT, "demo_interface", "config.yaml")
 
-    config = {
-        key: value.copy() if isinstance(value, dict) else value
-        for key, value in DEFAULT_CONFIG.items()
-    }
+    config = copy.deepcopy(DEFAULT_CONFIG)
 
     if os.path.exists(config_path):
         with open(config_path, "r", encoding="utf-8") as f:
             user_config = yaml.safe_load(f) or {}
+
         config = deep_update(config, user_config)
         print("Loaded config:", config_path)
     else:
@@ -93,9 +135,9 @@ def load_config():
 
 
 def resolve_project_path(path_value):
-    """Convert a relative project path to an absolute path."""
     if os.path.isabs(path_value):
         return path_value
+
     return os.path.join(PROJECT_ROOT, path_value)
 
 
@@ -108,18 +150,65 @@ DISPLAY_HEIGHT = int(CONFIG["window"]["display_height"])
 WEBCAM_ID = int(CONFIG["camera"]["webcam_id"])
 
 YOLO_MODEL_PATH = resolve_project_path(CONFIG["models"]["yolo_model_path"])
-BINARY_CHECKPOINT_PATH = resolve_project_path(CONFIG["models"]["binary_checkpoint_path"])
-ACTION_CHECKPOINT_PATH = resolve_project_path(CONFIG["models"]["action_checkpoint_path"])
+POSEFORMER_CHECKPOINT_PATH = resolve_project_path(CONFIG["models"]["poseformer_checkpoint_path"])
+
 USE_CUDA = bool(CONFIG["models"]["use_cuda"])
+
+DEMO_MODE = str(CONFIG["prediction"].get("demo_mode", "fusion")).lower().strip()
 
 SEQUENCE_LENGTH = int(CONFIG["prediction"]["sequence_length"])
 FALL_THRESHOLD = float(CONFIG["prediction"]["fall_threshold"])
 FALL_CONFIRM_COUNT = int(CONFIG["prediction"]["fall_confirm_count"])
 ACTION_NAMES = CONFIG["prediction"]["action_names"]
 
+REFERENCE_WIDTH = float(CONFIG["features"].get("reference_width", 1920.0))
+REFERENCE_HEIGHT = float(CONFIG["features"].get("reference_height", 1080.0))
+DEPTH_SCALE = float(CONFIG["features"].get("depth_scale", 1.0))
+
 SHOW_FALL_WARNING_ON_VIDEO = bool(CONFIG["ui"]["show_fall_warning_on_video"])
 DRAW_POSE = bool(CONFIG["ui"]["draw_pose"])
 DRAW_BBOX = bool(CONFIG["ui"]["draw_bbox"])
+
+VALID_DEMO_MODES = ["2d", "3d", "fusion"]
+
+if DEMO_MODE not in VALID_DEMO_MODES:
+    raise ValueError(
+        f"Invalid demo_mode: {DEMO_MODE}. "
+        f"Valid values are: {VALID_DEMO_MODES}"
+    )
+
+
+def get_checkpoint_paths_for_mode(mode):
+    if mode == "2d":
+        binary_path = CONFIG["models"].get(
+            "two_d_binary_checkpoint_path",
+            CONFIG["models"].get("binary_checkpoint_path")
+        )
+        action_path = CONFIG["models"].get(
+            "two_d_action_checkpoint_path",
+            CONFIG["models"].get("action_checkpoint_path")
+        )
+
+    elif mode == "3d":
+        binary_path = CONFIG["models"]["three_d_binary_checkpoint_path"]
+        action_path = CONFIG["models"]["three_d_action_checkpoint_path"]
+
+    elif mode == "fusion":
+        binary_path = CONFIG["models"]["fusion_binary_checkpoint_path"]
+        action_path = CONFIG["models"]["fusion_action_checkpoint_path"]
+
+    else:
+        raise ValueError(f"Unknown demo mode: {mode}")
+
+    return resolve_project_path(binary_path), resolve_project_path(action_path)
+
+
+BINARY_CHECKPOINT_PATH, ACTION_CHECKPOINT_PATH = get_checkpoint_paths_for_mode(DEMO_MODE)
+
+
+# =========================
+# SKELETON CONNECTIONS
+# =========================
 
 SKELETON = [
     (5, 7), (7, 9),
@@ -133,19 +222,45 @@ SKELETON = [
 
 
 # =========================
-# FEATURE EXTRACTION
+# SAFE TORCH LOAD
 # =========================
 
-def extract_features_from_keypoints(keypoints, frame_width, frame_height, prev_center=None):
-    keypoints = keypoints.astype(np.float32)
+def safe_torch_load(path, device):
+    try:
+        return torch.load(path, map_location=device, weights_only=False)
+    except TypeError:
+        return torch.load(path, map_location=device)
+
+
+# =========================
+# FEATURE EXTRACTION - 2D
+# =========================
+
+def extract_features_2d_from_keypoints(keypoints, prev_center=None):
+    """
+    2D feature extraction.
+
+    This follows the new training pipeline:
+        per-frame x/y mean-std normalization.
+
+    Output:
+        34 normalized 2D keypoint features
+        + 6 handcrafted 2D features
+        = 40 features
+    """
+
+    keypoints = np.asarray(keypoints, dtype=np.float32)
+
+    if keypoints.shape != (17, 2):
+        raise ValueError(f"Expected keypoints shape (17, 2), got {keypoints.shape}")
 
     xs = keypoints[:, 0]
     ys = keypoints[:, 1]
 
-    min_x = np.min(xs)
-    max_x = np.max(xs)
-    min_y = np.min(ys)
-    max_y = np.max(ys)
+    min_x = float(np.min(xs))
+    max_x = float(np.max(xs))
+    min_y = float(np.min(ys))
+    max_y = float(np.max(ys))
 
     width = max_x - min_x
     height = max_y - min_y
@@ -155,22 +270,24 @@ def extract_features_from_keypoints(keypoints, frame_width, frame_height, prev_c
     center_x = (min_x + max_x) / 2.0
     center_y = (min_y + max_y) / 2.0
 
-    scale = max(width, height) + eps
+    pose_2d = keypoints.reshape(17, 2)
 
-    norm_xs = (xs - center_x) / scale
-    norm_ys = (ys - center_y) / scale
+    mean_2d = pose_2d.mean(axis=0, keepdims=True)
+    std_2d = pose_2d.std(axis=0, keepdims=True)
 
-    normalized_coords = np.empty((17, 2), dtype=np.float32)
-    normalized_coords[:, 0] = norm_xs
-    normalized_coords[:, 1] = norm_ys
-    normalized_coords = normalized_coords.flatten()
+    std_2d = np.where(std_2d < eps, 1.0, std_2d)
+
+    normalized_pose_2d = (pose_2d - mean_2d) / std_2d
+    normalized_coords = normalized_pose_2d.reshape(-1).astype(np.float32)
 
     aspect_ratio = height / (width + eps)
-    norm_width = width / scale
-    norm_height = height / scale
 
-    center_x_norm = center_x / frame_width
-    center_y_norm = center_y / frame_height
+    scale = max(width, height) + eps
+    norm_width = width / (scale + eps)
+    norm_height = height / (scale + eps)
+
+    center_x_norm = center_x / REFERENCE_WIDTH
+    center_y_norm = center_y / REFERENCE_HEIGHT
 
     if prev_center is None:
         velocity = 0.0
@@ -190,12 +307,119 @@ def extract_features_from_keypoints(keypoints, frame_width, frame_height, prev_c
         dtype=np.float32
     )
 
-    features = np.concatenate([normalized_coords, handcrafted], axis=0)
+    features = np.concatenate([normalized_coords, handcrafted], axis=0).astype(np.float32)
+
+    if features.shape[0] != 40:
+        raise ValueError(f"2D feature dim must be 40, got {features.shape[0]}")
 
     current_center = (center_x, center_y)
     bbox = (min_x, min_y, max_x, max_y)
 
     return features, current_center, bbox, aspect_ratio
+
+
+# =========================
+# FEATURE EXTRACTION - 3D
+# =========================
+
+def normalize_pose3d_mean_std(pose3d):
+    """
+    Normalize one 3D pose frame using per-axis mean/std.
+
+    Formula:
+        pose = (pose - pose.mean(axis=0)) / pose.std(axis=0)
+
+    Mean/std are computed separately for x, y, z.
+    """
+
+    pose3d = np.asarray(pose3d, dtype=np.float32)
+
+    if pose3d.shape != (17, 3):
+        raise ValueError(f"Expected pose3d shape (17, 3), got {pose3d.shape}")
+
+    eps = 1e-6
+
+    mean = pose3d.mean(axis=0, keepdims=True)
+    std = pose3d.std(axis=0, keepdims=True)
+
+    std = np.where(std < eps, 1.0, std)
+
+    normalized = (pose3d - mean) / std
+
+    return normalized.astype(np.float32)
+
+
+def extract_features_3d_from_pose(pose3d, prev_center=None):
+    """
+    3D feature extraction.
+
+    Output:
+        51 normalized 3D keypoint features
+        + 8 handcrafted 3D features
+        = 59 features
+    """
+
+    pose = normalize_pose3d_mean_std(pose3d)
+
+    xs = pose[:, 0]
+    ys = pose[:, 1]
+    zs = pose[:, 2]
+
+    min_x = np.min(xs)
+    max_x = np.max(xs)
+
+    min_y = np.min(ys)
+    max_y = np.max(ys)
+
+    min_z = np.min(zs)
+    max_z = np.max(zs)
+
+    width_x = max_x - min_x
+    depth_y = max_y - min_y
+    height_z = max_z - min_z
+
+    eps = 1e-6
+
+    height_width_ratio = height_z / (width_x + eps)
+    depth_width_ratio = depth_y / (width_x + eps)
+
+    # Joint 10 = head, joint 0 = pelvis in H36M-like layout
+    head_height = zs[10] - zs[0]
+
+    # Joint 8 = thorax, joint 0 = pelvis
+    torso_vector = pose[8, :] - pose[0, :]
+    torso_horizontal = np.linalg.norm(torso_vector[0:2])
+    torso_vertical = abs(torso_vector[2]) + eps
+    torso_tilt = torso_horizontal / torso_vertical
+
+    center = pose.mean(axis=0)
+
+    if prev_center is None:
+        velocity = 0.0
+    else:
+        velocity = float(np.linalg.norm(center - prev_center))
+
+    handcrafted = np.array(
+        [
+            width_x,
+            depth_y,
+            height_z,
+            height_width_ratio,
+            depth_width_ratio,
+            head_height,
+            torso_tilt,
+            velocity
+        ],
+        dtype=np.float32
+    )
+
+    coords = pose.reshape(-1).astype(np.float32)
+    features = np.concatenate([coords, handcrafted], axis=0).astype(np.float32)
+
+    if features.shape[0] != 59:
+        raise ValueError(f"3D feature dim must be 59, got {features.shape[0]}")
+
+    return features, center
 
 
 # =========================
@@ -245,7 +469,7 @@ def draw_warning_on_frame(frame, final_label):
     if final_label == "Fall" and SHOW_FALL_WARNING_ON_VIDEO:
         h, _ = frame.shape[:2]
 
-        cv2.rectangle(frame, (10, h - 65), (510, h - 15), (0, 0, 0), -1)
+        cv2.rectangle(frame, (10, h - 65), (530, h - 15), (0, 0, 0), -1)
 
         cv2.putText(
             frame,
@@ -258,21 +482,37 @@ def draw_warning_on_frame(frame, final_label):
         )
 
 
+def draw_mode_on_frame(frame, mode):
+    text = f"Mode: {mode.upper()}"
+
+    cv2.rectangle(frame, (10, 10), (250, 45), (0, 0, 0), -1)
+
+    cv2.putText(
+        frame,
+        text,
+        (20, 35),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (255, 255, 255),
+        2
+    )
+
+
 # =========================
-# LOAD MODEL
+# MODEL LOADING
 # =========================
 
-def load_model(checkpoint_path, device):
+def load_sequence_model(checkpoint_path, device, model_class):
     if not os.path.exists(checkpoint_path):
         raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
 
-    checkpoint = torch.load(checkpoint_path, map_location=device)
+    checkpoint = safe_torch_load(checkpoint_path, device)
 
     input_dim = checkpoint.get("input_dim", 40)
     num_classes = checkpoint.get("num_classes", 2)
     class_names = checkpoint.get("class_names", [])
 
-    model = FallCNNLSTM(
+    model = model_class(
         input_dim=input_dim,
         num_classes=num_classes,
         cnn_channels=128,
@@ -286,11 +526,58 @@ def load_model(checkpoint_path, device):
     model.eval()
 
     print("Loaded model:", checkpoint_path)
+    print("Model class:", model_class.__name__)
     print("Input dim:", input_dim)
     print("Num classes:", num_classes)
     print("Class names:", class_names)
 
-    return model
+    return model, input_dim, class_names
+
+
+def create_poseformer_inferencer(checkpoint_path, device):
+    if PoseFormerV2Inferencer is None:
+        raise ImportError(
+            "Cannot import PoseFormerV2Inferencer. "
+            f"Original error: {POSEFORMER_IMPORT_ERROR}"
+        )
+
+    device_str = "cuda" if device.type == "cuda" else "cpu"
+
+    try:
+        return PoseFormerV2Inferencer(
+            checkpoint_path=str(checkpoint_path),
+            device=device_str
+        )
+    except TypeError:
+        pass
+
+    try:
+        return PoseFormerV2Inferencer(
+            ckpt_path=str(checkpoint_path),
+            device=device_str
+        )
+    except TypeError:
+        pass
+
+    try:
+        return PoseFormerV2Inferencer(
+            model_path=str(checkpoint_path),
+            device=device_str
+        )
+    except TypeError:
+        pass
+
+    try:
+        return PoseFormerV2Inferencer(str(checkpoint_path), device_str)
+    except TypeError:
+        pass
+
+    try:
+        return PoseFormerV2Inferencer(str(checkpoint_path))
+    except TypeError:
+        pass
+
+    return PoseFormerV2Inferencer()
 
 
 # =========================
@@ -304,15 +591,52 @@ class FallDetectionApp:
 
         if USE_CUDA and torch.cuda.is_available():
             self.device = torch.device("cuda")
+            self.yolo_device = 0
         else:
             self.device = torch.device("cpu")
+            self.yolo_device = "cpu"
 
         print("Device:", self.device)
+        print("YOLO device:", self.yolo_device)
+        print("Demo mode:", DEMO_MODE)
 
         self.yolo_model = YOLO(YOLO_MODEL_PATH)
 
-        self.binary_model = load_model(BINARY_CHECKPOINT_PATH, self.device)
-        self.action_model = load_model(ACTION_CHECKPOINT_PATH, self.device)
+        if DEMO_MODE == "2d":
+            model_class = FallCNNLSTM
+        elif DEMO_MODE in ["3d", "fusion"]:
+            model_class = FallCNNLSTM3D
+        else:
+            raise ValueError(f"Invalid demo mode: {DEMO_MODE}")
+
+        self.binary_model, self.binary_input_dim, self.binary_class_names = load_sequence_model(
+            BINARY_CHECKPOINT_PATH,
+            self.device,
+            model_class
+        )
+
+        self.action_model, self.action_input_dim, self.action_class_names = load_sequence_model(
+            ACTION_CHECKPOINT_PATH,
+            self.device,
+            model_class
+        )
+
+        if self.binary_input_dim != self.action_input_dim:
+            print("WARNING: Binary and action model input dimensions are different.")
+            print("Binary input dim:", self.binary_input_dim)
+            print("Action input dim:", self.action_input_dim)
+
+        self.expected_input_dim = self.binary_input_dim
+
+        self.poseformer = None
+
+        if DEMO_MODE in ["3d", "fusion"]:
+            print("Loading PoseFormerV2 checkpoint:", POSEFORMER_CHECKPOINT_PATH)
+            self.poseformer = create_poseformer_inferencer(
+                POSEFORMER_CHECKPOINT_PATH,
+                self.device
+            )
+            print("PoseFormerV2 loaded.")
 
         self.cap = None
         self.source_type = "webcam"
@@ -320,7 +644,10 @@ class FallDetectionApp:
         self.video_ended = False
 
         self.sequence_buffer = deque(maxlen=SEQUENCE_LENGTH)
-        self.prev_center = None
+
+        self.prev_center_2d = None
+        self.prev_center_3d = None
+
         self.fall_counter = 0
 
         self.final_label = "WAITING"
@@ -340,7 +667,7 @@ class FallDetectionApp:
 
         self.info_label = tk.Label(
             self.root,
-            text=f"Prediction: WAITING | Fall prob: 0.00 | Action prob: 0.00 | Buffer: 0/{SEQUENCE_LENGTH}",
+            text=f"Prediction: WAITING | Mode: {DEMO_MODE.upper()} | Buffer: 0/{SEQUENCE_LENGTH}",
             font=("Arial", 14, "bold"),
             fg="blue"
         )
@@ -378,7 +705,7 @@ class FallDetectionApp:
 
         self.status_label = tk.Label(
             self.root,
-            text="Status: Webcam running",
+            text=f"Status: Webcam running | Mode: {DEMO_MODE.upper()}",
             font=("Arial", 12)
         )
         self.status_label.pack(pady=5)
@@ -388,14 +715,41 @@ class FallDetectionApp:
 
         self.root.protocol("WM_DELETE_WINDOW", self.close_app)
 
+    def reset_poseformer_state(self):
+        if DEMO_MODE not in ["3d", "fusion"]:
+            return
+
+        if self.poseformer is None:
+            return
+
+        if hasattr(self.poseformer, "reset"):
+            try:
+                self.poseformer.reset()
+                return
+            except Exception:
+                pass
+
+        try:
+            self.poseformer = create_poseformer_inferencer(
+                POSEFORMER_CHECKPOINT_PATH,
+                self.device
+            )
+        except Exception as exc:
+            print("WARNING: Cannot reset PoseFormerV2:", exc)
+
     def reset_sequence_state(self):
         self.sequence_buffer.clear()
-        self.prev_center = None
+
+        self.prev_center_2d = None
+        self.prev_center_3d = None
+
         self.final_label = "WAITING"
         self.fall_prob = 0.0
         self.action_prob = 0.0
         self.aspect_ratio = 0.0
         self.fall_counter = 0
+
+        self.reset_poseformer_state()
 
     def release_capture(self):
         if self.cap is not None:
@@ -411,7 +765,9 @@ class FallDetectionApp:
         self.source_name = "Webcam"
         self.video_ended = False
 
-        self.status_label.config(text="Status: Webcam running")
+        self.status_label.config(
+            text=f"Status: Webcam running | Mode: {DEMO_MODE.upper()}"
+        )
 
         if not self.cap.isOpened():
             self.status_label.config(text="ERROR: Cannot open webcam")
@@ -443,12 +799,67 @@ class FallDetectionApp:
             self.open_webcam()
             return
 
-        self.status_label.config(text=f"Status: Uploaded video running - {self.source_name}")
+        self.status_label.config(
+            text=f"Status: Uploaded video running - {self.source_name} | Mode: {DEMO_MODE.upper()}"
+        )
         print("Uploaded video:", video_path)
 
     def return_to_webcam(self):
         print("Returning to webcam...")
         self.open_webcam()
+
+    def build_model_features(self, keypoints):
+        """
+        Build features according to selected demo mode.
+
+        2D mode:
+            40 features
+
+        3D mode:
+            59 features
+
+        Fusion mode:
+            99 features = 40 2D + 59 3D
+        """
+
+        features_2d, self.prev_center_2d, bbox, self.aspect_ratio = extract_features_2d_from_keypoints(
+            keypoints,
+            self.prev_center_2d
+        )
+
+        if DEMO_MODE == "2d":
+            return features_2d, bbox, "OK"
+
+        if self.poseformer is None:
+            return None, bbox, "NO POSEFORMER"
+
+        pose3d = self.poseformer.add_and_predict(keypoints)
+
+        if pose3d is None:
+            return None, bbox, "BUILDING 3D"
+
+        pose3d = np.asarray(pose3d, dtype=np.float32)
+
+        if pose3d.shape != (17, 3):
+            return None, bbox, "INVALID 3D"
+
+        features_3d, self.prev_center_3d = extract_features_3d_from_pose(
+            pose3d,
+            self.prev_center_3d
+        )
+
+        if DEMO_MODE == "3d":
+            return features_3d, bbox, "OK"
+
+        if DEMO_MODE == "fusion":
+            fusion_features = np.concatenate([features_2d, features_3d], axis=0).astype(np.float32)
+
+            if fusion_features.shape[0] != 99:
+                raise ValueError(f"Fusion feature dim must be 99, got {fusion_features.shape[0]}")
+
+            return fusion_features, bbox, "OK"
+
+        raise ValueError(f"Invalid demo mode: {DEMO_MODE}")
 
     def predict_hierarchical(self, sequence_tensor):
         with torch.no_grad():
@@ -475,21 +886,12 @@ class FallDetectionApp:
             return action_name, fall_prob, action_prob
 
     def process_frame(self, frame):
-        frame_height, frame_width = frame.shape[:2]
-
-        results = self.yolo_model(frame, verbose=False, device=self.device)
+        results = self.yolo_model(frame, verbose=False, device=self.yolo_device)
 
         if results and results[0].keypoints is not None and len(results[0].keypoints.xy) > 0:
-            keypoints = results[0].keypoints.xy[0].detach().cpu().numpy()
+            keypoints = results[0].keypoints.xy[0].detach().cpu().numpy().astype(np.float32)
 
-            features, self.prev_center, bbox, self.aspect_ratio = extract_features_from_keypoints(
-                keypoints,
-                frame_width,
-                frame_height,
-                self.prev_center
-            )
-
-            self.sequence_buffer.append(features)
+            features, bbox, feature_status = self.build_model_features(keypoints)
 
             if DRAW_POSE:
                 draw_pose(frame, keypoints)
@@ -505,6 +907,23 @@ class FallDetectionApp:
                     2
                 )
 
+            if feature_status != "OK":
+                self.final_label = feature_status
+                self.fall_prob = 0.0
+                self.action_prob = 0.0
+                return frame
+
+            if features is None:
+                return frame
+
+            if features.shape[0] != self.expected_input_dim:
+                raise ValueError(
+                    f"Feature dimension mismatch. "
+                    f"Expected {self.expected_input_dim}, got {features.shape[0]}"
+                )
+
+            self.sequence_buffer.append(features)
+
             if len(self.sequence_buffer) == SEQUENCE_LENGTH:
                 sequence_np = np.array(self.sequence_buffer, dtype=np.float32)
                 sequence_tensor = torch.tensor(sequence_np).unsqueeze(0).to(self.device)
@@ -517,7 +936,8 @@ class FallDetectionApp:
             self.final_label = "NO PERSON"
             self.fall_prob = 0.0
             self.action_prob = 0.0
-            self.prev_center = None
+            self.prev_center_2d = None
+            self.prev_center_3d = None
             self.fall_counter = 0
 
         return frame
@@ -529,15 +949,19 @@ class FallDetectionApp:
             text_color = "green"
         elif self.final_label == "NO PERSON":
             text_color = "orange"
+        elif self.final_label in ["BUILDING 3D", "INVALID 3D", "NO POSEFORMER"]:
+            text_color = "purple"
         else:
             text_color = "blue"
 
         self.info_label.config(
             text=(
                 f"Prediction: {self.final_label} | "
+                f"Mode: {DEMO_MODE.upper()} | "
                 f"Fall prob: {self.fall_prob:.2f} | "
                 f"Action prob: {self.action_prob:.2f} | "
                 f"Buffer: {len(self.sequence_buffer)}/{SEQUENCE_LENGTH} | "
+                f"Input dim: {self.expected_input_dim} | "
                 f"Source: {self.source_name}"
             ),
             fg=text_color
@@ -580,6 +1004,7 @@ class FallDetectionApp:
             target_height=DISPLAY_HEIGHT
         )
 
+        draw_mode_on_frame(frame, DEMO_MODE)
         draw_warning_on_frame(frame, self.final_label)
 
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -605,6 +1030,18 @@ class FallDetectionApp:
 # =========================
 
 if __name__ == "__main__":
+    print("=" * 80)
+    print("2D / 3D / Fusion Fall Detection Demo")
+    print("=" * 80)
+    print("Project root:", PROJECT_ROOT)
+    print("Demo mode:", DEMO_MODE)
+    print("YOLO model:", YOLO_MODEL_PATH)
+    print("Binary checkpoint:", BINARY_CHECKPOINT_PATH)
+    print("Action checkpoint:", ACTION_CHECKPOINT_PATH)
+
+    if DEMO_MODE in ["3d", "fusion"]:
+        print("PoseFormer checkpoint:", POSEFORMER_CHECKPOINT_PATH)
+
     root = tk.Tk()
     app = FallDetectionApp(root)
     root.mainloop()
