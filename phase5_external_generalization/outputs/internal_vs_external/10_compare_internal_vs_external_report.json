@@ -1,0 +1,20 @@
+{
+    "phase": "Phase 5 - Internal vs External Comparison",
+    "step": "10_compare_internal_vs_external",
+    "goal": "Compare internal dataset results with external fine-tuning results to evaluate whether the Phase 4 quality-aware design remains valid on the new dataset.",
+    "main_claim": "The exact best model changes from Quality-Concat on the internal dataset to Quality-Gated on the external dataset. However, the top two external models are both Phase 4 quality-aware models. Therefore, the Phase 4 quality-aware fusion direction is supported under external adaptation.",
+    "caution": "Internal and external results should not be interpreted as a direct measure of dataset difficulty because the datasets, splits, and training conditions differ. This comparison is intended to evaluate whether the model ranking trend and design direction remain valid when the models are adapted to a new dataset.",
+    "outputs": {
+        "comparison_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\internal_vs_external\\internal_vs_external_model_comparison.csv",
+        "phase_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\internal_vs_external\\internal_vs_external_phase_summary.csv",
+        "claims_json": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\internal_vs_external\\internal_vs_external_claims.json",
+        "report_md": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\internal_vs_external\\internal_vs_external_report.md",
+        "report_html": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\internal_vs_external\\internal_vs_external_report.html",
+        "report_json": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\internal_vs_external\\10_compare_internal_vs_external_report.json",
+        "figures": {
+            "internal_vs_external_macro_f1": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\internal_vs_external\\figures\\internal_vs_external_macro_f1.png",
+            "internal_vs_external_accuracy": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\internal_vs_external\\figures\\internal_vs_external_accuracy.png",
+            "internal_vs_external_rank_change": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\internal_vs_external\\figures\\internal_vs_external_rank_change.png"
+        }
+    }
+}

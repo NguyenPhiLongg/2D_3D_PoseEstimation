@@ -1,0 +1,21 @@
+﻿task,target_model,baseline_model,metric,target_value,baseline_value,absolute_improvement,relative_improvement_percent
+binary,Concat Fusion Common,2D Common,accuracy,0.9393,0.9346,0.0047,0.5029
+binary,Concat Fusion Common,2D Common,macro_f1,0.9299,0.9234,0.0065,0.7039
+binary,Concat Fusion Common,3D Common,accuracy,0.9393,0.9272,0.0121,1.305
+binary,Concat Fusion Common,3D Common,macro_f1,0.9299,0.914,0.0159,1.7396
+binary,Gated Fusion,Concat Fusion Common,accuracy,0.9379,0.9393,-0.0014,-0.149
+binary,Gated Fusion,Concat Fusion Common,macro_f1,0.9281,0.9299,-0.0018,-0.1936
+binary,Gated Fusion,2D Common,accuracy,0.9379,0.9346,0.0033,0.3531
+binary,Gated Fusion,2D Common,macro_f1,0.9281,0.9234,0.0047,0.509
+binary,Gated Fusion,3D Common,accuracy,0.9379,0.9272,0.0107,1.154
+binary,Gated Fusion,3D Common,macro_f1,0.9281,0.914,0.0141,1.5427
+action,Concat Fusion Common,2D Common,accuracy,0.9864,0.9698,0.0166,1.7117
+action,Concat Fusion Common,2D Common,macro_f1,0.9751,0.9436,0.0315,3.3383
+action,Concat Fusion Common,3D Common,accuracy,0.9864,0.9679,0.0185,1.9114
+action,Concat Fusion Common,3D Common,macro_f1,0.9751,0.947,0.0281,2.9673
+action,Gated Fusion,Concat Fusion Common,accuracy,0.9781,0.9864,-0.0083,-0.8414
+action,Gated Fusion,Concat Fusion Common,macro_f1,0.9618,0.9751,-0.0133,-1.364
+action,Gated Fusion,2D Common,accuracy,0.9781,0.9698,0.0083,0.8558
+action,Gated Fusion,2D Common,macro_f1,0.9618,0.9436,0.0182,1.9288
+action,Gated Fusion,3D Common,accuracy,0.9781,0.9679,0.0102,1.0538
+action,Gated Fusion,3D Common,macro_f1,0.9618,0.947,0.0148,1.5628

@@ -1,0 +1,132 @@
+{
+    "phase": "Phase 5 - External Dataset Adaptation",
+    "step": "09_generate_phase5_dashboard",
+    "goal": "Generate final dashboard for report and presentation.",
+    "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "prediction_rows_per_model": {
+            "phase1_2d_common": 112,
+            "phase2_3d_common": 112,
+            "phase2_concat_common": 112,
+            "phase3_gated_fusion": 112,
+            "phase4_quality_concat": 112,
+            "phase4_quality_gated": 112
+        }
+    },
+    "summary": {
+        "best_by_macro_f1": {
+            "model_name": "phase4_quality_gated",
+            "macro_f1_percent": 75.8909351829706,
+            "accuracy_percent": 75.89285714285714,
+            "fall_recall_percent": 75.0,
+            "fall_f1_percent": 75.67567567567568
+        },
+        "best_by_fall_recall": {
+            "model_name": "phase4_quality_gated",
+            "fall_recall_percent": 75.0
+        },
+        "best_by_fall_f1": {
+            "model_name": "phase4_quality_gated",
+            "fall_f1_percent": 75.67567567567568
+        },
+        "split_summary": {
+            "train": {
+                "num_sequences": 335,
+                "num_groups": 15,
+                "num_videos": 120,
+                "dataset_counts": {
+                    "MulCamFall": 335
+                },
+                "label_counts": {
+                    "Not_Fall": 176,
+                    "Fall": 159
+                },
+                "group_keys": [
+                    "MulCamFall__chute02",
+                    "MulCamFall__chute03",
+                    "MulCamFall__chute04",
+                    "MulCamFall__chute05",
+                    "MulCamFall__chute06",
+                    "MulCamFall__chute07",
+                    "MulCamFall__chute08",
+                    "MulCamFall__chute11",
+                    "MulCamFall__chute12",
+                    "MulCamFall__chute13",
+                    "MulCamFall__chute15",
+                    "MulCamFall__chute17",
+                    "MulCamFall__chute18",
+                    "MulCamFall__chute21",
+                    "MulCamFall__chute23"
+                ]
+            },
+            "val": {
+                "num_sequences": 104,
+                "num_groups": 4,
+                "num_videos": 32,
+                "dataset_counts": {
+                    "MulCamFall": 104
+                },
+                "label_counts": {
+                    "Not_Fall": 56,
+                    "Fall": 48
+                },
+                "group_keys": [
+                    "MulCamFall__chute01",
+                    "MulCamFall__chute09",
+                    "MulCamFall__chute14",
+                    "MulCamFall__chute19"
+                ]
+            },
+            "test": {
+                "num_sequences": 112,
+                "num_groups": 4,
+                "num_videos": 32,
+                "dataset_counts": {
+                    "MulCamFall": 112
+                },
+                "label_counts": {
+                    "Not_Fall": 56,
+                    "Fall": 56
+                },
+                "group_keys": [
+                    "MulCamFall__chute10",
+                    "MulCamFall__chute16",
+                    "MulCamFall__chute20",
+                    "MulCamFall__chute22"
+                ]
+            }
+        },
+        "num_models": 6
+    },
+    "outputs": {
+        "html_dashboard": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\phase5_dashboard.html",
+        "markdown_dashboard": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\phase5_dashboard.md",
+        "json_summary": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\phase5_dashboard_summary.json",
+        "output_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard",
+        "tables": {
+            "dashboard_final_metrics.csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\tables\\dashboard_final_metrics.csv",
+            "dashboard_phase4_improvement_summary.csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\tables\\dashboard_phase4_improvement_summary.csv",
+            "dashboard_phase_level_summary.csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\tables\\dashboard_phase_level_summary.csv",
+            "dashboard_confusion_summary.csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\tables\\dashboard_confusion_summary.csv"
+        },
+        "figures": {
+            "dashboard_macro_f1.png": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\dashboard_macro_f1.png",
+            "dashboard_accuracy.png": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\dashboard_accuracy.png",
+            "dashboard_fall_recall.png": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\dashboard_fall_recall.png",
+            "dashboard_fall_f1.png": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\dashboard_fall_f1.png",
+            "dashboard_grouped_metrics.png": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\dashboard_grouped_metrics.png",
+            "dashboard_training_curve_val_macro_f1.png": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\dashboard_training_curve_val_macro_f1.png"
+        },
+        "confusion_matrix_figures": [
+            "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\confusion_matrices\\confusion_matrix_phase1_2d_common.png",
+            "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\confusion_matrices\\confusion_matrix_phase2_3d_common.png",
+            "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\confusion_matrices\\confusion_matrix_phase2_concat_common.png",
+            "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\confusion_matrices\\confusion_matrix_phase3_gated_fusion.png",
+            "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\confusion_matrices\\confusion_matrix_phase4_quality_gated.png",
+            "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\phase5_dashboard\\figures\\confusion_matrices\\confusion_matrix_phase4_quality_concat.png"
+        ]
+    },
+    "main_conclusion": "After fair external fine-tuning, Phase 4 quality-aware models achieved the strongest results. This supports the validity of the Phase 4 quality-aware fusion strategy."
+}

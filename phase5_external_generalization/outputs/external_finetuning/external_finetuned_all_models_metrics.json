@@ -1,0 +1,230 @@
+[
+    {
+        "model_name": "phase1_2d_common",
+        "display_name": "Phase 1 2D Common",
+        "model_family": "single_2d",
+        "best_epoch": 16,
+        "best_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\checkpoints\\best_phase1_2d_common_external.pt",
+        "pretrained_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase3_common_set_gated_fusion\\checkpoints\\best_model_2d_common_binary.pt",
+        "uses_quality": false,
+        "from_scratch": false,
+        "val_accuracy": 0.6826923076923077,
+        "val_macro_f1": 0.6819571865443426,
+        "val_fall_recall": 0.6875,
+        "val_fall_f1": 0.6666666666666666,
+        "val_not_fall_f1": 0.6972477064220184,
+        "test_accuracy": 0.5803571428571429,
+        "test_macro_f1": 0.5704610363117095,
+        "test_weighted_f1": 0.5704610363117095,
+        "test_not_fall_f1": 0.6356589147286822,
+        "test_fall_precision": 0.6153846153846154,
+        "test_fall_recall": 0.42857142857142855,
+        "test_fall_f1": 0.5052631578947369,
+        "test_tn": 41,
+        "test_fp": 15,
+        "test_fn": 32,
+        "test_tp": 24,
+        "test_confusion_matrix": [
+            [
+                41,
+                15
+            ],
+            [
+                32,
+                24
+            ]
+        ],
+        "val_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\val_predictions_phase1_2d_common.csv",
+        "test_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\test_predictions_phase1_2d_common.csv"
+    },
+    {
+        "model_name": "phase2_3d_common",
+        "display_name": "Phase 2 3D Common",
+        "model_family": "single_3d",
+        "best_epoch": 15,
+        "best_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\checkpoints\\best_phase2_3d_common_external.pt",
+        "pretrained_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase3_common_set_gated_fusion\\checkpoints\\best_model_3d_common_binary.pt",
+        "uses_quality": false,
+        "from_scratch": false,
+        "val_accuracy": 0.7211538461538461,
+        "val_macro_f1": 0.7209216248727677,
+        "val_fall_recall": 0.75,
+        "val_fall_f1": 0.7128712871287128,
+        "val_not_fall_f1": 0.7289719626168224,
+        "test_accuracy": 0.6696428571428571,
+        "test_macro_f1": 0.6636090591768813,
+        "test_weighted_f1": 0.6636090591768813,
+        "test_not_fall_f1": 0.7086614173228346,
+        "test_fall_precision": 0.7317073170731707,
+        "test_fall_recall": 0.5357142857142857,
+        "test_fall_f1": 0.6185567010309279,
+        "test_tn": 45,
+        "test_fp": 11,
+        "test_fn": 26,
+        "test_tp": 30,
+        "test_confusion_matrix": [
+            [
+                45,
+                11
+            ],
+            [
+                26,
+                30
+            ]
+        ],
+        "val_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\val_predictions_phase2_3d_common.csv",
+        "test_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\test_predictions_phase2_3d_common.csv"
+    },
+    {
+        "model_name": "phase2_concat_common",
+        "display_name": "Phase 2 2D+3D Concat Common",
+        "model_family": "single_concat",
+        "best_epoch": 28,
+        "best_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\checkpoints\\best_phase2_concat_common_external.pt",
+        "pretrained_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase3_common_set_gated_fusion\\checkpoints\\best_model_concat_common_binary.pt",
+        "uses_quality": false,
+        "from_scratch": false,
+        "val_accuracy": 0.7596153846153846,
+        "val_macro_f1": 0.7594151938558342,
+        "val_fall_recall": 0.7916666666666666,
+        "val_fall_f1": 0.7524752475247525,
+        "val_not_fall_f1": 0.7663551401869159,
+        "test_accuracy": 0.7232142857142857,
+        "test_macro_f1": 0.7226615544372554,
+        "test_weighted_f1": 0.7226615544372554,
+        "test_not_fall_f1": 0.7350427350427351,
+        "test_fall_precision": 0.7450980392156863,
+        "test_fall_recall": 0.6785714285714286,
+        "test_fall_f1": 0.7102803738317757,
+        "test_tn": 43,
+        "test_fp": 13,
+        "test_fn": 18,
+        "test_tp": 38,
+        "test_confusion_matrix": [
+            [
+                43,
+                13
+            ],
+            [
+                18,
+                38
+            ]
+        ],
+        "val_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\val_predictions_phase2_concat_common.csv",
+        "test_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\test_predictions_phase2_concat_common.csv"
+    },
+    {
+        "model_name": "phase3_gated_fusion",
+        "display_name": "Phase 3 Gated Fusion",
+        "model_family": "gated",
+        "best_epoch": 32,
+        "best_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\checkpoints\\best_phase3_gated_fusion_external.pt",
+        "pretrained_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase3_common_set_gated_fusion\\checkpoints\\best_model_gated_fusion_binary.pt",
+        "uses_quality": false,
+        "from_scratch": false,
+        "val_accuracy": 0.6923076923076923,
+        "val_macro_f1": 0.6921938586755456,
+        "val_fall_recall": 0.7291666666666666,
+        "val_fall_f1": 0.6862745098039216,
+        "val_not_fall_f1": 0.6981132075471698,
+        "test_accuracy": 0.6071428571428571,
+        "test_macro_f1": 0.6070175438596491,
+        "test_weighted_f1": 0.6070175438596491,
+        "test_not_fall_f1": 0.6,
+        "test_fall_precision": 0.603448275862069,
+        "test_fall_recall": 0.625,
+        "test_fall_f1": 0.6140350877192983,
+        "test_tn": 33,
+        "test_fp": 23,
+        "test_fn": 21,
+        "test_tp": 35,
+        "test_confusion_matrix": [
+            [
+                33,
+                23
+            ],
+            [
+                21,
+                35
+            ]
+        ],
+        "val_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\val_predictions_phase3_gated_fusion.csv",
+        "test_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\test_predictions_phase3_gated_fusion.csv"
+    },
+    {
+        "model_name": "phase4_quality_gated",
+        "display_name": "Phase 4 Quality-Gated",
+        "model_family": "quality_gated",
+        "best_epoch": 10,
+        "best_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\checkpoints\\best_phase4_quality_gated_external.pt",
+        "pretrained_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase4_quality_aware_fusion\\checkpoints\\best_model_quality_gated_binary.pt",
+        "uses_quality": true,
+        "from_scratch": false,
+        "val_accuracy": 0.8461538461538461,
+        "val_macro_f1": 0.8460969293377729,
+        "val_fall_recall": 0.8958333333333334,
+        "val_fall_f1": 0.8431372549019608,
+        "val_not_fall_f1": 0.8490566037735849,
+        "test_accuracy": 0.7589285714285714,
+        "test_macro_f1": 0.7589093518297059,
+        "test_weighted_f1": 0.7589093518297059,
+        "test_not_fall_f1": 0.7610619469026548,
+        "test_fall_precision": 0.7636363636363637,
+        "test_fall_recall": 0.75,
+        "test_fall_f1": 0.7567567567567568,
+        "test_tn": 43,
+        "test_fp": 13,
+        "test_fn": 14,
+        "test_tp": 42,
+        "test_confusion_matrix": [
+            [
+                43,
+                13
+            ],
+            [
+                14,
+                42
+            ]
+        ],
+        "val_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\val_predictions_phase4_quality_gated.csv",
+        "test_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\test_predictions_phase4_quality_gated.csv"
+    },
+    {
+        "model_name": "phase4_quality_concat",
+        "display_name": "Phase 4 Quality-Concat",
+        "model_family": "quality_concat",
+        "best_epoch": 8,
+        "best_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\checkpoints\\best_phase4_quality_concat_external.pt",
+        "pretrained_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase4_quality_aware_fusion\\checkpoints\\best_model_quality_concat_binary.pt",
+        "uses_quality": true,
+        "from_scratch": false,
+        "val_accuracy": 0.8173076923076923,
+        "val_macro_f1": 0.8171555473304339,
+        "val_fall_recall": 0.8541666666666666,
+        "val_fall_f1": 0.8118811881188119,
+        "val_not_fall_f1": 0.822429906542056,
+        "test_accuracy": 0.7410714285714286,
+        "test_macro_f1": 0.7349653202774378,
+        "test_weighted_f1": 0.7349653202774379,
+        "test_not_fall_f1": 0.7751937984496124,
+        "test_fall_precision": 0.8461538461538461,
+        "test_fall_recall": 0.5892857142857143,
+        "test_fall_f1": 0.6947368421052632,
+        "test_tn": 50,
+        "test_fp": 6,
+        "test_fn": 23,
+        "test_tp": 33,
+        "test_confusion_matrix": [
+            [
+                50,
+                6
+            ],
+            [
+                23,
+                33
+            ]
+        ],
+        "val_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\val_predictions_phase4_quality_concat.csv",
+        "test_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\test_predictions_phase4_quality_concat.csv"
+    }
+]

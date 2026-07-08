@@ -1,0 +1,5 @@
+﻿phase,num_models,best_macro_model,best_macro_f1,best_macro_accuracy,best_macro_fall_recall,best_macro_fall_f1,best_fall_recall_model,best_fall_recall,best_fall_f1_model,best_fall_f1
+Phase 1,1,phase1_2d_common,0.5704610363117095,0.5803571428571429,0.4285714285714285,0.5052631578947369,phase1_2d_common,0.4285714285714285,phase1_2d_common,0.5052631578947369
+Phase 2,2,phase2_concat_common,0.7226615544372554,0.7232142857142857,0.6785714285714286,0.7102803738317757,phase2_concat_common,0.6785714285714286,phase2_concat_common,0.7102803738317757
+Phase 3,1,phase3_gated_fusion,0.6070175438596491,0.6071428571428571,0.625,0.6140350877192983,phase3_gated_fusion,0.625,phase3_gated_fusion,0.6140350877192983
+Phase 4,2,phase4_quality_gated,0.7589093518297059,0.7589285714285714,0.75,0.7567567567567568,phase4_quality_gated,0.75,phase4_quality_gated,0.7567567567567568

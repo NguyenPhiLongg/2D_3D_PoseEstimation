@@ -1,0 +1,2 @@
+C:\Users\ASUS\Downloads\3D_Human_Pose_NCKH\data\1_raw_videos\Fall\f_raw_b_2\B_N_345_resized.mp4
+C:\Users\ASUS\Downloads\3D_Human_Pose_NCKH\data\1_raw_videos\Fall\f_raw_b_2\B_N_349_resized.mp4

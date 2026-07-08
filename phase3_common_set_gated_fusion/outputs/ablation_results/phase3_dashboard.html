@@ -1,0 +1,1656 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Phase 3 Dashboard</title>
+        
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111827;
+            --panel-2: #1f2937;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --border: #374151;
+            --blue: #38bdf8;
+            --green: #22c55e;
+            --red: #ef4444;
+            --yellow: #facc15;
+            --purple: #a78bfa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.5;
+        }
+
+        .page {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 28px;
+        }
+
+        .header {
+            padding: 28px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: linear-gradient(135deg, #111827, #172554);
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            margin: 0 0 12px 0;
+            font-size: 34px;
+        }
+
+        .header p {
+            margin: 6px 0;
+            color: var(--muted);
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            background: rgba(56, 189, 248, 0.15);
+            color: #bae6fd;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 999px;
+            font-size: 13px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+
+        .panel h2 {
+            margin: 0 0 14px 0;
+            font-size: 24px;
+        }
+
+        .panel h3 {
+            margin: 0 0 10px 0;
+        }
+
+        .panel p {
+            color: var(--muted);
+        }
+
+        .warning-panel {
+            border-color: rgba(250, 204, 21, 0.4);
+            background: rgba(250, 204, 21, 0.08);
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .metric-card {
+            position: relative;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            min-height: 130px;
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 9px;
+            background: rgba(167, 139, 250, 0.15);
+            color: #ddd6fe;
+            border-radius: 999px;
+            font-size: 12px;
+            border: 1px solid rgba(167, 139, 250, 0.35);
+        }
+
+        .metric-title {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 34px;
+            font-weight: bold;
+            color: var(--blue);
+            margin-bottom: 8px;
+        }
+
+        .metric-subtitle {
+            color: var(--text);
+            font-size: 15px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 14px;
+        }
+
+        .data-table th {
+            background: #020617;
+            color: #f9fafb;
+            text-align: left;
+            padding: 10px;
+            border: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 10px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .data-table tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .compact-table td,
+        .compact-table th {
+            text-align: center;
+        }
+
+        .compact-table td:first-child,
+        .compact-table th:first-child {
+            text-align: left;
+        }
+
+        .bar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 18px;
+        }
+
+        .bar-card {
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .bar-card h3 {
+            margin-bottom: 18px;
+        }
+
+        .bar-row {
+            display: grid;
+            grid-template-columns: 160px 1fr 80px;
+            gap: 12px;
+            align-items: center;
+            margin: 12px 0;
+        }
+
+        .bar-label {
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .bar-track {
+            height: 14px;
+            background: #020617;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue), var(--green));
+            border-radius: 999px;
+        }
+
+        .bar-value {
+            color: var(--muted);
+            font-size: 13px;
+            text-align: right;
+        }
+
+        .cm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 18px;
+        }
+
+        .cm-card {
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            overflow-x: auto;
+        }
+
+        .cm-card h3 {
+            margin-bottom: 4px;
+        }
+
+        .cm-subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+        .confusion-matrix {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .confusion-matrix th {
+            background: #020617;
+            color: #f9fafb;
+            padding: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .confusion-matrix td {
+            min-width: 90px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            color: #f9fafb;
+        }
+
+        .cm-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .cm-percent {
+            font-size: 12px;
+            color: #e5e7eb;
+        }
+
+        .cm-label {
+            margin-top: 4px;
+            font-size: 11px;
+            opacity: 0.85;
+        }
+
+        .note-box {
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 14px 0;
+        }
+
+        .note-box h3 {
+            color: var(--blue);
+        }
+
+        .footer {
+            color: var(--muted);
+            text-align: center;
+            padding: 20px;
+            font-size: 13px;
+        }
+    </style>
+    
+    </head>
+    <body>
+        <div class="page">
+            <div class="header">
+                <h1>Phase 3 Dashboard</h1>
+                <p>Common-set Fair Comparison and Gated Fusion for Fall Detection and Action Recognition.</p>
+                <p>Generated from Phase 3 result JSON files.</p>
+
+                <div class="badge-row">
+                    <div class="badge">2D Common</div>
+                    <div class="badge">3D Common</div>
+                    <div class="badge">Concat Fusion</div>
+                    <div class="badge">Gated Fusion</div>
+                    <div class="badge">8/8 result files found</div>
+                </div>
+            </div>
+
+            
+            
+    <section class="panel">
+        <h2>Overview</h2>
+        <div class="metric-grid">
+            
+    <div class="metric-card">
+        <div class="card-tag">99D</div>
+        <div class="metric-title">Best Binary Accuracy</div>
+        <div class="metric-value">93.93%</div>
+        <div class="metric-subtitle">Concat Fusion Common</div>
+    </div>
+    
+    <div class="metric-card">
+        <div class="card-tag">99D</div>
+        <div class="metric-title">Best Binary Macro F1</div>
+        <div class="metric-value">92.99%</div>
+        <div class="metric-subtitle">Concat Fusion Common</div>
+    </div>
+    
+    <div class="metric-card">
+        <div class="card-tag">99D</div>
+        <div class="metric-title">Best Action Accuracy</div>
+        <div class="metric-value">98.64%</div>
+        <div class="metric-subtitle">Concat Fusion Common</div>
+    </div>
+    
+    <div class="metric-card">
+        <div class="card-tag">99D</div>
+        <div class="metric-title">Best Action Macro F1</div>
+        <div class="metric-value">97.51%</div>
+        <div class="metric-subtitle">Concat Fusion Common</div>
+    </div>
+    
+        </div>
+    </section>
+    
+            
+    <section class="panel">
+        <h2>Binary Task: Fall / Not_Fall</h2>
+        <p>This table compares all binary models on the same common set.</p>
+        <table class="data-table compact-table">
+<thead>
+<tr>
+<th>Model</th>
+<th>Input</th>
+<th>Input Dim</th>
+<th>Accuracy</th>
+<th>Macro F1</th>
+<th>Fall Precision</th>
+<th>Fall Recall</th>
+<th>Fall F1</th>
+<th>Test Samples</th>
+<th>Test Videos</th>
+<th>Mean Gate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2D Common</td>
+<td>2D</td>
+<td>40D</td>
+<td>93.46%</td>
+<td>92.34%</td>
+<td>88.94%</td>
+<td>89.91%</td>
+<td>89.42%</td>
+<td>2,965</td>
+<td>812</td>
+<td>-</td>
+</tr>
+<tr>
+<td>3D Common</td>
+<td>3D</td>
+<td>59D</td>
+<td>92.72%</td>
+<td>91.40%</td>
+<td>88.93%</td>
+<td>87.17%</td>
+<td>88.04%</td>
+<td>2,965</td>
+<td>812</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Concat Fusion Common</td>
+<td>2D + 3D</td>
+<td>99D</td>
+<td>93.93%</td>
+<td>92.99%</td>
+<td>87.81%</td>
+<td>93.20%</td>
+<td>90.43%</td>
+<td>2,965</td>
+<td>812</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Gated Fusion</td>
+<td>2D + 3D</td>
+<td>40D + 59D</td>
+<td>93.79%</td>
+<td>92.81%</td>
+<td>88.16%</td>
+<td>92.21%</td>
+<td>90.14%</td>
+<td>2,965</td>
+<td>812</td>
+<td>0.4837</td>
+</tr>
+</tbody>
+</table>
+    </section>
+    
+            
+    <section class="panel">
+        <h2>Action Task: Sitting / Sleeping / Standing / Walking</h2>
+        <p>This table compares action classification models on the same common set.</p>
+        <table class="data-table compact-table">
+<thead>
+<tr>
+<th>Model</th>
+<th>Input</th>
+<th>Input Dim</th>
+<th>Accuracy</th>
+<th>Macro F1</th>
+<th>Sitting F1</th>
+<th>Sleeping F1</th>
+<th>Standing F1</th>
+<th>Walking F1</th>
+<th>Test Samples</th>
+<th>Test Videos</th>
+<th>Mean Gate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2D Common</td>
+<td>2D</td>
+<td>40D</td>
+<td>96.98%</td>
+<td>94.36%</td>
+<td>94.04%</td>
+<td>96.39%</td>
+<td>87.30%</td>
+<td>99.73%</td>
+<td>2,053</td>
+<td>367</td>
+<td>-</td>
+</tr>
+<tr>
+<td>3D Common</td>
+<td>3D</td>
+<td>59D</td>
+<td>96.79%</td>
+<td>94.70%</td>
+<td>95.21%</td>
+<td>94.88%</td>
+<td>89.63%</td>
+<td>99.09%</td>
+<td>2,053</td>
+<td>367</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Concat Fusion Common</td>
+<td>2D + 3D</td>
+<td>99D</td>
+<td>98.64%</td>
+<td>97.51%</td>
+<td>97.41%</td>
+<td>97.70%</td>
+<td>94.97%</td>
+<td>99.95%</td>
+<td>2,053</td>
+<td>367</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Gated Fusion</td>
+<td>2D + 3D</td>
+<td>40D + 59D</td>
+<td>97.81%</td>
+<td>96.18%</td>
+<td>95.99%</td>
+<td>95.75%</td>
+<td>93.12%</td>
+<td>99.86%</td>
+<td>2,053</td>
+<td>367</td>
+<td>0.4663</td>
+</tr>
+</tbody>
+</table>
+    </section>
+    
+            
+    <section class="panel">
+        <h2>Visual Metric Comparison</h2>
+        <div class="bar-grid">
+            
+    <div class="bar-card">
+        <h3>Binary Accuracy</h3>
+        
+    <div class="bar-row">
+        <div class="bar-label">2D Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 93.46%"></div>
+        </div>
+        <div class="bar-value">93.46%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">3D Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 92.72%"></div>
+        </div>
+        <div class="bar-value">92.72%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">Concat Fusion Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 93.93%"></div>
+        </div>
+        <div class="bar-value">93.93%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">Gated Fusion</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 93.79%"></div>
+        </div>
+        <div class="bar-value">93.79%</div>
+    </div>
+    
+    </div>
+    
+    <div class="bar-card">
+        <h3>Binary Macro F1</h3>
+        
+    <div class="bar-row">
+        <div class="bar-label">2D Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 92.34%"></div>
+        </div>
+        <div class="bar-value">92.34%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">3D Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 91.40%"></div>
+        </div>
+        <div class="bar-value">91.40%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">Concat Fusion Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 92.99%"></div>
+        </div>
+        <div class="bar-value">92.99%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">Gated Fusion</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 92.81%"></div>
+        </div>
+        <div class="bar-value">92.81%</div>
+    </div>
+    
+    </div>
+    
+    <div class="bar-card">
+        <h3>Action Accuracy</h3>
+        
+    <div class="bar-row">
+        <div class="bar-label">2D Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 96.98%"></div>
+        </div>
+        <div class="bar-value">96.98%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">3D Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 96.79%"></div>
+        </div>
+        <div class="bar-value">96.79%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">Concat Fusion Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 98.64%"></div>
+        </div>
+        <div class="bar-value">98.64%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">Gated Fusion</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 97.81%"></div>
+        </div>
+        <div class="bar-value">97.81%</div>
+    </div>
+    
+    </div>
+    
+    <div class="bar-card">
+        <h3>Action Macro F1</h3>
+        
+    <div class="bar-row">
+        <div class="bar-label">2D Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 94.36%"></div>
+        </div>
+        <div class="bar-value">94.36%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">3D Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 94.70%"></div>
+        </div>
+        <div class="bar-value">94.70%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">Concat Fusion Common</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 97.51%"></div>
+        </div>
+        <div class="bar-value">97.51%</div>
+    </div>
+    
+    <div class="bar-row">
+        <div class="bar-label">Gated Fusion</div>
+        <div class="bar-track">
+            <div class="bar-fill" style="width: 96.18%"></div>
+        </div>
+        <div class="bar-value">96.18%</div>
+    </div>
+    
+    </div>
+    
+        </div>
+    </section>
+    
+            
+    <section class="panel">
+        <h2>Gated Fusion Analysis</h2>
+        
+    <p>
+        Gate interpretation: a higher gate value means the model gives more weight to the 2D stream,
+        while a lower gate value means the model gives more weight to the estimated 3D stream.
+        This interpretation is approximate because vector-gate mode learns one gate value per hidden dimension.
+    </p>
+    
+        <table class="data-table compact-table">
+<thead>
+<tr>
+<th>Task</th>
+<th>Mean Gate</th>
+<th>Std Gate</th>
+<th>Min Gate</th>
+<th>Max Gate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>binary</td>
+<td>0.4837</td>
+<td>0.0196</td>
+<td>0.3970</td>
+<td>0.5505</td>
+</tr>
+<tr>
+<td>action</td>
+<td>0.4663</td>
+<td>0.0343</td>
+<td>0.3784</td>
+<td>0.5170</td>
+</tr>
+</tbody>
+</table>
+    </section>
+    
+            
+    <section class="panel">
+        <h2>Training Summary</h2>
+        <table class="data-table compact-table">
+<thead>
+<tr>
+<th>Task</th>
+<th>Model</th>
+<th>Best Epoch</th>
+<th>Best Val Macro F1</th>
+<th>Test Accuracy</th>
+<th>Test Macro F1</th>
+<th>Last Train Loss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>binary</td>
+<td>2D Common</td>
+<td>21</td>
+<td>92.42%</td>
+<td>93.46%</td>
+<td>92.34%</td>
+<td>0.0948</td>
+</tr>
+<tr>
+<td>action</td>
+<td>2D Common</td>
+<td>24</td>
+<td>95.03%</td>
+<td>96.98%</td>
+<td>94.36%</td>
+<td>0.0296</td>
+</tr>
+<tr>
+<td>binary</td>
+<td>3D Common</td>
+<td>26</td>
+<td>89.33%</td>
+<td>92.72%</td>
+<td>91.40%</td>
+<td>0.1002</td>
+</tr>
+<tr>
+<td>action</td>
+<td>3D Common</td>
+<td>25</td>
+<td>93.85%</td>
+<td>96.79%</td>
+<td>94.70%</td>
+<td>0.0301</td>
+</tr>
+<tr>
+<td>binary</td>
+<td>Concat Fusion Common</td>
+<td>29</td>
+<td>92.41%</td>
+<td>93.93%</td>
+<td>92.99%</td>
+<td>0.0558</td>
+</tr>
+<tr>
+<td>action</td>
+<td>Concat Fusion Common</td>
+<td>23</td>
+<td>95.41%</td>
+<td>98.64%</td>
+<td>97.51%</td>
+<td>0.0200</td>
+</tr>
+<tr>
+<td>binary</td>
+<td>Gated Fusion</td>
+<td>23</td>
+<td>92.05%</td>
+<td>93.79%</td>
+<td>92.81%</td>
+<td>0.0479</td>
+</tr>
+<tr>
+<td>action</td>
+<td>Gated Fusion</td>
+<td>19</td>
+<td>96.51%</td>
+<td>97.81%</td>
+<td>96.18%</td>
+<td>0.0188</td>
+</tr>
+</tbody>
+</table>
+    </section>
+    
+            
+    <section class="panel">
+        <h2>Confusion Matrices</h2>
+        <p>Green diagonal cells are correct predictions. Red cells are wrong predictions.</p>
+        <div class="cm-grid">
+            
+            <div class="cm-card">
+                <h3>Binary - 2D Common</h3>
+                <div class="cm-subtitle">
+                    Input: 2D | Dim: 40D
+                </div>
+                <table class="confusion-matrix">
+<thead>
+<tr>
+<th>True \ Pred</th>
+<th>Not_Fall</th>
+<th>Fall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>Not_Fall</th>
+
+                <td style="background: rgba(34, 197, 94, 0.850);">
+                    <div class="cm-value">1951</div>
+                    <div class="cm-percent">95.0%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.184);">
+                    <div class="cm-value">102</div>
+                    <div class="cm-percent">5.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Fall</th>
+
+                <td style="background: rgba(239, 68, 68, 0.181);">
+                    <div class="cm-value">92</div>
+                    <div class="cm-percent">10.1%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.473);">
+                    <div class="cm-value">820</div>
+                    <div class="cm-percent">89.9%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+</tr>
+</tbody>
+</table>
+            </div>
+            
+            <div class="cm-card">
+                <h3>Action - 2D Common</h3>
+                <div class="cm-subtitle">
+                    Input: 2D | Dim: 40D
+                </div>
+                <table class="confusion-matrix">
+<thead>
+<tr>
+<th>True \ Pred</th>
+<th>Sitting</th>
+<th>Sleeping</th>
+<th>Standing</th>
+<th>Walking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>Sitting</th>
+
+                <td style="background: rgba(34, 197, 94, 0.452);">
+                    <div class="cm-value">426</div>
+                    <div class="cm-percent">98.2%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.152);">
+                    <div class="cm-value">3</div>
+                    <div class="cm-percent">0.7%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.153);">
+                    <div class="cm-value">5</div>
+                    <div class="cm-percent">1.2%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Sleeping</th>
+
+                <td style="background: rgba(239, 68, 68, 0.160);">
+                    <div class="cm-value">17</div>
+                    <div class="cm-percent">4.8%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.398);">
+                    <div class="cm-value">334</div>
+                    <div class="cm-percent">94.1%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.152);">
+                    <div class="cm-value">4</div>
+                    <div class="cm-percent">1.1%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Standing</th>
+
+                <td style="background: rgba(239, 68, 68, 0.165);">
+                    <div class="cm-value">26</div>
+                    <div class="cm-percent">16.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.151);">
+                    <div class="cm-value">1</div>
+                    <div class="cm-percent">0.6%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.279);">
+                    <div class="cm-value">134</div>
+                    <div class="cm-percent">82.2%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.151);">
+                    <div class="cm-value">2</div>
+                    <div class="cm-percent">1.2%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Walking</th>
+
+                <td style="background: rgba(239, 68, 68, 0.152);">
+                    <div class="cm-value">3</div>
+                    <div class="cm-percent">0.3%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.151);">
+                    <div class="cm-value">1</div>
+                    <div class="cm-percent">0.1%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.850);">
+                    <div class="cm-value">1097</div>
+                    <div class="cm-percent">99.6%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+</tr>
+</tbody>
+</table>
+            </div>
+            
+            <div class="cm-card">
+                <h3>Binary - 3D Common</h3>
+                <div class="cm-subtitle">
+                    Input: 3D | Dim: 59D
+                </div>
+                <table class="confusion-matrix">
+<thead>
+<tr>
+<th>True \ Pred</th>
+<th>Not_Fall</th>
+<th>Fall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>Not_Fall</th>
+
+                <td style="background: rgba(34, 197, 94, 0.850);">
+                    <div class="cm-value">1954</div>
+                    <div class="cm-percent">95.2%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.183);">
+                    <div class="cm-value">99</div>
+                    <div class="cm-percent">4.8%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Fall</th>
+
+                <td style="background: rgba(239, 68, 68, 0.189);">
+                    <div class="cm-value">117</div>
+                    <div class="cm-percent">12.8%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.464);">
+                    <div class="cm-value">795</div>
+                    <div class="cm-percent">87.2%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+</tr>
+</tbody>
+</table>
+            </div>
+            
+            <div class="cm-card">
+                <h3>Action - 3D Common</h3>
+                <div class="cm-subtitle">
+                    Input: 3D | Dim: 59D
+                </div>
+                <table class="confusion-matrix">
+<thead>
+<tr>
+<th>True \ Pred</th>
+<th>Sitting</th>
+<th>Sleeping</th>
+<th>Standing</th>
+<th>Walking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>Sitting</th>
+
+                <td style="background: rgba(34, 197, 94, 0.455);">
+                    <div class="cm-value">427</div>
+                    <div class="cm-percent">98.4%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.152);">
+                    <div class="cm-value">4</div>
+                    <div class="cm-percent">0.9%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.152);">
+                    <div class="cm-value">3</div>
+                    <div class="cm-percent">0.7%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Sleeping</th>
+
+                <td style="background: rgba(239, 68, 68, 0.166);">
+                    <div class="cm-value">26</div>
+                    <div class="cm-percent">7.3%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.393);">
+                    <div class="cm-value">324</div>
+                    <div class="cm-percent">91.3%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.153);">
+                    <div class="cm-value">5</div>
+                    <div class="cm-percent">1.4%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Standing</th>
+
+                <td style="background: rgba(239, 68, 68, 0.155);">
+                    <div class="cm-value">8</div>
+                    <div class="cm-percent">4.9%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.288);">
+                    <div class="cm-value">147</div>
+                    <div class="cm-percent">90.2%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.155);">
+                    <div class="cm-value">8</div>
+                    <div class="cm-percent">4.9%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Walking</th>
+
+                <td style="background: rgba(239, 68, 68, 0.151);">
+                    <div class="cm-value">2</div>
+                    <div class="cm-percent">0.2%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.156);">
+                    <div class="cm-value">10</div>
+                    <div class="cm-percent">0.9%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.850);">
+                    <div class="cm-value">1089</div>
+                    <div class="cm-percent">98.9%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+</tr>
+</tbody>
+</table>
+            </div>
+            
+            <div class="cm-card">
+                <h3>Binary - Concat Fusion Common</h3>
+                <div class="cm-subtitle">
+                    Input: 2D + 3D | Dim: 99D
+                </div>
+                <table class="confusion-matrix">
+<thead>
+<tr>
+<th>True \ Pred</th>
+<th>Not_Fall</th>
+<th>Fall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>Not_Fall</th>
+
+                <td style="background: rgba(34, 197, 94, 0.850);">
+                    <div class="cm-value">1935</div>
+                    <div class="cm-percent">94.3%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.190);">
+                    <div class="cm-value">118</div>
+                    <div class="cm-percent">5.7%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Fall</th>
+
+                <td style="background: rgba(239, 68, 68, 0.171);">
+                    <div class="cm-value">62</div>
+                    <div class="cm-percent">6.8%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.486);">
+                    <div class="cm-value">850</div>
+                    <div class="cm-percent">93.2%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+</tr>
+</tbody>
+</table>
+            </div>
+            
+            <div class="cm-card">
+                <h3>Action - Concat Fusion Common</h3>
+                <div class="cm-subtitle">
+                    Input: 2D + 3D | Dim: 99D
+                </div>
+                <table class="confusion-matrix">
+<thead>
+<tr>
+<th>True \ Pred</th>
+<th>Sitting</th>
+<th>Sleeping</th>
+<th>Standing</th>
+<th>Walking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>Sitting</th>
+
+                <td style="background: rgba(34, 197, 94, 0.456);">
+                    <div class="cm-value">433</div>
+                    <div class="cm-percent">99.8%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.151);">
+                    <div class="cm-value">1</div>
+                    <div class="cm-percent">0.2%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Sleeping</th>
+
+                <td style="background: rgba(239, 68, 68, 0.157);">
+                    <div class="cm-value">12</div>
+                    <div class="cm-percent">3.4%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.401);">
+                    <div class="cm-value">340</div>
+                    <div class="cm-percent">95.8%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.152);">
+                    <div class="cm-value">3</div>
+                    <div class="cm-percent">0.8%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Standing</th>
+
+                <td style="background: rgba(239, 68, 68, 0.156);">
+                    <div class="cm-value">10</div>
+                    <div class="cm-percent">6.1%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.151);">
+                    <div class="cm-value">1</div>
+                    <div class="cm-percent">0.6%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.289);">
+                    <div class="cm-value">151</div>
+                    <div class="cm-percent">92.6%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.151);">
+                    <div class="cm-value">1</div>
+                    <div class="cm-percent">0.6%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Walking</th>
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.850);">
+                    <div class="cm-value">1101</div>
+                    <div class="cm-percent">100.0%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+</tr>
+</tbody>
+</table>
+            </div>
+            
+            <div class="cm-card">
+                <h3>Binary - Gated Fusion</h3>
+                <div class="cm-subtitle">
+                    Input: 2D + 3D | Dim: 40D + 59D
+                </div>
+                <table class="confusion-matrix">
+<thead>
+<tr>
+<th>True \ Pred</th>
+<th>Not_Fall</th>
+<th>Fall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>Not_Fall</th>
+
+                <td style="background: rgba(34, 197, 94, 0.850);">
+                    <div class="cm-value">1940</div>
+                    <div class="cm-percent">94.5%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.188);">
+                    <div class="cm-value">113</div>
+                    <div class="cm-percent">5.5%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Fall</th>
+
+                <td style="background: rgba(239, 68, 68, 0.174);">
+                    <div class="cm-value">71</div>
+                    <div class="cm-percent">7.8%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.482);">
+                    <div class="cm-value">841</div>
+                    <div class="cm-percent">92.2%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+</tr>
+</tbody>
+</table>
+            </div>
+            
+            <div class="cm-card">
+                <h3>Action - Gated Fusion</h3>
+                <div class="cm-subtitle">
+                    Input: 2D + 3D | Dim: 40D + 59D
+                </div>
+                <table class="confusion-matrix">
+<thead>
+<tr>
+<th>True \ Pred</th>
+<th>Sitting</th>
+<th>Sleeping</th>
+<th>Standing</th>
+<th>Walking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>Sitting</th>
+
+                <td style="background: rgba(34, 197, 94, 0.454);">
+                    <div class="cm-value">431</div>
+                    <div class="cm-percent">99.3%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.152);">
+                    <div class="cm-value">3</div>
+                    <div class="cm-percent">0.7%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Sleeping</th>
+
+                <td style="background: rgba(239, 68, 68, 0.164);">
+                    <div class="cm-value">23</div>
+                    <div class="cm-percent">6.5%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.393);">
+                    <div class="cm-value">327</div>
+                    <div class="cm-percent">92.1%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.153);">
+                    <div class="cm-value">5</div>
+                    <div class="cm-percent">1.4%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Standing</th>
+
+                <td style="background: rgba(239, 68, 68, 0.156);">
+                    <div class="cm-value">10</div>
+                    <div class="cm-percent">6.1%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.151);">
+                    <div class="cm-value">1</div>
+                    <div class="cm-percent">0.6%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.288);">
+                    <div class="cm-value">149</div>
+                    <div class="cm-percent">91.4%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.152);">
+                    <div class="cm-value">3</div>
+                    <div class="cm-percent">1.8%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+</tr>
+<tr>
+<th>Walking</th>
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(239, 68, 68, 0.150);">
+                    <div class="cm-value">0</div>
+                    <div class="cm-percent">0.0%</div>
+                    <div class="cm-label">Wrong</div>
+                </td>
+                
+
+                <td style="background: rgba(34, 197, 94, 0.850);">
+                    <div class="cm-value">1101</div>
+                    <div class="cm-percent">100.0%</div>
+                    <div class="cm-label">Correct</div>
+                </td>
+                
+</tr>
+</tbody>
+</table>
+            </div>
+            
+        </div>
+    </section>
+    
+            
+    <section class="panel">
+        <h2>How to Interpret This Dashboard</h2>
+
+        <div class="note-box">
+            <h3>1. Fair comparison</h3>
+            <p>
+                Phase 3 is designed to compare all models on the same common video subset.
+                This avoids unfair comparison between the old 2D baseline and 3D/Fusion models.
+            </p>
+        </div>
+
+        <div class="note-box">
+            <h3>2. Concat Fusion</h3>
+            <p>
+                Concat Fusion directly joins 2D features and 3D features:
+                40D + 59D = 99D. This is a fixed early-fusion strategy.
+            </p>
+        </div>
+
+        <div class="note-box">
+            <h3>3. Gated Fusion</h3>
+            <p>
+                Gated Fusion learns how much the model should rely on 2D or estimated 3D features.
+                It is useful because estimated 3D pose may contain errors from YOLOv8-Pose and PoseFormerV2.
+            </p>
+        </div>
+
+        <div class="note-box">
+            <h3>4. Important metric for fall detection</h3>
+            <p>
+                Fall Recall is especially important because missing a real fall can be more serious
+                than raising a false alarm.
+            </p>
+        </div>
+    </section>
+    
+
+            <div class="footer">
+                Phase 3 directory: C:\Users\ASUS\Downloads\3D_Human_Pose_NCKH\phase3_common_set_gated_fusion
+                <br />
+                Dashboard path: C:\Users\ASUS\Downloads\3D_Human_Pose_NCKH\phase3_common_set_gated_fusion\outputs\ablation_results\phase3_dashboard.html
+            </div>
+        </div>
+    </body>
+    </html>
+    

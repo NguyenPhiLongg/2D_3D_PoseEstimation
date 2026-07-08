@@ -1,0 +1,24 @@
+{
+    "action": {
+        "task_name": "Action Classification",
+        "best_model": "Phase 2 - Concat Common",
+        "phase": "Phase 2",
+        "accuracy": 0.9864,
+        "macro_f1": 0.9751,
+        "accuracy_percent": 98.64,
+        "macro_f1_percent": 97.50999999999999,
+        "num_test_samples": 2053,
+        "num_test_videos": 367
+    },
+    "binary": {
+        "task_name": "Binary Fall Detection",
+        "best_model": "Phase 4 - Quality-Concat",
+        "phase": "Phase 4",
+        "accuracy": 0.9615514333895447,
+        "macro_f1": 0.9546170057132546,
+        "accuracy_percent": 96.15514333895447,
+        "macro_f1_percent": 95.46170057132545,
+        "num_test_samples": 2965,
+        "num_test_videos": 812
+    }
+}

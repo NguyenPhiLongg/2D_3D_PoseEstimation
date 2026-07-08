@@ -1,0 +1,53 @@
+{
+    "num_rows": 682,
+    "num_eval_rows": 681,
+    "datasets": {
+        "MulCamFall": 552,
+        "Le2i": 130
+    },
+    "labels": {
+        "Fall": 394,
+        "Not_Fall": 288
+    },
+    "has_annotation": {
+        "True": 682
+    },
+    "include_eval": {
+        "True": 681,
+        "False": 1
+    },
+    "scenes": {
+        "Coffee_room_01": 48,
+        "chute23": 48,
+        "chute20": 48,
+        "chute04": 40,
+        "chute19": 40,
+        "chute06": 32,
+        "Home_02": 30,
+        "Home_01": 30,
+        "chute09": 24,
+        "chute02": 24,
+        "chute01": 24,
+        "chute16": 24,
+        "chute10": 24,
+        "chute11": 24,
+        "chute12": 24,
+        "Coffee_room_02": 22,
+        "chute07": 16,
+        "chute03": 16,
+        "chute05": 16,
+        "chute15": 16,
+        "chute14": 16,
+        "chute13": 16,
+        "chute08": 16,
+        "chute18": 16,
+        "chute17": 16,
+        "chute21": 16,
+        "chute22": 16
+    },
+    "notes": {
+        "MulCamFall segment parsed from data_tuple3.csv.": 551,
+        "Le2i Fall interval parsed from annotation file.": 130,
+        "Video file not found for this chute/camera.": 1
+    }
+}

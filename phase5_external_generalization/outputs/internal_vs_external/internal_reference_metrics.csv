@@ -1,0 +1,7 @@
+﻿model_name,internal_accuracy,internal_macro_f1,internal_fall_recall,internal_fall_f1,internal_source
+phase1_2d_common,0.9346,0.9234,0.8991,0.8942,Phase 3 common internal binary fair set
+phase2_3d_common,0.9272,0.914,0.8717,0.8804,Phase 3 common internal binary fair set
+phase2_concat_common,0.9393,0.9299,0.932,0.9043,Phase 3 common internal binary fair set
+phase3_gated_fusion,0.9379,0.9281,0.9221,0.9014,Phase 3 gated fusion internal binary fair set
+phase4_quality_gated,0.953457,0.945028,,,Phase 4 quality-aware binary internal evaluation
+phase4_quality_concat,0.961551,0.954617,,,Phase 4 quality-aware binary internal evaluation

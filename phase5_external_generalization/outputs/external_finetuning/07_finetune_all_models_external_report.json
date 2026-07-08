@@ -1,0 +1,164 @@
+{
+    "phase": "Phase 5 - External Dataset Adaptation",
+    "step": "07_finetune_all_models_external",
+    "goal": "Fine-tune/train all Phase 1-4 model variants on the same external train split, select best checkpoint using the same external validation split, and compare all models on the same external test split.",
+    "elapsed_sec": 36.74172353744507,
+    "num_models": 6,
+    "training_mode": "fine_tune_from_previous_best",
+    "fairness_rules": [
+        "All models use the same train/val/test split created by Step 06.",
+        "No sequence rebuilding is performed in Step 07.",
+        "Quality scaler is fitted only on external train split and reused for val/test.",
+        "Best checkpoint is selected by validation Macro F1.",
+        "Final comparison uses only the external test split."
+    ],
+    "split_summary": {
+        "train": {
+            "num_sequences": 335,
+            "label_counts": {
+                "Not_Fall": 176,
+                "Fall": 159
+            },
+            "num_groups": 15
+        },
+        "val": {
+            "num_sequences": 104,
+            "label_counts": {
+                "Not_Fall": 56,
+                "Fall": 48
+            },
+            "num_groups": 4
+        },
+        "test": {
+            "num_sequences": 112,
+            "label_counts": {
+                "Not_Fall": 56,
+                "Fall": 56
+            },
+            "num_groups": 4
+        }
+    },
+    "best_by_test_macro_f1": {
+        "model_name": "phase4_quality_gated",
+        "display_name": "Phase 4 Quality-Gated",
+        "model_family": "quality_gated",
+        "best_epoch": 10,
+        "test_accuracy": 0.7589285714285714,
+        "test_macro_f1": 0.7589093518297059,
+        "test_fall_recall": 0.75,
+        "test_fall_f1": 0.7567567567567568,
+        "test_not_fall_f1": 0.7610619469026548,
+        "test_tn": 43,
+        "test_fp": 13,
+        "test_fn": 14,
+        "test_tp": 42,
+        "val_macro_f1": 0.8460969293377729,
+        "val_fall_recall": 0.8958333333333334,
+        "uses_quality": true,
+        "from_scratch": false,
+        "best_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\checkpoints\\best_phase4_quality_gated_external.pt",
+        "pretrained_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase4_quality_aware_fusion\\checkpoints\\best_model_quality_gated_binary.pt",
+        "val_accuracy": 0.8461538461538461,
+        "val_fall_f1": 0.8431372549019608,
+        "val_not_fall_f1": 0.8490566037735849,
+        "test_weighted_f1": 0.7589093518297059,
+        "test_fall_precision": 0.7636363636363637,
+        "test_confusion_matrix": [
+            [
+                43,
+                13
+            ],
+            [
+                14,
+                42
+            ]
+        ],
+        "val_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\val_predictions_phase4_quality_gated.csv",
+        "test_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\test_predictions_phase4_quality_gated.csv"
+    },
+    "best_by_test_fall_recall": {
+        "model_name": "phase4_quality_gated",
+        "display_name": "Phase 4 Quality-Gated",
+        "model_family": "quality_gated",
+        "best_epoch": 10,
+        "test_accuracy": 0.7589285714285714,
+        "test_macro_f1": 0.7589093518297059,
+        "test_fall_recall": 0.75,
+        "test_fall_f1": 0.7567567567567568,
+        "test_not_fall_f1": 0.7610619469026548,
+        "test_tn": 43,
+        "test_fp": 13,
+        "test_fn": 14,
+        "test_tp": 42,
+        "val_macro_f1": 0.8460969293377729,
+        "val_fall_recall": 0.8958333333333334,
+        "uses_quality": true,
+        "from_scratch": false,
+        "best_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\checkpoints\\best_phase4_quality_gated_external.pt",
+        "pretrained_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase4_quality_aware_fusion\\checkpoints\\best_model_quality_gated_binary.pt",
+        "val_accuracy": 0.8461538461538461,
+        "val_fall_f1": 0.8431372549019608,
+        "val_not_fall_f1": 0.8490566037735849,
+        "test_weighted_f1": 0.7589093518297059,
+        "test_fall_precision": 0.7636363636363637,
+        "test_confusion_matrix": [
+            [
+                43,
+                13
+            ],
+            [
+                14,
+                42
+            ]
+        ],
+        "val_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\val_predictions_phase4_quality_gated.csv",
+        "test_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\test_predictions_phase4_quality_gated.csv"
+    },
+    "best_by_test_fall_f1": {
+        "model_name": "phase4_quality_gated",
+        "display_name": "Phase 4 Quality-Gated",
+        "model_family": "quality_gated",
+        "best_epoch": 10,
+        "test_accuracy": 0.7589285714285714,
+        "test_macro_f1": 0.7589093518297059,
+        "test_fall_recall": 0.75,
+        "test_fall_f1": 0.7567567567567568,
+        "test_not_fall_f1": 0.7610619469026548,
+        "test_tn": 43,
+        "test_fp": 13,
+        "test_fn": 14,
+        "test_tp": 42,
+        "val_macro_f1": 0.8460969293377729,
+        "val_fall_recall": 0.8958333333333334,
+        "uses_quality": true,
+        "from_scratch": false,
+        "best_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\checkpoints\\best_phase4_quality_gated_external.pt",
+        "pretrained_checkpoint_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase4_quality_aware_fusion\\checkpoints\\best_model_quality_gated_binary.pt",
+        "val_accuracy": 0.8461538461538461,
+        "val_fall_f1": 0.8431372549019608,
+        "val_not_fall_f1": 0.8490566037735849,
+        "test_weighted_f1": 0.7589093518297059,
+        "test_fall_precision": 0.7636363636363637,
+        "test_confusion_matrix": [
+            [
+                43,
+                13
+            ],
+            [
+                14,
+                42
+            ]
+        ],
+        "val_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\val_predictions_phase4_quality_gated.csv",
+        "test_predictions_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions\\test_predictions_phase4_quality_gated.csv"
+    },
+    "outputs": {
+        "metrics_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\external_finetuned_all_models_metrics.csv",
+        "metrics_json": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\external_finetuned_all_models_metrics.json",
+        "epochs_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\external_finetuned_all_models_per_epoch.csv",
+        "predictions_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\external_finetuned_all_models_test_predictions_long.csv",
+        "report_json": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\07_finetune_all_models_external_report.json",
+        "checkpoints_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\checkpoints",
+        "predictions_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\external_finetuning\\predictions"
+    }
+}

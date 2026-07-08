@@ -1,0 +1,14 @@
+{
+    "phase": "Phase 5 - External Dataset Generalization",
+    "step": "02_extract_2d_confidence_external",
+    "num_selected_videos": 314,
+    "num_success": 314,
+    "num_skipped_existing": 0,
+    "num_failed": 0,
+    "total_frames_written": 273723,
+    "total_no_person_frames": 80738,
+    "total_multi_person_frames": 35216,
+    "summary_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\extraction_2d\\02_extract_2d_confidence_summary.csv",
+    "output_data_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\extracted_2d_confidence",
+    "fairness_note": "This step only extracts video-level 2D pose features. Fair model comparison must still use the common external sequence manifest and later the common fair manifest after 2D, 3D, and quality feature availability checks."
+}

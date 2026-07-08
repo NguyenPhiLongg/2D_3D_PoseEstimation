@@ -1,0 +1,96 @@
+{
+    "phase": "Phase 5 - External Dataset Adaptation",
+    "step": "06_create_external_train_val_test_split",
+    "goal": "Create train/val/test split from the external dataset for fine-tuning. This replaces zero-shot external evaluation because the model must be adapted to the new data domain.",
+    "selected_datasets": [
+        "MulCamFall"
+    ],
+    "default_note": "MulCamFall is used as the main binary external adaptation dataset because it has both Fall and Not_Fall. Le2i is not recommended for binary training in the current parsed form because it contains only Fall labels.",
+    "test_size": 0.2,
+    "val_size": 0.2,
+    "seed": 42,
+    "num_selected_sequences": 551,
+    "split_summary": {
+        "train": {
+            "num_sequences": 335,
+            "num_groups": 15,
+            "num_videos": 120,
+            "dataset_counts": {
+                "MulCamFall": 335
+            },
+            "label_counts": {
+                "Not_Fall": 176,
+                "Fall": 159
+            },
+            "group_keys": [
+                "MulCamFall__chute02",
+                "MulCamFall__chute03",
+                "MulCamFall__chute04",
+                "MulCamFall__chute05",
+                "MulCamFall__chute06",
+                "MulCamFall__chute07",
+                "MulCamFall__chute08",
+                "MulCamFall__chute11",
+                "MulCamFall__chute12",
+                "MulCamFall__chute13",
+                "MulCamFall__chute15",
+                "MulCamFall__chute17",
+                "MulCamFall__chute18",
+                "MulCamFall__chute21",
+                "MulCamFall__chute23"
+            ]
+        },
+        "val": {
+            "num_sequences": 104,
+            "num_groups": 4,
+            "num_videos": 32,
+            "dataset_counts": {
+                "MulCamFall": 104
+            },
+            "label_counts": {
+                "Not_Fall": 56,
+                "Fall": 48
+            },
+            "group_keys": [
+                "MulCamFall__chute01",
+                "MulCamFall__chute09",
+                "MulCamFall__chute14",
+                "MulCamFall__chute19"
+            ]
+        },
+        "test": {
+            "num_sequences": 112,
+            "num_groups": 4,
+            "num_videos": 32,
+            "dataset_counts": {
+                "MulCamFall": 112
+            },
+            "label_counts": {
+                "Not_Fall": 56,
+                "Fall": 56
+            },
+            "group_keys": [
+                "MulCamFall__chute10",
+                "MulCamFall__chute16",
+                "MulCamFall__chute20",
+                "MulCamFall__chute22"
+            ]
+        }
+    },
+    "leakage_report": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+    },
+    "outputs": {
+        "all_split_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\train_val_test_splits\\external_train_val_test_split.csv",
+        "train_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\train_val_test_splits\\external_train_manifest.csv",
+        "val_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\train_val_test_splits\\external_val_manifest.csv",
+        "test_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\train_val_test_splits\\external_test_manifest.csv",
+        "train_npz": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\train_val_test_splits\\external_train_inputs.npz",
+        "val_npz": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\train_val_test_splits\\external_val_inputs.npz",
+        "test_npz": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\train_val_test_splits\\external_test_inputs.npz",
+        "report_json": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\splits\\06_create_external_train_val_test_split_report.json"
+    },
+    "important_rule": "Train, validation, and test are separated by group_key, not random sequence. This avoids leakage from sequences cut from the same chute/video."
+}

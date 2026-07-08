@@ -1,0 +1,124 @@
+project:
+  name: "Phase 5 - External Dataset Generalization"
+  root: "C:/Users/ASUS/Downloads/3D_Human_Pose_NCKH"
+  phase_dir: "phase5_external_generalization"
+
+tasks:
+  primary_task: "binary"
+  binary_classes:
+    0: "Not_Fall"
+    1: "Fall"
+
+datasets:
+  Le2i:
+    enabled: true
+    dataset_name: "Le2i"
+    raw_dir: "phase5_external_generalization/data/external_raw/Le2i"
+    metadata_output: "phase5_external_generalization/data/external_metadata/le2i_metadata.csv"
+    video_extensions: [".avi", ".mp4", ".mov", ".mkv"]
+
+    # Only annotated folders are kept for official evaluation.
+    include_scenes:
+      - "Coffee_room_01"
+      - "Coffee_room_02"
+      - "Home_01"
+      - "Home_02"
+
+    exclude_scenes:
+      - "Office"
+      - "Lecture_room"
+
+    label_mode: "annotation_file"
+    include_eval: true
+
+  MulCamFall:
+    enabled: true
+    dataset_name: "MulCamFall"
+    raw_dir: "phase5_external_generalization/data/external_raw/MulCamFall/dataset"
+    annotation_csv: "phase5_external_generalization/data/external_metadata/MulCamFall_data_tuple3.csv"
+    report_pdf: "phase5_external_generalization/data/external_metadata/MulCamFall_technicalReport.pdf"
+    metadata_output: "phase5_external_generalization/data/external_metadata/mulcamfall_metadata.csv"
+    video_extensions: [".avi", ".mp4", ".mov", ".mkv"]
+
+    # Position code 2 = Falling.
+    # Position code 3 = Lying on the ground after falling.
+    # For binary fall detection, both 2 and 3 are treated as Fall-positive.
+    fall_position_codes: [2, 3]
+    not_fall_position_codes: [1, 4, 5, 6, 7, 8, 9]
+
+    label_mode: "segment_csv"
+    include_eval: true
+
+outputs:
+  all_metadata_csv: "phase5_external_generalization/data/external_metadata/all_external_metadata.csv"
+
+  extracted_2d_dir: "phase5_external_generalization/data/extracted_2d_confidence"
+  extracted_3d_dir: "phase5_external_generalization/data/extracted_3d"
+  normalized_3d_dir: "phase5_external_generalization/data/normalized_3d"
+  quality_features_dir: "phase5_external_generalization/data/quality_features"
+  external_sequences_dir: "phase5_external_generalization/data/external_sequences"
+
+  preparation_dir: "phase5_external_generalization/outputs/preparation"
+  extraction_2d_dir: "phase5_external_generalization/outputs/extraction_2d"
+  extraction_3d_dir: "phase5_external_generalization/outputs/extraction_3d"
+  quality_output_dir: "phase5_external_generalization/outputs/quality_features"
+  sequences_output_dir: "phase5_external_generalization/outputs/sequences"
+  evaluation_dir: "phase5_external_generalization/outputs/evaluation"
+  comparison_dir: "phase5_external_generalization/outputs/comparison"
+  dashboard_dir: "phase5_external_generalization/outputs/dashboard"
+
+pose_extraction:
+  yolo_model: "yolov8m-pose.pt"
+  image_size: 640
+  confidence_threshold: 0.25
+  max_persons: 1
+  select_person_strategy: "largest_bbox"
+  save_bbox: true
+  save_confidence: true
+
+sequence:
+  sequence_length: 60
+  stride: 15
+  include_short: true
+  padding_strategy: "repeat_last_frame"
+
+model_inputs:
+  phase1_2d_dim: 40
+  phase2_3d_dim: 59
+  concat_dim: 99
+  quality_dim: 33
+
+checkpoints:
+  phase1_2d_common_binary: "phase3_common_set_gated_fusion/checkpoints/best_model_2d_common_binary.pt"
+  phase2_3d_common_binary: "phase3_common_set_gated_fusion/checkpoints/best_model_3d_common_binary.pt"
+  phase2_concat_common_binary: "phase3_common_set_gated_fusion/checkpoints/best_model_concat_common_binary.pt"
+  phase3_gated_fusion_binary: "phase3_common_set_gated_fusion/checkpoints/best_model_gated_fusion_binary.pt"
+  phase4_quality_gated_binary: "phase4_quality_aware_fusion/checkpoints/best_model_quality_gated_binary.pt"
+  phase4_quality_concat_binary: "phase4_quality_aware_fusion/checkpoints/best_model_quality_concat_binary.pt"
+
+models_to_evaluate:
+  - "phase1_2d_common"
+  - "phase2_3d_common"
+  - "phase2_concat_common"
+  - "phase3_gated_fusion"
+  - "phase4_quality_gated"
+  - "phase4_quality_concat"
+
+evaluation:
+  metrics:
+    - "accuracy"
+    - "macro_f1"
+    - "fall_precision"
+    - "fall_recall"
+    - "fall_f1"
+    - "not_fall_f1"
+    - "confusion_matrix"
+
+  primary_metric: "macro_f1"
+  safety_metric: "fall_recall"
+
+runtime:
+  device: "cuda"
+  batch_size: 64
+  num_workers: 0
+  seed: 42

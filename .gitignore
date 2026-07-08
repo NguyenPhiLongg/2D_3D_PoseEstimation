@@ -1,6 +1,6 @@
-# =========================================================
-# Python
-# =========================================================
+# ============================================================
+# Python cache / build files
+# ============================================================
 
 __pycache__/
 *.py[cod]
@@ -13,165 +13,211 @@ __pycache__/
 build/
 dist/
 
-# =========================================================
+# ============================================================
 # Virtual environments
-# =========================================================
+# ============================================================
 
 venv/
 .venv/
 env/
-.env/
+ENV/
 .nckh_3dpose/
 conda-env/
-ENV/
 
-# =========================================================
+# ============================================================
 # Environment variables and secrets
-# =========================================================
+# ============================================================
 
 .env
 .env.*
 !.env.example
+*.key
+*.pem
+*.p12
+*.token
+secrets/
+credentials/
 
-# =========================================================
+# ============================================================
 # Jupyter Notebook checkpoints
-# =========================================================
+# ============================================================
 
 .ipynb_checkpoints/
 
-# =========================================================
+# ============================================================
 # IDE / Editor
-# =========================================================
+# ============================================================
 
 .vscode/
 .idea/
 *.code-workspace
 
-# =========================================================
+# ============================================================
 # OS files
-# =========================================================
+# ============================================================
 
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# =========================================================
-# Logs
-# =========================================================
+# ============================================================
+# Logs and temporary files
+# ============================================================
 
 *.log
 logs/
 error_videos.txt
-
-# =========================================================
-# Large raw video datasets
-# Do not upload raw videos to GitHub.
-# =========================================================
-
-data/1_raw_videos/
-*.mp4
-*.avi
-*.mov
-*.mkv
-*.webm
-
-# =========================================================
-# Extracted pose data
-# These files can be regenerated from raw videos.
-# =========================================================
-
-data/2_extracted_2d/
-data/3_extracted_3d/
-data/4_normalized_3d/
-
-# Keep the folder structure if .gitkeep files are used
-!data/2_extracted_2d/.gitkeep
-!data/3_extracted_3d/.gitkeep
-!data/4_normalized_3d/.gitkeep
-
-# =========================================================
-# Master dataset CSV
-# This file can be large and may contain generated pose data.
-# =========================================================
-
-data/master_dataset.csv
-
-# =========================================================
-# Model checkpoints and pretrained weights
-# Use Git LFS or external storage if needed.
-# =========================================================
-
-*.pt
-*.pth
-*.bin
-*.onnx
-*.engine
-
-# =========================================================
-# YOLO pretrained weights
-# =========================================================
-
-yolov8*.pt
-
-# =========================================================
-# PoseFormerV2 external repository
-# Ignore if cloned inside this project.
-# =========================================================
-
-phase2_3d_upgrade/poseformerv2_repo/
-
-# =========================================================
-# Training checkpoints
-# =========================================================
-
-phase1_2d_baseline/checkpoints/
-phase2_3d_upgrade/checkpoints/
-
-# Keep folder structure if needed
-!phase1_2d_baseline/checkpoints/.gitkeep
-!phase2_3d_upgrade/checkpoints/.gitkeep
-
-# =========================================================
-# Large demo outputs
-# =========================================================
-
-phase2_3d_upgrade/outputs/demo_3d_frames/
-phase2_3d_upgrade/outputs/demo_3d_videos/
-phase2_3d_upgrade/outputs/demo_3d_csv/
-
-# =========================================================
-# Keep lightweight result files
-# JSON, CSV comparison, and dashboard HTML are allowed.
-# =========================================================
-
-!phase2_3d_upgrade/outputs/training_3d/
-!phase2_3d_upgrade/outputs/training_3d/*.json
-
-!phase2_3d_upgrade/outputs/training_fusion_2d3d/
-!phase2_3d_upgrade/outputs/training_fusion_2d3d/*.json
-
-!phase2_3d_upgrade/outputs/comparison_results/
-!phase2_3d_upgrade/outputs/comparison_results/*.csv
-
-!phase2_3d_upgrade/outputs/model_comparison_dashboard.html
-
-!phase1_2d_baseline/outputs/
-!phase1_2d_baseline/outputs/training_2d/
-!phase1_2d_baseline/outputs/training_2d/*.json
-
-# =========================================================
-# Temporary files
-# =========================================================
-
 tmp/
 temp/
 *.tmp
 *.bak
 *.backup
 
-# =========================================================
-# Large compressed files
-# =========================================================
+# ============================================================
+# Large raw video datasets
+# Do not upload raw videos to GitHub.
+# ============================================================
+
+data/1_raw_videos/
+phase5_external_generalization/data/external_raw/
+
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.wmv
+*.flv
+
+# ============================================================
+# Generated internal dataset files
+# These can be regenerated from raw videos.
+# ============================================================
+
+data/2_extracted_2d/
+data/3_extracted_3d/
+data/4_normalized_3d/
+data/master_dataset.csv
+
+# Keep folder structure if .gitkeep files exist
+!data/2_extracted_2d/.gitkeep
+!data/3_extracted_3d/.gitkeep
+!data/4_normalized_3d/.gitkeep
+
+# ============================================================
+# Generated Phase 5 data / intermediate features
+# These are usually large and can be regenerated by scripts.
+# ============================================================
+
+phase5_external_generalization/data/2d_confidence/
+phase5_external_generalization/data/3d_estimated/
+phase5_external_generalization/data/estimated_3d/
+phase5_external_generalization/data/normalized_3d/
+phase5_external_generalization/data/quality_features/
+phase5_external_generalization/data/external_sequences/
+
+# ============================================================
+# Large NumPy / array / tensor files
+# ============================================================
+
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.joblib
+
+# ============================================================
+# Model checkpoints and pretrained weights
+# Use Git LFS or external storage if these must be shared.
+# ============================================================
+
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.onnx
+*.engine
+*.h5
+*.pb
+
+# YOLO pretrained weights
+yolov8*.pt
+
+# PoseFormerV2 external repository if cloned locally
+phase2_3d_upgrade/poseformerv2_repo/
+
+# Phase checkpoints
+phase1_2d_baseline/checkpoints/
+phase2_3d_upgrade/checkpoints/
+phase3_common_set_gated_fusion/checkpoints/
+phase4_quality_aware_fusion/checkpoints/
+phase5_external_generalization/outputs/external_finetuning/checkpoints/
+
+# Keep folder structure if needed
+!phase1_2d_baseline/checkpoints/.gitkeep
+!phase2_3d_upgrade/checkpoints/.gitkeep
+!phase3_common_set_gated_fusion/checkpoints/.gitkeep
+!phase4_quality_aware_fusion/checkpoints/.gitkeep
+
+# ============================================================
+# Heavy demo outputs / generated media
+# ============================================================
+
+phase2_3d_upgrade/outputs/demo_3d_frames/
+phase2_3d_upgrade/outputs/demo_3d_videos/
+phase2_3d_upgrade/outputs/demo_3d_csv/
+frames/
+extracted_frames/
+pose_frames/
+outputs/frames/
+
+# ============================================================
+# Heavy training predictions
+# Keep summary metrics/reports, ignore raw prediction dumps.
+# ============================================================
+
+phase5_external_generalization/outputs/external_finetuning/predictions/
+phase5_external_generalization/outputs/external_finetuning/external_finetuned_all_models_test_predictions_long.csv
+
+# ============================================================
+# Keep lightweight reports, dashboards, and comparison files
+# ============================================================
+
+!phase1_2d_baseline/outputs/
+!phase1_2d_baseline/outputs/**/*.json
+!phase1_2d_baseline/outputs/**/*.csv
+!phase1_2d_baseline/outputs/**/*.html
+!phase1_2d_baseline/outputs/**/*.md
+
+!phase2_3d_upgrade/outputs/
+!phase2_3d_upgrade/outputs/**/*.json
+!phase2_3d_upgrade/outputs/**/*.csv
+!phase2_3d_upgrade/outputs/**/*.html
+!phase2_3d_upgrade/outputs/**/*.md
+
+!phase3_common_set_gated_fusion/outputs/
+!phase3_common_set_gated_fusion/outputs/**/*.json
+!phase3_common_set_gated_fusion/outputs/**/*.csv
+!phase3_common_set_gated_fusion/outputs/**/*.html
+!phase3_common_set_gated_fusion/outputs/**/*.md
+
+!phase4_quality_aware_fusion/outputs/
+!phase4_quality_aware_fusion/outputs/**/*.json
+!phase4_quality_aware_fusion/outputs/**/*.csv
+!phase4_quality_aware_fusion/outputs/**/*.html
+!phase4_quality_aware_fusion/outputs/**/*.md
+
+!phase5_external_generalization/outputs/
+!phase5_external_generalization/outputs/**/*.json
+!phase5_external_generalization/outputs/**/*.csv
+!phase5_external_generalization/outputs/**/*.html
+!phase5_external_generalization/outputs/**/*.md
+!phase5_external_generalization/outputs/**/*.png
+!phase5_external_generalization/outputs/**/*.jpg
+
+# ============================================================
+# Compressed archives
+# ============================================================
 
 *.zip
 *.rar
@@ -179,27 +225,21 @@ temp/
 *.tar
 *.tar.gz
 
-# =========================================================
+# ============================================================
 # Cache files
-# =========================================================
+# ============================================================
 
 .cache/
 .cache_*/
 *.cache
 
-# =========================================================
-# Matplotlib / generated images if not needed
-# =========================================================
+# ============================================================
+# Documentation images
+# ============================================================
 
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.bmp
-*.tiff
-
-# If you want to keep figures for the README, put them here:
 !docs/
 !docs/images/
 !docs/images/*.png
 !docs/images/*.jpg
+!docs/images/*.jpeg
+!docs/images/*.gif

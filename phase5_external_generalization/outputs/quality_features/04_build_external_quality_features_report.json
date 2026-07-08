@@ -1,0 +1,87 @@
+{
+    "phase": "Phase 5 - External Dataset Generalization",
+    "step": "04_build_external_quality_features",
+    "num_manifest_sequences": 2888,
+    "num_quality_sequences": 2888,
+    "num_skipped_sequences": 0,
+    "quality_dim": 33,
+    "quality_feature_columns": [
+        "mean_confidence",
+        "min_confidence",
+        "std_confidence",
+        "missing_joint_ratio",
+        "low_conf_01_ratio",
+        "low_conf_02_ratio",
+        "low_conf_03_ratio",
+        "low_conf_05_ratio",
+        "mean_bbox_conf",
+        "min_bbox_conf",
+        "multi_person_ratio",
+        "bbox_aspect_mean",
+        "bbox_aspect_change",
+        "bbox_area_mean",
+        "bbox_area_change",
+        "bbox_center_velocity_mean",
+        "bbox_center_velocity_std",
+        "temporal_jitter",
+        "velocity_mean",
+        "velocity_std",
+        "bone_length_mean",
+        "bone_length_std",
+        "bone_length_cv",
+        "3d_velocity_mean",
+        "3d_velocity_std",
+        "3d_bone_length_mean",
+        "3d_bone_length_std",
+        "3d_bone_length_cv",
+        "3d_z_mean",
+        "3d_z_std",
+        "3d_z_velocity_mean",
+        "3d_z_velocity_std",
+        "3d_z_instability"
+    ],
+    "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "num_quality_sequences": 2888,
+        "num_manifest_sequences": 2888,
+        "expected_quality_dim": 33,
+        "quality_dim": 33,
+        "num_missing_quality_sequences": 0,
+        "num_extra_quality_sequences": 0,
+        "label_counts": {
+            "Fall": 2600,
+            "Not_Fall": 288
+        },
+        "dataset_counts": {
+            "Le2i": 2337,
+            "MulCamFall": 551
+        }
+    },
+    "manifest_summary": {
+        "num_sequences": 2888,
+        "num_videos": 314,
+        "datasets": {
+            "Le2i": 2337,
+            "MulCamFall": 551
+        },
+        "labels": {
+            "Fall": 2600,
+            "Not_Fall": 288
+        },
+        "valid_frame_count_min": 31,
+        "valid_frame_count_max": 60,
+        "valid_frame_count_mean": 54.4671052631579
+    },
+    "outputs": {
+        "all_quality_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\quality_features\\all_external_quality_sequences.csv",
+        "report_quality_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\quality_features\\04_quality_feature_summary.csv",
+        "skipped_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\quality_features\\04_quality_feature_skipped.csv",
+        "stats_csv_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\quality_features\\04_quality_feature_distribution.csv",
+        "stats_json_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\quality_features\\04_quality_feature_stats.json",
+        "report_json_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\quality_features\\04_build_external_quality_features_report.json"
+    },
+    "fairness_note": "Quality features are computed using all_external_sequences.csv. Therefore each quality row has the same sequence_key as the common external sequence manifest. This avoids comparing models on different sequence sets.",
+    "phase4_consistency_note": "The 33 quality features and formulas match Phase 4 build_quality_features.py. External normalized 3D stores 51 xyz coordinates. Quality features are sequence-level reliability indicators used by Phase 4 models."
+}

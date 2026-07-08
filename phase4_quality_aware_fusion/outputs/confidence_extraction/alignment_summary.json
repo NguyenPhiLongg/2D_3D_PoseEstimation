@@ -1,0 +1,28 @@
+{
+    "old_2d_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\data\\2_extracted_2d",
+    "new_2d_conf_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\data\\5_extracted_2d_confidence",
+    "output_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase4_quality_aware_fusion\\outputs\\confidence_extraction",
+    "common_only": false,
+    "num_old_files": 5483,
+    "num_new_files": 5483,
+    "num_matched_files_checked": 5483,
+    "num_missing_new_files": 0,
+    "num_extra_new_files": 0,
+    "status_counts": {
+        "OK": 5483
+    },
+    "checked_count": 5483,
+    "recommended_count": 5483,
+    "recommended_ratio": 1.0,
+    "min_recommended_ratio": 0.95,
+    "overall_reuse_existing_3d_recommended": true,
+    "mean_abs_xy_error_average": 0.0,
+    "p95_abs_xy_error_average": 0.0,
+    "mean_confidence_average": 0.7818234928975505,
+    "missing_joint_ratio_average": 0.1321264222113366,
+    "alignment_csv_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase4_quality_aware_fusion\\outputs\\confidence_extraction\\alignment_check.csv",
+    "problem_videos_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase4_quality_aware_fusion\\outputs\\confidence_extraction\\problem_alignment_videos.txt",
+    "missing_new_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase4_quality_aware_fusion\\outputs\\confidence_extraction\\missing_new_confidence_files.txt",
+    "extra_new_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase4_quality_aware_fusion\\outputs\\confidence_extraction\\extra_new_confidence_files.txt",
+    "interpretation": "If overall_reuse_existing_3d_recommended is true, Phase 4 can reuse data/4_normalized_3d. If false, consider checking person selection or re-extracting 3D from the new 2D confidence files."
+}

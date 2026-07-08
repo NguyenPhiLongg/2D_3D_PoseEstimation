@@ -1,0 +1,11 @@
+{
+    "best_internal_model": "phase4_quality_concat",
+    "best_internal_macro_f1": 0.954617,
+    "best_external_model": "phase4_quality_gated",
+    "best_external_macro_f1": 0.7589093518297059,
+    "phase4_top2_external": true,
+    "phase4_external_best": true,
+    "main_claim": "The exact best model changes from Quality-Concat on the internal dataset to Quality-Gated on the external dataset. However, the top two external models are both Phase 4 quality-aware models. Therefore, the Phase 4 quality-aware fusion direction is supported under external adaptation.",
+    "caution": "Internal and external results should not be interpreted as a direct measure of dataset difficulty because the datasets, splits, and training conditions differ. This comparison is intended to evaluate whether the model ranking trend and design direction remain valid when the models are adapted to a new dataset.",
+    "report_ready_paragraph": "The comparison between the internal dataset and the new external dataset shows that the exact best-performing model can change across domains. On the internal dataset, Phase 4 Quality-Concat achieved the best result. After fair fine-tuning on the external dataset, Phase 4 Quality-Gated achieved the best external test result, while Quality-Concat remained among the top-performing models. This suggests that the key contribution is not that one specific architecture always ranks first, but that the Phase 4 quality-aware fusion direction remains valid and beneficial when adapting to a new dataset."
+}

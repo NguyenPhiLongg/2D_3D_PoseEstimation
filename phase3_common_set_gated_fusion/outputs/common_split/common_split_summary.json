@@ -1,0 +1,65 @@
+{
+    "total_videos": 5409,
+    "split_counts": {
+        "train": 3785,
+        "test": 812,
+        "val": 812
+    },
+    "binary_distribution_by_split": {
+        "train": {
+            "Fall": 2077,
+            "Not_Fall": 1708
+        },
+        "val": {
+            "Fall": 445,
+            "Not_Fall": 367
+        },
+        "test": {
+            "Fall": 445,
+            "Not_Fall": 367
+        }
+    },
+    "stratify_distribution_by_split": {
+        "train": {
+            "Fall": 2077,
+            "Sitting": 664,
+            "Sleeping": 358,
+            "Standing": 343,
+            "Walking": 343
+        },
+        "val": {
+            "Fall": 445,
+            "Sitting": 143,
+            "Sleeping": 77,
+            "Walking": 74,
+            "Standing": 73
+        },
+        "test": {
+            "Fall": 445,
+            "Sitting": 143,
+            "Sleeping": 77,
+            "Standing": 74,
+            "Walking": 73
+        }
+    },
+    "action_distribution_for_action_task": {
+        "train": {
+            "Sitting": 664,
+            "Sleeping": 358,
+            "Standing": 343,
+            "Walking": 343
+        },
+        "val": {
+            "Sitting": 143,
+            "Sleeping": 77,
+            "Walking": 74,
+            "Standing": 73
+        },
+        "test": {
+            "Sitting": 143,
+            "Sleeping": 77,
+            "Standing": 74,
+            "Walking": 73
+        }
+    }
+}

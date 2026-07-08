@@ -1,0 +1,106 @@
+{
+    "phase": "Phase 5 - External Dataset Generalization",
+    "step": "05_build_external_sequences",
+    "elapsed_sec": 27.94070267677307,
+    "num_fair_sequences": 2888,
+    "num_skipped_sequences": 0,
+    "sequence_length": 60,
+    "input_dimensions": {
+        "x2d_common": [
+            60,
+            40
+        ],
+        "x3d_common": [
+            60,
+            59
+        ],
+        "xconcat_common": [
+            60,
+            99
+        ],
+        "x2d_quality": [
+            60,
+            40
+        ],
+        "x3d_quality": [
+            60,
+            59
+        ],
+        "quality_raw": [
+            33
+        ]
+    },
+    "preprocessing_alignment": {
+        "phase1_2d_common": "uses x2d_common from phase3_utils.extract_2d_features_from_df",
+        "phase2_3d_common": "uses x3d_common from phase3_utils.extract_3d_features_from_df",
+        "phase2_concat_common": "uses xconcat_common = x2d_common + x3d_common",
+        "phase3_gated_fusion": "uses x2d_common and x3d_common",
+        "phase4_quality_models": "uses x2d_quality, x3d_quality, and quality_raw from phase4_utils preprocessing"
+    },
+    "fairness_rule": "Every model will be evaluated using the same sequence_key order from all_external_sequences_common_fair.csv. Different preprocessing variants are kept only because Phase 1/2/3 and Phase 4 were trained with different preprocessing code.",
+    "validation": {
+        "valid": true,
+        "errors": [],
+        "num_fair_sequences": 2888,
+        "label_counts": {
+            "0": 288,
+            "1": 2600
+        },
+        "shapes": {
+            "x2d_common": [
+                2888,
+                60,
+                40
+            ],
+            "x3d_common": [
+                2888,
+                60,
+                59
+            ],
+            "xconcat_common": [
+                2888,
+                60,
+                99
+            ],
+            "x2d_quality": [
+                2888,
+                60,
+                40
+            ],
+            "x3d_quality": [
+                2888,
+                60,
+                59
+            ],
+            "quality_raw": [
+                2888,
+                33
+            ],
+            "y_binary": [
+                2888
+            ],
+            "valid_lengths": [
+                2888
+            ],
+            "sequence_keys": [
+                2888
+            ]
+        },
+        "sequence_key_match": true
+    },
+    "label_counts": {
+        "Fall": 2600,
+        "Not_Fall": 288
+    },
+    "dataset_counts": {
+        "Le2i": 2337,
+        "MulCamFall": 551
+    },
+    "outputs": {
+        "fair_manifest_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\all_external_sequences_common_fair.csv",
+        "skipped_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\sequences\\05_build_external_sequences_skipped.csv",
+        "npz_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\external_sequence_inputs.npz",
+        "feature_availability_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\feature_availability.csv",
+        "report_json_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\sequences\\05_build_external_sequences_report.json"
+    }
+}

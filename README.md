@@ -1,152 +1,232 @@
-# 2D and 3D Pose Estimation for Fall Detection and Human Action Recognition
+# 2D/3D Human Pose Fall Detection and Quality-Aware Fusion
+
+This repository contains a research implementation for **fall detection** and **human action recognition** using 2D pose estimation, estimated 3D pose lifting, temporal sequence modeling, and multiple fusion strategies.
+
+The project compares several model families:
+
+- **Phase 1:** 2D pose baseline
+- **Phase 2:** estimated 3D pose and 2D+3D concatenation
+- **Phase 3:** gated 2D/3D fusion
+- **Phase 4:** quality-aware fusion
+- **Phase 5:** external dataset adaptation and validation
+
+The final research direction shows that **quality-aware fusion** improves robustness when adapting to a new external dataset.
+
+---
 
 ## 1. Project Overview
 
-This repository contains the implementation of a scientific research project on **fall detection and human action recognition** using 2D pose estimation, estimated 3D pose lifting, and deep learning sequence models.
+The system takes video clips as input and predicts whether the action is a fall or a normal activity.
 
-The main goal of this project is to investigate whether 2D skeleton data, estimated 3D skeleton data, or a fusion of both can improve the performance of fall detection and human activity classification.
+### Main Tasks
 
-The project focuses on two main tasks:
+#### Binary Fall Detection
 
-1. **Binary Classification**
-   - `Fall`
-   - `Not_Fall`
+```text
+Fall
+Not_Fall
+```
 
-2. **Action Classification**
-   - `Sitting`
-   - `Sleeping`
-   - `Standing`
-   - `Walking`
+#### Action Classification
 
-The system first extracts 2D human pose keypoints from videos using **YOLOv8-Pose**. Then, the extracted 2D keypoints are lifted into estimated 3D skeletons using **PoseFormerV2**. Finally, three different learning settings are compared:
+```text
+Sitting
+Sleeping
+Standing
+Walking
+```
 
-1. **2D model**
-   - Input: 2D keypoints and handcrafted 2D pose features.
+### General Pipeline
 
-2. **3D model**
-   - Input: estimated 3D keypoints and handcrafted 3D pose features.
-
-3. **Fusion 2D + 3D model**
-   - Input: concatenated 2D and 3D features.
-
-The final experiment shows that the **Fusion 2D+3D model achieves the best overall performance** in both the binary fall detection task and the action classification task.
+```text
+Raw video
+   ↓
+YOLOv8-Pose
+   ↓
+2D pose keypoints
+   ↓
+PoseFormerV2 / 2D-to-3D pose lifting
+   ↓
+Estimated 3D pose features
+   ↓
+2D / 3D / fusion sequence models
+   ↓
+Fall detection or action classification
+```
 
 ---
 
 ## 2. Research Motivation
 
-Fall detection is an important problem in computer vision and intelligent monitoring systems, especially for elderly care, healthcare, and safety surveillance. A fall may lead to severe injury if it is not detected quickly. Therefore, automatic fall detection can help provide early warnings and reduce response time in emergency situations.
+Fall detection is important in healthcare monitoring, elderly care, and intelligent surveillance. Missing a real fall can be dangerous, while false alarms can reduce system reliability.
 
-Traditional vision-based approaches may use raw RGB frames directly. However, RGB-based methods can be affected by lighting conditions, background noise, camera angle, and irrelevant visual information. Skeleton-based approaches are more compact because they focus mainly on the human body structure.
+Instead of relying directly on RGB frames, this project uses skeleton-based representations. Skeleton features are more compact and focus on human body structure rather than background, lighting, or irrelevant image details.
 
-In this project, human poses are represented as skeleton keypoints. The research question is:
+The main research questions are:
 
-> Can estimated 3D pose information improve fall detection and action recognition compared with using only 2D pose information?
-
-To answer this question, the project compares:
-
-- 2D skeleton-based classification.
-- Estimated 3D skeleton-based classification.
-- Early fusion of 2D and 3D skeleton features.
+1. Can estimated 3D pose improve fall detection compared with 2D pose only?
+2. Can 2D and 3D pose features be fused effectively?
+3. Can pose-quality information improve fusion robustness?
+4. Do the improvements remain valid on an external dataset?
 
 ---
 
 ## 3. Dataset Sources
 
-This project uses video data collected from public datasets. Due to file size limitations, the raw datasets are **not included directly in this repository**.
+Raw datasets are not included in this repository because of file size limitations.
 
-### 3.1 Fall Vision Dataset
+### 3.1 Internal Dataset
 
-Fall-related videos are taken from the **Fall Vision** dataset:
+The internal experiments use fall and non-fall videos collected from public video datasets and organized into fall and action classes.
 
-**Dataset name:**
+The main internal sources include:
+
+- Fall Vision dataset
+- Human Activity & Suspicious Behavior Video Dataset from Kaggle
+- Additional curated class folders for sitting, sleeping, standing, and walking
+
+### 3.2 External Dataset for Phase 5
+
+Phase 5 uses an external dataset adaptation protocol. The main external dataset used for binary adaptation is **MulCamFall**.
+
+Final valid external dataset split:
+
+| Split | Sequences | Videos | Groups / Chutes |
+|---|---:|---:|---:|
+| Train | 335 | 120 | 15 |
+| Validation | 104 | 32 | 4 |
+| Test | 112 | 32 | 4 |
+| Total | 551 | 184 | 23 |
+
+The external test split is balanced:
 
 ```text
-Fall Vision: A Benchmark Video Dataset for Advancing Fall Detection Technology
+Not_Fall: 56 sequences
+Fall: 56 sequences
+```
 
-Source:
+---
 
-Harvard Dataverse
+## 4. Feature Representations
 
-Dataset page:
+### 4.1 2D Features
 
-https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/75QPKK
+The 2D model uses 17 COCO keypoints.
 
-DOI:
+Each keypoint has:
 
-https://doi.org/10.7910/DVN/75QPKK
+```text
+x, y
+```
 
-This dataset provides fall and non-fall videos designed for fall detection research. It includes fall scenarios and normal activities that are useful for evaluating fall detection algorithms.
+The final 2D frame representation is:
 
-In this project, the dataset is used mainly for:
+```text
+34 normalized 2D keypoint values
++ 6 handcrafted 2D pose features
+= 40 features per frame
+```
 
-Fall videos.
-Non-fall videos such as sitting, sleeping, and standing-related actions.
-3.2 Kaggle Human Activity Dataset
+Example handcrafted 2D features:
 
-Some walking-related videos are taken from the Kaggle dataset:
+- aspect ratio
+- normalized width
+- normalized height
+- normalized center position
+- motion velocity
 
-Dataset name:
+### 4.2 3D Features
 
-Human Activity & Suspicious Behavior Video Dataset
+The estimated 3D model uses 17 skeleton joints.
 
-Source:
+Each joint has:
 
-Kaggle
+```text
+x, y, z
+```
 
-Dataset page:
+The final 3D frame representation is:
 
-https://www.kaggle.com/datasets/daudshah/video-dataset
+```text
+51 normalized 3D coordinate values
++ 8 handcrafted 3D pose features
+= 59 features per frame
+```
 
-This dataset contains labeled video clips of normal human activities and abnormal or suspicious behaviors.
+Example handcrafted 3D features:
 
-In this project, the walking-related classes were used, especially:
+- width
+- depth
+- height
+- height-width ratio
+- depth-width ratio
+- head height
+- torso tilt
+- velocity
 
-Walking
-Walking while Reading a Book
+### 4.3 Concatenated 2D+3D Features
 
-These samples were used to enrich the Walking action class.
+The early fusion representation concatenates 2D and 3D features:
 
-4. Dataset Organization
+```text
+2D features + 3D features
+= 40 + 59
+= 99 features per frame
+```
 
-The expected dataset structure is:
+### 4.4 Pose Quality Features
 
-data/
-├── 1_raw_videos/
-│   ├── Fall/
-│   │   ├── ...
-│   │   └── ...
-│   └── Not_Fall/
-│       ├── Sit/
-│       ├── Sleep/
-│       ├── Stand/
-│       └── Walking/
-│
-├── 2_extracted_2d/
-│   ├── video_001.csv
-│   ├── video_002.csv
-│   └── ...
-│
-├── 3_extracted_3d/
-│   ├── video_001.csv
-│   ├── video_002.csv
-│   └── ...
-│
-├── 4_normalized_3d/
-│   ├── video_001.csv
-│   ├── video_002.csv
-│   └── ...
-│
-└── master_dataset.csv
-Folder explanation
-Folder	Description
-data/1_raw_videos/	Original video files.
-data/2_extracted_2d/	2D keypoints extracted by YOLOv8-Pose.
-data/3_extracted_3d/	Raw estimated 3D keypoints generated by PoseFormerV2.
-data/4_normalized_3d/	Normalized 3D keypoints used for training.
-data/master_dataset.csv	Combined 2D dataset used in Phase 1 training.
-5. Project Structure
-2D_3D_PoseEstimation/
+Phase 4 introduces quality-aware fusion. Quality features describe the reliability of pose extraction and 3D lifting.
+
+Examples:
+
+- mean keypoint confidence
+- missing joint ratio
+- low-confidence keypoint ratio
+- multi-person ratio
+- bounding box stability
+- temporal jitter
+- 2D/3D motion instability
+- 3D depth instability
+
+These quality features help the fusion model decide how much it should trust 2D and 3D pose information.
+
+---
+
+## 5. Model Variants
+
+| Phase | Model | Description |
+|---|---|---|
+| Phase 1 | `phase1_2d_common` | 2D pose sequence baseline |
+| Phase 2 | `phase2_3d_common` | estimated 3D pose sequence model |
+| Phase 2 | `phase2_concat_common` | early concatenation of 2D and 3D features |
+| Phase 3 | `phase3_gated_fusion` | learned gated fusion between 2D and 3D streams |
+| Phase 4 | `phase4_quality_gated` | quality-aware gated fusion |
+| Phase 4 | `phase4_quality_concat` | 2D+3D concat with additional quality features |
+
+Most sequence models use a CNN1D + BiLSTM style architecture for temporal modeling.
+
+Input shape:
+
+```text
+(batch_size, sequence_length, feature_dim)
+```
+
+Default sequence configuration:
+
+```text
+sequence_length = 60
+stride = 15
+```
+
+---
+
+## 6. Project Structure
+
+A simplified project structure is shown below.
+
+```text
+3D_Human_Pose_NCKH/
 ├── data/
 │   ├── 1_raw_videos/
 │   ├── 2_extracted_2d/
@@ -155,511 +235,375 @@ data/master_dataset.csv	Combined 2D dataset used in Phase 1 training.
 │   └── master_dataset.csv
 │
 ├── phase1_2d_baseline/
-│   ├── checkpoints/
 │   ├── 01_yolo_extract.py
-│   ├── 02_preprocess_2d.ipynb
-│   ├── 03_train_analysis_2d.ipynb
 │   ├── model_2d.py
-│   └── train_2d.py
+│   ├── train_2d.py
+│   ├── checkpoints/
+│   └── outputs/
 │
 ├── phase2_3d_upgrade/
 │   ├── adapters/
-│   │   ├── coco_to_h36m.py
-│   │   ├── normalize_2d_pose.py
-│   │   └── pose_buffer.py
-│   │
-│   ├── checkpoints/
-│   │   ├── 1_3_27_48.7.bin
-│   │   ├── 27_243_45.2.bin
-│   │   ├── best_model_3d_binary.pt
-│   │   ├── best_model_3d_action.pt
-│   │   ├── best_model_fusion_2d3d_binary.pt
-│   │   └── best_model_fusion_2d3d_action.pt
-│   │
 │   ├── inference/
-│   │   ├── infer_3d_pose.py
-│   │   ├── poseformerv2_loader.py
-│   │   ├── test_video_to_3d.py
-│   │   ├── test_video_to_3d_video.py
-│   │   └── visualize_3d.py
-│   │
 │   ├── notebooks/
-│   │   ├── 01_poseformerv2_setup_test.ipynb
-│   │   ├── 02_2d_to_3d_inference_demo.ipynb
-│   │   └── 03_compare_2d_vs_3d.ipynb
-│   │
-│   ├── outputs/
-│   │   ├── comparison_results/
-│   │   ├── demo_3d_frames/
-│   │   ├── demo_3d_videos/
-│   │   ├── training_3d/
-│   │   └── training_fusion_2d3d/
-│   │
-│   ├── poseformerv2_repo/
-│   ├── extract_3d_keypoints.py
 │   ├── model_3d.py
+│   ├── extract_3d_keypoints.py
 │   ├── normalize_3d_dataset.py
 │   ├── train_3d.py
-│   └── train_fusion_2d3d.py
+│   ├── train_fusion_2d3d.py
+│   ├── checkpoints/
+│   └── outputs/
 │
-├── generate_results_dashboard.py
+├── phase3_common_set_gated_fusion/
+│   ├── model_gated_fusion.py
+│   ├── checkpoints/
+│   └── outputs/
+│
+├── phase4_quality_aware_fusion/
+│   ├── model_quality_aware_fusion.py
+│   ├── checkpoints/
+│   └── outputs/
+│
+├── phase5_external_generalization/
+│   ├── phase5_config.yaml
+│   ├── phase5_utils.py
+│   ├── external_label_mapping.py
+│   ├── scripts/
+│   │   ├── 01_prepare_external_dataset.py
+│   │   ├── 02_extract_2d_confidence_external.py
+│   │   ├── 03_estimate_3d_external.py
+│   │   ├── 04_build_external_quality_features.py
+│   │   ├── 05_build_external_sequences.py
+│   │   ├── 06_create_external_train_val_test_split.py
+│   │   ├── 07_finetune_all_models_external.py
+│   │   ├── 08_compare_external_finetuning_results.py
+│   │   ├── 09_generate_phase5_dashboard.py
+│   │   └── 10_compare_internal_vs_external.py
+│   ├── data/
+│   └── outputs/
+│
 ├── requirements.txt
 ├── README.md
 └── .gitignore
+```
 
-Note: Some large files such as raw videos, extracted keypoints, model checkpoints, and pretrained weights may be ignored by Git and should be downloaded or generated separately.
+Large data folders, raw videos, generated NumPy files, and model checkpoints are excluded from Git by default.
 
-6. Methodology
+---
 
-The overall pipeline is:
+## 7. Installation
 
-Raw Video
-   ↓
-YOLOv8-Pose
-   ↓
-2D Keypoints
-   ↓
-PoseFormerV2
-   ↓
-Estimated 3D Keypoints
-   ↓
-Feature Engineering
-   ↓
-CNN1D + BiLSTM
-   ↓
-Fall / Not_Fall or Action Prediction
-7. Phase 1 - 2D Pose Baseline
-7.1 2D Keypoint Extraction
+### 7.1 Create Conda Environment
 
-2D keypoints are extracted using YOLOv8m-Pose.
-
-Each detected person is represented by 17 COCO keypoints:
-
-x0, y0, x1, y1, ..., x16, y16
-
-Each frame is saved into a CSV file.
-
-Command:
-
-python phase1_2d_baseline/01_yolo_extract.py
-
-Output folder:
-
-data/2_extracted_2d/
-7.2 2D Feature Engineering
-
-The 2D model uses:
-
-34 normalized 2D keypoint features
-+ 6 handcrafted features
-= 40 input features per frame
-
-The 2D pose is normalized using per-frame mean and standard deviation:
-
-pose_2d = (pose_2d - pose_2d.mean(axis=1)) / pose_2d.std(axis=1)
-
-The handcrafted 2D features include:
-
-aspect_ratio
-norm_width
-norm_height
-center_x_norm
-center_y_norm
-velocity
-7.3 2D Model Architecture
-
-The 2D model is a CNN1D + BiLSTM model.
-
-The model contains:
-
-Conv1D layers for local temporal feature extraction.
-BatchNorm and ReLU activation.
-Dropout for regularization.
-BiLSTM for sequence modeling.
-Fully connected classifier.
-
-Input shape:
-
-(batch_size, sequence_length, feature_dim)
-
-For the 2D model:
-
-sequence_length = 60
-feature_dim = 40
-7.4 Train 2D Binary Model
-python phase1_2d_baseline/train_2d.py --task binary --epochs 30
-
-Output checkpoint:
-
-phase1_2d_baseline/checkpoints/best_model_2d_binary.pt
-
-Output result JSON:
-
-phase1_2d_baseline/outputs/training_2d/results_2d_binary.json
-7.5 Train 2D Action Model
-python phase1_2d_baseline/train_2d.py --task action --epochs 30
-
-Output checkpoint:
-
-phase1_2d_baseline/checkpoints/best_model_2d_action.pt
-
-Output result JSON:
-
-phase1_2d_baseline/outputs/training_2d/results_2d_action.json
-8. Phase 2 - Estimated 3D Pose Upgrade
-8.1 Why 3D Pose?
-
-2D keypoints only describe body joints on the image plane. However, fall detection may benefit from spatial information such as body orientation, depth, posture, and lying direction. Therefore, the project uses PoseFormerV2 to estimate 3D skeletons from 2D keypoints.
-
-8.2 2D-to-3D Pose Lifting
-
-PoseFormerV2 is used to lift 2D skeleton sequences into estimated 3D poses.
-
-The process is:
-
-2D COCO keypoints
-   ↓
-COCO-to-H36M compatible processing
-   ↓
-PoseFormerV2
-   ↓
-Estimated 3D skeleton
-
-Command:
-
-python phase2_3d_upgrade/extract_3d_keypoints.py
-
-Output folder:
-
-data/3_extracted_3d/
-
-The extracted 3D CSV format is:
-
-frame,
-x0, y0, z0,
-x1, y1, z1,
-...
-x16, y16, z16,
-source_file,
-label,
-action_label,
-action_name
-8.3 3D Normalization
-
-The 3D pose is normalized using mean and standard deviation along the x, y, and z dimensions.
-
-The normalization follows the idea:
-
-pose = (pose - pose.mean(axis=0)) / pose.std(axis=0)
-
-This makes the 3D input more comparable to the 2D input normalization.
-
-Command:
-
-python phase2_3d_upgrade/normalize_3d_dataset.py --overwrite
-
-Output folder:
-
-data/4_normalized_3d/
-8.4 3D Feature Engineering
-
-The 3D model uses:
-
-51 normalized 3D keypoint features
-+ 8 handcrafted 3D features
-= 59 input features per frame
-
-The handcrafted 3D features include:
-
-width_x
-depth_y
-height_z
-height_width_ratio
-depth_width_ratio
-head_height
-torso_tilt
-velocity
-8.5 3D Model Architecture
-
-The 3D model uses the same general architecture as the 2D model:
-
-CNN1D + BiLSTM
-
-The difference is only the input representation:
-
-Model	Input features
-2D model	40
-3D model	59
-
-For the 3D model:
-
-sequence_length = 60
-feature_dim = 59
-8.6 Train 3D Binary Model
-python phase2_3d_upgrade/train_3d.py --task binary --epochs 30
-
-Output checkpoint:
-
-phase2_3d_upgrade/checkpoints/best_model_3d_binary.pt
-
-Output result JSON:
-
-phase2_3d_upgrade/outputs/training_3d/results_3d_binary_cnn_lstm.json
-8.7 Train 3D Action Model
-python phase2_3d_upgrade/train_3d.py --task action --epochs 30
-
-Output checkpoint:
-
-phase2_3d_upgrade/checkpoints/best_model_3d_action.pt
-
-Output result JSON:
-
-phase2_3d_upgrade/outputs/training_3d/results_3d_action_cnn_lstm.json
-9. Fusion 2D + 3D
-9.1 Motivation
-
-The 2D model captures body geometry directly from the image plane, while the 3D model adds estimated spatial information. Instead of using only one representation, the project also tests early fusion by concatenating 2D and 3D features.
-
-The fusion input is:
-
-2D features + 3D features
-= 40 + 59
-= 99 features per frame
-9.2 Fusion Pipeline
-2D keypoints and features
-       +
-3D keypoints and features
-       ↓
-Concatenation
-       ↓
-CNN1D + BiLSTM
-       ↓
-Classification
-
-This approach is called early fusion because the 2D and 3D features are combined before being passed into the model.
-
-9.3 Train Fusion Binary Model
-python phase2_3d_upgrade/train_fusion_2d3d.py --task binary --epochs 30
-
-Output checkpoint:
-
-phase2_3d_upgrade/checkpoints/best_model_fusion_2d3d_binary.pt
-
-Output result JSON:
-
-phase2_3d_upgrade/outputs/training_fusion_2d3d/results_fusion_2d3d_binary.json
-9.4 Train Fusion Action Model
-python phase2_3d_upgrade/train_fusion_2d3d.py --task action --epochs 30
-
-Output checkpoint:
-
-phase2_3d_upgrade/checkpoints/best_model_fusion_2d3d_action.pt
-
-Output result JSON:
-
-phase2_3d_upgrade/outputs/training_fusion_2d3d/results_fusion_2d3d_action.json
-10. Experimental Results
-10.1 Binary Task - Fall / Not_Fall
-Model	Accuracy	Macro F1	Fall Precision	Fall Recall	Fall F1
-2D Binary	0.9238	0.9150	0.87	0.90	0.89
-3D Binary	0.9278	0.9146	0.90	0.86	0.88
-Fusion 2D+3D Binary	0.9407	0.9310	0.90	0.91	0.91
-
-The fusion model achieves the best performance in the binary fall detection task. It improves both Accuracy and Macro F1 compared with using only 2D or only 3D features.
-
-The most important metric in fall detection is often Fall Recall because missing a fall is more serious than raising a false alarm. The Fusion model achieves the highest Fall Recall:
-
-Fusion Fall Recall = 0.91
-10.2 Action Task - Sitting / Sleeping / Standing / Walking
-Model	Accuracy	Macro F1	Sitting F1	Sleeping F1	Standing F1	Walking F1
-2D Action	0.9609	0.9464	0.93	0.93	0.93	1.00
-3D Action	0.9382	0.9075	0.88	0.95	0.81	0.99
-Fusion 2D+3D Action	0.9691	0.9532	0.93	0.96	0.92	1.00
-
-The fusion model also achieves the best performance in the action classification task.
-
-The results show that the combination of 2D and 3D features helps improve overall classification performance. The 3D-only model performs well in some classes such as Sleeping, but it performs worse in Standing. After fusion, the model becomes more stable across classes.
-
-11. Result Dashboard
-
-A dashboard is provided to visualize the comparison results.
-
-Generate the HTML dashboard:
-
-python generate_results_dashboard.py
-
-Output:
-
-phase2_3d_upgrade/outputs/model_comparison_dashboard.html
-
-Open the dashboard on Windows:
-
-start phase2_3d_upgrade/outputs/model_comparison_dashboard.html
-
-The dashboard includes:
-
-Compact result tables.
-Accuracy and Macro F1 comparison.
-Per-class classification reports.
-Confusion matrix heatmaps.
-Binary and action task summaries.
-12. Notebooks
-
-The project includes three notebooks for explanation and visualization.
-
-phase2_3d_upgrade/notebooks/
-├── 01_poseformerv2_setup_test.ipynb
-├── 02_2d_to_3d_inference_demo.ipynb
-└── 03_compare_2d_vs_3d.ipynb
-12.1 Notebook 01 - PoseFormerV2 Setup Test
-
-This notebook checks:
-
-Python environment.
-PyTorch and CUDA.
-PoseFormerV2 checkpoint.
-PoseFormerV2 inference with fake 2D keypoints.
-Output shape of estimated 3D pose.
-12.2 Notebook 02 - 2D to 3D Inference Demo
-
-This notebook demonstrates:
-
-Reading a real video.
-Running YOLOv8-Pose.
-Extracting 2D keypoints.
-Running PoseFormerV2.
-Visualizing 2D skeleton and estimated 3D skeleton.
-12.3 Notebook 03 - Compare 2D vs 3D
-
-This notebook:
-
-Loads training result JSON files.
-Compares 2D, 3D, and Fusion models.
-Plots Accuracy and Macro F1.
-Plots per-class F1 scores.
-Plots confusion matrices.
-Generates a short experimental conclusion.
-13. Installation
-13.1 Create environment
-
-Using Anaconda:
-
+```bash
 conda create -n nckh_3dpose python=3.10 -y
 conda activate nckh_3dpose
-13.2 Install dependencies
+```
+
+### 7.2 Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-If CUDA is available, install the correct PyTorch version for your CUDA version from the official PyTorch website.
+Install the correct PyTorch version for your CUDA version from the official PyTorch installation page.
 
-14. Main Dependencies
+### 7.3 Optional: Check CUDA
 
-The project uses:
+```python
+import torch
 
-Python
-PyTorch
-NumPy
-Pandas
-Scikit-learn
-OpenCV
-Matplotlib
-Ultralytics YOLOv8
-PoseFormerV2
-15. Reproducibility
+print(torch.cuda.is_available())
+print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
+```
 
-The training scripts use a fixed random seed:
+---
 
-RANDOM_SEED = 42
+## 8. How to Run
 
-The sequence configuration is:
+### 8.1 Phase 1: 2D Baseline
 
-SEQUENCE_LENGTH = 60
-STRIDE = 15
-BATCH_SIZE = 64
-EPOCHS = 30
-LEARNING_RATE = 1e-3
-WEIGHT_DECAY = 1e-4
-16. Important Notes
-16.1 Estimated 3D Pose Is Not Ground-Truth 3D
+Extract 2D keypoints:
 
-The 3D skeletons in this project are estimated from 2D keypoints using PoseFormerV2. They are not captured from real 3D motion capture systems.
-
-Therefore, the 3D data may contain errors from:
-
-YOLOv8-Pose 2D detection
-COCO-to-H36M conversion
-2D-to-3D lifting
-PoseFormerV2 estimation
-
-This explains why the standalone 3D model does not always outperform the 2D model.
-
-16.2 Fusion Gives the Best Overall Result
-
-Although the standalone 3D model is not always better than the 2D model, combining both 2D and 3D features gives the best results.
-
-This suggests that:
-
-2D keypoints provide strong image-plane pose information.
-3D keypoints provide additional spatial structure.
-Fusion combines both advantages.
-17. How to Run the Full Pipeline
-Step 1 - Extract 2D keypoints
+```bash
 python phase1_2d_baseline/01_yolo_extract.py
-Step 2 - Preprocess 2D dataset
+```
 
-Run the notebook:
+Train 2D binary model:
 
-phase1_2d_baseline/02_preprocess_2d.ipynb
-Step 3 - Train 2D models
+```bash
 python phase1_2d_baseline/train_2d.py --task binary --epochs 30
+```
+
+Train 2D action model:
+
+```bash
 python phase1_2d_baseline/train_2d.py --task action --epochs 30
-Step 4 - Extract estimated 3D keypoints
+```
+
+### 8.2 Phase 2: 3D Upgrade and 2D+3D Concatenation
+
+Extract estimated 3D keypoints:
+
+```bash
 python phase2_3d_upgrade/extract_3d_keypoints.py
-Step 5 - Normalize 3D keypoints
+```
+
+Normalize 3D keypoints:
+
+```bash
 python phase2_3d_upgrade/normalize_3d_dataset.py --overwrite
-Step 6 - Train 3D models
+```
+
+Train 3D model:
+
+```bash
 python phase2_3d_upgrade/train_3d.py --task binary --epochs 30
 python phase2_3d_upgrade/train_3d.py --task action --epochs 30
-Step 7 - Train Fusion models
+```
+
+Train early fusion 2D+3D model:
+
+```bash
 python phase2_3d_upgrade/train_fusion_2d3d.py --task binary --epochs 30
 python phase2_3d_upgrade/train_fusion_2d3d.py --task action --epochs 30
-Step 8 - Generate result dashboard
-python generate_results_dashboard.py
-18. Repository Notes
+```
 
-The following files and folders are usually not uploaded to GitHub because they are large:
+### 8.3 Phase 5: External Dataset Adaptation
 
-data/1_raw_videos/
-data/2_extracted_2d/
-data/3_extracted_3d/
-data/4_normalized_3d/
-*.pt
-*.bin
-*.mp4
+Run the full Phase 5 pipeline:
 
-If model weights or datasets need to be shared, use:
+```bash
+python phase5_external_generalization/scripts/01_prepare_external_dataset.py
+python phase5_external_generalization/scripts/02_extract_2d_confidence_external.py
+python phase5_external_generalization/scripts/03_estimate_3d_external.py
+python phase5_external_generalization/scripts/04_build_external_quality_features.py
+python phase5_external_generalization/scripts/05_build_external_sequences.py
+python phase5_external_generalization/scripts/06_create_external_train_val_test_split.py
+python phase5_external_generalization/scripts/07_finetune_all_models_external.py
+python phase5_external_generalization/scripts/08_compare_external_finetuning_results.py
+python phase5_external_generalization/scripts/09_generate_phase5_dashboard.py
+python phase5_external_generalization/scripts/10_compare_internal_vs_external.py
+```
 
-Google Drive
-Kaggle
-Harvard Dataverse
-GitHub Releases
-Git LFS
-19. Research Conclusion
+Fast test for one model:
 
-This project demonstrates a complete skeleton-based fall detection and action recognition pipeline. The experimental results show that:
+```bash
+python phase5_external_generalization/scripts/07_finetune_all_models_external.py --models phase1_2d_common --epochs 2
+```
 
-2D skeleton features are strong and stable for human action recognition.
-Estimated 3D skeleton features provide useful spatial information but may contain lifting errors.
-The Fusion 2D+3D model achieves the best overall performance.
-Early fusion of 2D and 3D pose features improves both fall detection and action classification.
-The proposed pipeline is useful as a research baseline for future work in skeleton-based fall detection.
-20. Future Work
+Run full external fine-tuning:
 
-Possible future improvements include:
+```bash
+python phase5_external_generalization/scripts/07_finetune_all_models_external.py --epochs 40 --patience 10 --batch-size 32
+```
 
-Using a larger and more balanced dataset.
-Improving 2D keypoint quality.
-Fine-tuning PoseFormerV2 on fall-related poses.
-Testing other sequence models such as TCN, Transformer, or ST-GCN.
-Adding real-time fall detection from webcam or CCTV video.
-Using temporal smoothing for more stable predictions.
-Evaluating on more diverse camera angles and environments.
+---
+
+## 9. Experimental Results
+
+### 9.1 Internal Dataset Results
+
+| Model | Accuracy | Macro F1 | Fall Recall | Fall F1 |
+|---|---:|---:|---:|---:|
+| Phase 1 - 2D Common | 93.46% | 92.34% | 89.91% | 89.42% |
+| Phase 2 - 3D Common | 92.72% | 91.40% | 87.17% | 88.04% |
+| Phase 2 - 2D+3D Concat | 93.93% | 92.99% | 93.20% | 90.43% |
+| Phase 3 - Gated Fusion | 93.79% | 92.81% | 92.21% | 90.14% |
+| Phase 4 - Quality-Gated | 95.35% | 94.50% | N/A | N/A |
+| Phase 4 - Quality-Concat | 96.16% | 95.46% | N/A | N/A |
+
+On the internal dataset, **Phase 4 Quality-Concat** achieves the strongest overall binary result.
+
+### 9.2 External Dataset Fine-tuning Results
+
+All models are fine-tuned on the same external train split, selected using the same validation split, and evaluated on the same external test split.
+
+| Rank | Model | Best Epoch | Accuracy | Macro F1 | Fall Recall | Fall F1 | Not_Fall F1 |
+|---:|---|---:|---:|---:|---:|---:|---:|
+| 1 | Phase 4 - Quality-Gated | 10 | 75.89% | 75.89% | 75.00% | 75.68% | 76.11% |
+| 2 | Phase 4 - Quality-Concat | 8 | 74.11% | 73.50% | 58.93% | 69.47% | 77.52% |
+| 3 | Phase 2 - 2D+3D Concat | 28 | 72.32% | 72.27% | 67.86% | 71.03% | 73.50% |
+| 4 | Phase 2 - 3D Common | 15 | 66.96% | 66.36% | 53.57% | 61.86% | 70.87% |
+| 5 | Phase 3 - Gated Fusion | 32 | 60.71% | 60.70% | 62.50% | 61.40% | 60.00% |
+| 6 | Phase 1 - 2D Common | 16 | 58.04% | 57.05% | 42.86% | 50.53% | 63.57% |
+
+The best external model is **Phase 4 Quality-Gated**.
+
+### 9.3 Main Research Finding
+
+The exact best-performing model changes across datasets:
+
+- Internal dataset: **Quality-Concat** performs best.
+- External dataset: **Quality-Gated** performs best.
+
+However, the top external models are still both **Phase 4 quality-aware models**. This supports the main research conclusion that **adding pose-quality information improves fusion robustness and helps the model adapt better to external data**.
+
+---
+
+## 10. Important Outputs
+
+### Phase 5 External Fine-tuning
+
+```text
+phase5_external_generalization/outputs/external_finetuning/
+```
+
+Important files:
+
+```text
+external_finetuned_all_models_metrics.csv
+external_finetuned_all_models_per_epoch.csv
+```
+
+### Phase 5 Comparison Report
+
+```text
+phase5_external_generalization/outputs/external_finetuning/comparison/
+```
+
+Important files:
+
+```text
+ranking_by_macro_f1.csv
+phase4_improvement_summary.csv
+phase5_external_finetuning_conclusions.md
+08_compare_external_finetuning_results_report.json
+```
+
+### Phase 5 Dashboard
+
+```text
+phase5_external_generalization/outputs/phase5_dashboard/
+```
+
+Important files:
+
+```text
+phase5_dashboard.html
+phase5_dashboard.md
+phase5_dashboard_summary.json
+```
+
+### Internal vs External Comparison
+
+```text
+phase5_external_generalization/outputs/internal_vs_external/
+```
+
+Important files:
+
+```text
+internal_vs_external_report.html
+internal_vs_external_report.md
+internal_vs_external_model_comparison.csv
+10_compare_internal_vs_external_report.json
+```
+
+---
+
+## 11. Reproducibility Notes
+
+Default configuration:
+
+```text
+random_seed = 42
+sequence_length = 60
+stride = 15
+```
+
+External fine-tuning protocol:
+
+```text
+same external train split
+same external validation split
+same external test split
+best checkpoint selected by validation Macro F1
+final ranking based on test Macro F1
+```
+
+This avoids unfair comparison caused by different train/test splits.
+
+---
+
+## 12. Important Limitations
+
+### 12.1 Estimated 3D Is Not Ground-truth 3D
+
+The 3D skeletons are estimated from 2D keypoints. They are not captured from motion capture systems.
+
+Errors may come from:
+
+- 2D pose detection
+- missing keypoints
+- camera angle
+- 2D-to-3D lifting
+- temporal instability
+
+Therefore, 3D-only models do not always outperform 2D models.
+
+### 12.2 Dataset Shift
+
+External datasets may have different:
+
+- camera viewpoints
+- environments
+- fall definitions
+- action distributions
+- video quality
+- pose detection reliability
+
+For this reason, external evaluation should be interpreted as a domain adaptation test, not as a direct comparison of dataset difficulty.
+
+---
+
+## 13. Repository and Data Notes
+
+The following files are intentionally excluded from Git:
+
+```text
+raw videos
+extracted 2D keypoint CSV files
+estimated 3D CSV files
+large NumPy arrays
+model checkpoints
+pretrained weights
+temporary logs
+large compressed archives
+```
+
+If large files need to be shared, use:
+
+- Google Drive
+- Kaggle
+- GitHub Releases
+- Git LFS
+- institutional storage
+
+---
+
+## 14. Future Work
+
+Possible improvements:
+
+- Add more balanced fall and non-fall videos.
+- Improve 2D pose quality filtering.
+- Fine-tune the 3D pose lifting model on fall-related poses.
+- Test temporal models such as TCN, Transformer, or ST-GCN.
+- Improve domain adaptation for external datasets.
+- Add real-time webcam or CCTV inference.
+- Use temporal smoothing to reduce unstable frame-level predictions.
+- Evaluate on more camera angles and environments.
+
+---
+
+## 15. Research Conclusion
+
+This project demonstrates a complete skeleton-based fall detection pipeline using 2D pose, estimated 3D pose, fusion models, and external dataset validation.
+
+The main conclusion is:
+
+```text
+Quality-aware fusion is more robust than using 2D pose, 3D pose, or simple 2D+3D concatenation alone when adapting to an external dataset.
+```
+
+The Phase 5 experiment supports the validity of the Phase 4 quality-aware fusion design.

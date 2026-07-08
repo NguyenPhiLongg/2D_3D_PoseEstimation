@@ -1,0 +1,33 @@
+{
+    "phase": "Phase 5 - External Dataset Generalization",
+    "step": "03_estimate_3d_external",
+    "num_selected_videos": 314,
+    "num_success": 314,
+    "num_skipped_existing": 0,
+    "num_failed": 0,
+    "method": "poseformer",
+    "total_frames_2d": 273723,
+    "total_frames_normalized_3d": 273723,
+    "expected_normalized_xyz_dim": 51,
+    "expected_model_feature_dim_after_loader": 59,
+    "xyz_dim_counts": {
+        "51": 314
+    },
+    "loader_dim_counts": {
+        "59": 314
+    },
+    "total_poseformer_frames": 146272,
+    "total_proxy_frames": 46182,
+    "total_missing_3d_frames": 81269,
+    "validation": {
+        "all_success_or_skipped": true,
+        "expected_normalized_xyz_dim": 51,
+        "expected_model_feature_dim_after_loader": 59,
+        "errors": []
+    },
+    "summary_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\extraction_3d\\03_estimate_3d_external_summary.csv",
+    "raw_3d_output_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\extracted_3d",
+    "normalized_3d_output_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\normalized_3d",
+    "normalization_rule": "Same as Phase 2 normalize_3d_dataset.py: per-frame, per-axis mean/std normalization over 17 joints. Output CSV keeps 51 xyz coordinate columns. Phase 3/4 loaders later compute 8 handcrafted 3D features, producing 59D input.",
+    "fairness_note": "This step writes one normalized 3D row for each 2D frame so all models can later be evaluated using the same external sequence manifest."
+}

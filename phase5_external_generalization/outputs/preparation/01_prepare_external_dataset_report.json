@@ -1,0 +1,131 @@
+{
+    "phase": "Phase 5 - External Dataset Generalization",
+    "step": "01_prepare_external_dataset",
+    "metadata": {
+        "num_rows": 682,
+        "num_eval_rows": 681,
+        "num_annotated_rows": 682,
+        "datasets": {
+            "MulCamFall": 552,
+            "Le2i": 130
+        },
+        "labels": {
+            "Fall": 394,
+            "Not_Fall": 288
+        },
+        "scenes": {
+            "Coffee_room_01": 48,
+            "chute23": 48,
+            "chute20": 48,
+            "chute04": 40,
+            "chute19": 40,
+            "chute06": 32,
+            "Home_02": 30,
+            "Home_01": 30,
+            "chute09": 24,
+            "chute02": 24,
+            "chute01": 24,
+            "chute16": 24,
+            "chute10": 24,
+            "chute11": 24,
+            "chute12": 24,
+            "Coffee_room_02": 22,
+            "chute07": 16,
+            "chute03": 16,
+            "chute05": 16,
+            "chute15": 16,
+            "chute14": 16,
+            "chute13": 16,
+            "chute08": 16,
+            "chute18": 16,
+            "chute17": 16,
+            "chute21": 16,
+            "chute22": 16
+        }
+    },
+    "metadata_quality_report": {
+        "num_rows": 682,
+        "num_eval_rows": 681,
+        "datasets": {
+            "MulCamFall": 552,
+            "Le2i": 130
+        },
+        "labels": {
+            "Fall": 394,
+            "Not_Fall": 288
+        },
+        "has_annotation": {
+            "True": 682
+        },
+        "include_eval": {
+            "True": 681,
+            "False": 1
+        },
+        "scenes": {
+            "Coffee_room_01": 48,
+            "chute23": 48,
+            "chute20": 48,
+            "chute04": 40,
+            "chute19": 40,
+            "chute06": 32,
+            "Home_02": 30,
+            "Home_01": 30,
+            "chute09": 24,
+            "chute02": 24,
+            "chute01": 24,
+            "chute16": 24,
+            "chute10": 24,
+            "chute11": 24,
+            "chute12": 24,
+            "Coffee_room_02": 22,
+            "chute07": 16,
+            "chute03": 16,
+            "chute05": 16,
+            "chute15": 16,
+            "chute14": 16,
+            "chute13": 16,
+            "chute08": 16,
+            "chute18": 16,
+            "chute17": 16,
+            "chute21": 16,
+            "chute22": 16
+        },
+        "notes": {
+            "MulCamFall segment parsed from data_tuple3.csv.": 551,
+            "Le2i Fall interval parsed from annotation file.": 130,
+            "Video file not found for this chute/camera.": 1
+        }
+    },
+    "sequences": {
+        "num_sequences": 2888,
+        "num_videos": 314,
+        "datasets": {
+            "Le2i": 2337,
+            "MulCamFall": 551
+        },
+        "labels": {
+            "Fall": 2600,
+            "Not_Fall": 288
+        },
+        "valid_frame_count_min": 31,
+        "valid_frame_count_max": 60,
+        "valid_frame_count_mean": 54.4671052631579
+    },
+    "outputs": {
+        "metadata_outputs": {
+            "le2i_metadata": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_metadata\\le2i_metadata.csv",
+            "mulcamfall_metadata": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_metadata\\mulcamfall_metadata.csv",
+            "all_external_metadata": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_metadata\\all_external_metadata.csv",
+            "metadata_report": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\outputs\\preparation\\external_metadata_report.json"
+        },
+        "sequence_outputs": {
+            "all_external_sequences": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\all_external_sequences.csv",
+            "le2i_sequences": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\le2i_sequences.csv",
+            "mulcamfall_sequences": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\phase5_external_generalization\\data\\external_sequences\\mulcamfall_sequences.csv"
+        }
+    },
+    "fairness_rule": {
+        "important": true,
+        "message": "This step creates the common external sequence manifest. All models must later evaluate on the same fair common manifest. After feature extraction, script 05/06 must filter this manifest by shared availability of 2D, 3D, and quality features before comparing models."
+    }
+}
