@@ -288,3 +288,7 @@ paper_baselines/yadav2021_convlstm_guided_features/outputs/checkpoints/
 !paper_baselines/**/outputs/plots/**/*.jpg
 !paper_baselines/**/outputs/plots/**/*.jpeg
 
+
+# Large scan reports
+paper_baselines/**/outputs/reports/*scan_report*.json
+paper_baselines/**/outputs/reports/*_scan_*.json
