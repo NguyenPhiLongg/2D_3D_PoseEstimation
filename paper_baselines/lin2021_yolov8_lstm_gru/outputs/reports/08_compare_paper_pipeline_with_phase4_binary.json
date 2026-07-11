@@ -1,0 +1,120 @@
+{
+    "status": "completed",
+    "task": "Binary Fall / Not_Fall",
+    "comparison_scope": "Existing clean binary results only",
+    "lin_report": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\reports\\07_evaluate_rnn_lstm_gru_report.json",
+    "output_html": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\reports\\08_compare_paper_pipeline_with_phase4_binary.html",
+    "output_json": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\reports\\08_compare_paper_pipeline_with_phase4_binary.json",
+    "output_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\metrics\\08_compare_paper_pipeline_with_phase4_binary.csv",
+    "best_overall": {
+        "model": "Phase 4 - Quality-Concat",
+        "accuracy": 0.9616,
+        "macro_f1": 0.9546,
+        "test_samples": 2965,
+        "test_videos": 812
+    },
+    "best_paper_style_pipeline": {
+        "model": "Lin-style YOLOv8 + GRU",
+        "accuracy": 0.937992125984252,
+        "macro_f1": 0.9312108071510325,
+        "fall_recall": 0.9255474452554745,
+        "fall_f1": 0.9096126255380201,
+        "test_samples": 2032,
+        "test_videos": 823
+    },
+    "fairness_note": "The task is the same binary Fall/Not_Fall task, but the existing test sample counts differ between Phase 4 and the Lin-style YOLOv8 baseline.",
+    "table": [
+        {
+            "family": "Phase 4",
+            "model": "Phase 4 - Quality-Concat",
+            "input": "2D pose + estimated 3D pose + quality features",
+            "aggregation": "Sample-level",
+            "accuracy": 0.9616,
+            "macro_f1": 0.9546,
+            "fall_recall": NaN,
+            "fall_f1": NaN,
+            "not_fall_f1": NaN,
+            "tn": NaN,
+            "fp": NaN,
+            "fn": NaN,
+            "tp": NaN,
+            "test_samples": 2965,
+            "test_videos": 812,
+            "source": "phase4_dashboard.html",
+            "note": "Best clean binary model in Phase 4 dashboard."
+        },
+        {
+            "family": "Phase 4",
+            "model": "Phase 4 - Quality-Gated",
+            "input": "2D pose + estimated 3D pose + quality features",
+            "aggregation": "Sample-level",
+            "accuracy": 0.9535,
+            "macro_f1": 0.945,
+            "fall_recall": NaN,
+            "fall_f1": NaN,
+            "not_fall_f1": NaN,
+            "tn": NaN,
+            "fp": NaN,
+            "fn": NaN,
+            "tp": NaN,
+            "test_samples": 2965,
+            "test_videos": 812,
+            "source": "phase4_dashboard.html",
+            "note": "Second-best clean binary model in Phase 4 dashboard."
+        },
+        {
+            "family": "Paper-style baseline",
+            "model": "Lin-style YOLOv8 + GRU",
+            "input": "YOLOv8 2D skeleton sequence, 15 joints x 2 coordinates",
+            "aggregation": "Sequence-level",
+            "accuracy": 0.937992125984252,
+            "macro_f1": 0.9312108071510325,
+            "fall_recall": 0.9255474452554745,
+            "fall_f1": 0.9096126255380201,
+            "not_fall_f1": 0.952808988764045,
+            "tn": 1272.0,
+            "fp": 75.0,
+            "fn": 51.0,
+            "tp": 634.0,
+            "test_samples": 2032,
+            "test_videos": 823,
+            "source": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\reports\\07_evaluate_rnn_lstm_gru_report.json",
+            "note": "Best RNN/LSTM/GRU model from adapted Lin-style pipeline."
+        }
+    ],
+    "all_lin_style_models": [
+        {
+            "model_type": "RNN",
+            "sequence_accuracy": 0.8238188976377953,
+            "sequence_macro_f1": 0.8177772033133239,
+            "sequence_fall_recall": 0.9518248175182482,
+            "sequence_fall_f1": 0.7845968712394705,
+            "video_mean_prob_accuracy": 0.8541919805589308,
+            "video_mean_prob_macro_f1": 0.8483899491562892,
+            "video_mean_prob_fall_recall": 0.96,
+            "video_mean_prob_fall_f1": 0.8780487804878049
+        },
+        {
+            "model_type": "LSTM",
+            "sequence_accuracy": 0.9010826771653543,
+            "sequence_macro_f1": 0.8931705384081199,
+            "sequence_fall_recall": 0.9328467153284672,
+            "sequence_fall_f1": 0.8640973630831643,
+            "video_mean_prob_accuracy": 0.9161603888213852,
+            "video_mean_prob_macro_f1": 0.914954509715826,
+            "video_mean_prob_fall_recall": 0.9466666666666667,
+            "video_mean_prob_fall_f1": 0.9250814332247557
+        },
+        {
+            "model_type": "GRU",
+            "sequence_accuracy": 0.937992125984252,
+            "sequence_macro_f1": 0.9312108071510325,
+            "sequence_fall_recall": 0.9255474452554745,
+            "sequence_fall_f1": 0.9096126255380201,
+            "video_mean_prob_accuracy": 0.9441069258809235,
+            "video_mean_prob_macro_f1": 0.9435326054531352,
+            "video_mean_prob_fall_recall": 0.9555555555555556,
+            "video_mean_prob_fall_f1": 0.9492273730684326
+        }
+    ]
+}

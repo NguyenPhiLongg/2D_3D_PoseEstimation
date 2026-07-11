@@ -1,0 +1,72 @@
+{
+    "status": "completed",
+    "pipeline_note": "This split is created at video level to avoid leakage. Validation split will be used to tune thresholds, and test split will be used for final evaluation.",
+    "split_mode": "loaded_existing_video_level_split",
+    "split_source": "paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_video_level_split.csv",
+    "seed": 42,
+    "train_ratio": 0.7,
+    "val_ratio": 0.15,
+    "test_ratio": 0.15,
+    "index_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\data\\rule_features\\all_rule_features_index.csv",
+    "output_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\data\\splits",
+    "total_videos": 5483,
+    "total_frames": 651989,
+    "video_level_split_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\data\\splits\\chen2020_video_level_split.csv",
+    "manifest_with_split_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\data\\splits\\chen2020_rule_features_manifest_with_split.csv",
+    "train_index_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\data\\splits\\chen2020_train_rule_features_index.csv",
+    "val_index_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\data\\splits\\chen2020_val_rule_features_index.csv",
+    "test_index_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\data\\splits\\chen2020_test_rule_features_index.csv",
+    "summary": {
+        "train": {
+            "split": "train",
+            "num_videos": 3838,
+            "num_frames": 454688,
+            "label_counts_by_video": {
+                "Fall": 2099,
+                "Not_Fall": 1739
+            },
+            "label_counts_by_frame": {
+                "Fall": 189225,
+                "Not_Fall": 265463
+            },
+            "valid_rule_feature_frames": 454688
+        },
+        "val": {
+            "split": "val",
+            "num_videos": 822,
+            "num_frames": 97652,
+            "label_counts_by_video": {
+                "Fall": 449,
+                "Not_Fall": 373
+            },
+            "label_counts_by_frame": {
+                "Fall": 39979,
+                "Not_Fall": 57673
+            },
+            "valid_rule_feature_frames": 97652
+        },
+        "test": {
+            "split": "test",
+            "num_videos": 823,
+            "num_frames": 99649,
+            "label_counts_by_video": {
+                "Fall": 450,
+                "Not_Fall": 373
+            },
+            "label_counts_by_frame": {
+                "Fall": 40491,
+                "Not_Fall": 59158
+            },
+            "valid_rule_feature_frames": 99649
+        }
+    },
+    "leakage_report": {
+        "valid": true,
+        "train_val_overlap_count": 0,
+        "train_test_overlap_count": 0,
+        "val_test_overlap_count": 0,
+        "train_val_overlap_examples": [],
+        "train_test_overlap_examples": [],
+        "val_test_overlap_examples": []
+    }
+}

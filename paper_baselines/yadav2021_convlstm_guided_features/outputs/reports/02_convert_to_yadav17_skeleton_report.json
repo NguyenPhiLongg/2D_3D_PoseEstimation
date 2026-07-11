@@ -1,0 +1,121 @@
+{
+    "status": "completed",
+    "pipeline_note": "Convert PoseFormer/H36M-style 17-joint 3D pose into adapted Yadav17 selected skeleton order and apply per-video min-max normalization.",
+    "input_index_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\raw_3d_skeleton\\raw_3d_skeleton_index.csv",
+    "output_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\yadav17_skeleton",
+    "num_input_videos": 5402,
+    "num_success_or_skipped": 5402,
+    "num_failed": 0,
+    "total_frames_success": 509587,
+    "label_video_counts": {
+        "Fall": 2960,
+        "Not_Fall": 2442
+    },
+    "normalization": "per_video_minmax_per_axis",
+    "output_index_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\yadav17_skeleton\\yadav17_skeleton_index.csv",
+    "failed_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\yadav17_skeleton\\yadav17_skeleton_failed_files.csv",
+    "yadav17_mapping": [
+        {
+            "yadav_index": 0,
+            "yadav_joint": "hip_right",
+            "source_h36m_index": 1,
+            "source_h36m_joint": "right_hip"
+        },
+        {
+            "yadav_index": 1,
+            "yadav_joint": "foot_left_proxy",
+            "source_h36m_index": 6,
+            "source_h36m_joint": "left_ankle"
+        },
+        {
+            "yadav_index": 2,
+            "yadav_joint": "knee_right",
+            "source_h36m_index": 2,
+            "source_h36m_joint": "right_knee"
+        },
+        {
+            "yadav_index": 3,
+            "yadav_joint": "knee_left",
+            "source_h36m_index": 5,
+            "source_h36m_joint": "left_knee"
+        },
+        {
+            "yadav_index": 4,
+            "yadav_joint": "hip_left",
+            "source_h36m_index": 4,
+            "source_h36m_joint": "left_hip"
+        },
+        {
+            "yadav_index": 5,
+            "yadav_joint": "foot_right_proxy",
+            "source_h36m_index": 3,
+            "source_h36m_joint": "right_ankle"
+        },
+        {
+            "yadav_index": 6,
+            "yadav_joint": "ankle_right",
+            "source_h36m_index": 3,
+            "source_h36m_joint": "right_ankle"
+        },
+        {
+            "yadav_index": 7,
+            "yadav_joint": "ankle_left",
+            "source_h36m_index": 6,
+            "source_h36m_joint": "left_ankle"
+        },
+        {
+            "yadav_index": 8,
+            "yadav_joint": "head",
+            "source_h36m_index": 10,
+            "source_h36m_joint": "head"
+        },
+        {
+            "yadav_index": 9,
+            "yadav_joint": "spine_mid",
+            "source_h36m_index": 7,
+            "source_h36m_joint": "spine"
+        },
+        {
+            "yadav_index": 10,
+            "yadav_joint": "spine_base",
+            "source_h36m_index": 0,
+            "source_h36m_joint": "pelvis"
+        },
+        {
+            "yadav_index": 11,
+            "yadav_joint": "wrist_left",
+            "source_h36m_index": 13,
+            "source_h36m_joint": "left_wrist"
+        },
+        {
+            "yadav_index": 12,
+            "yadav_joint": "shoulder_right",
+            "source_h36m_index": 14,
+            "source_h36m_joint": "right_shoulder"
+        },
+        {
+            "yadav_index": 13,
+            "yadav_joint": "shoulder_left",
+            "source_h36m_index": 11,
+            "source_h36m_joint": "left_shoulder"
+        },
+        {
+            "yadav_index": 14,
+            "yadav_joint": "elbow_left",
+            "source_h36m_index": 12,
+            "source_h36m_joint": "left_elbow"
+        },
+        {
+            "yadav_index": 15,
+            "yadav_joint": "wrist_right",
+            "source_h36m_index": 16,
+            "source_h36m_joint": "right_wrist"
+        },
+        {
+            "yadav_index": 16,
+            "yadav_joint": "elbow_right",
+            "source_h36m_index": 15,
+            "source_h36m_joint": "right_elbow"
+        }
+    ]
+}

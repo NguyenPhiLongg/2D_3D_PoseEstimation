@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Paper Pipeline vs Phase 4 Binary Comparison</title>
+<style>
+:root {
+    --bg: #f6f8fb;
+    --card: #ffffff;
+    --text: #172033;
+    --muted: #657083;
+    --line: #e4e8f0;
+    --blue: #2563eb;
+    --green: #16a34a;
+    --purple: #7c3aed;
+    --orange: #ea580c;
+    --red: #dc2626;
+    --shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: Inter, Segoe UI, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+.page {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 28px;
+}
+.hero {
+    background: linear-gradient(135deg, #172033, #263b72);
+    color: white;
+    padding: 32px;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+}
+.hero h1 { margin: 0 0 8px 0; font-size: 32px; }
+.hero p { color: #dbeafe; margin: 6px 0; }
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border-top: 5px solid var(--blue);
+}
+.card.green { border-top-color: var(--green); }
+.card.blue { border-top-color: var(--blue); }
+.card.purple { border-top-color: var(--purple); }
+.card.orange { border-top-color: var(--orange); }
+.card-title {
+    color: var(--muted);
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 800;
+}
+.card-value {
+    margin-top: 8px;
+    font-size: 21px;
+    font-weight: 900;
+}
+.card-sub {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 13px;
+}
+.section {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 26px;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+}
+.section h2 { margin-top: 0; }
+.note {
+    border: 1px solid #fde68a;
+    background: #fffbeb;
+    padding: 16px;
+    border-radius: 16px;
+    margin: 16px 0;
+}
+.good {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    padding: 16px;
+    border-radius: 16px;
+    margin: 16px 0;
+}
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    margin-top: 14px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    min-width: 1080px;
+}
+.compact table { min-width: 850px; }
+th {
+    text-align: left;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+}
+td {
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+}
+tr:last-child td { border-bottom: none; }
+.best-row { background: #fff7ed; }
+.rank { font-weight: 900; }
+.model-cell { font-weight: 800; }
+.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+.strong { font-weight: 900; }
+.badge {
+    display: inline-block;
+    background: #334155;
+    color: white;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+}
+.bar-row {
+    display: grid;
+    grid-template-columns: 320px 1fr 90px;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+.bar-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 14px;
+}
+.bar-label span {
+    color: var(--muted);
+    font-size: 12px;
+}
+.bar-track {
+    height: 13px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+}
+.bar-fill {
+    height: 100%;
+    border-radius: 999px;
+}
+.bar-value {
+    text-align: right;
+    font-weight: 900;
+}
+.footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 18px;
+}
+@media (max-width: 1000px) {
+    .cards { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 1fr; }
+    .bar-value { text-align: left; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+    <section class="hero">
+        <h1>Paper-style Pipeline vs Phase 4 Binary Fall Detection</h1>
+        <p>Task: binary Fall / Not_Fall comparison using existing results only.</p>
+        <p>Compared models: Lin-style YOLOv8 recurrent baseline, Phase 4 Quality-Concat, and Phase 4 Quality-Gated.</p>
+    </section>
+
+    
+    <section class="cards">
+        <div class="card green">
+            <div class="card-title">Best Overall Binary Model</div>
+            <div class="card-value">Phase 4 - Quality-Concat</div>
+            <div class="card-sub">Macro F1 95.46% | Accuracy 96.16%</div>
+        </div>
+        <div class="card blue">
+            <div class="card-title">Best Paper-style Pipeline</div>
+            <div class="card-value">Lin-style YOLOv8 + GRU</div>
+            <div class="card-sub">Macro F1 93.12% | Fall Recall 92.55%</div>
+        </div>
+        <div class="card purple">
+            <div class="card-title">Phase 4 Quality-Concat</div>
+            <div class="card-value">95.46%</div>
+            <div class="card-sub">Accuracy 96.16%</div>
+        </div>
+        <div class="card orange">
+            <div class="card-title">Phase 4 Quality-Gated</div>
+            <div class="card-value">94.50%</div>
+            <div class="card-sub">Accuracy 95.35%</div>
+        </div>
+    </section>
+    
+
+    <section class="section">
+        <h2>Main Result</h2>
+        <div class="good">
+            <strong>Conclusion:</strong>
+            Phase 4 Quality-Concat remains the best clean binary model by Macro F1.
+            The best paper-style recurrent baseline is Lin-style YOLOv8 + GRU, but it is below Phase 4 Quality-Concat on Macro F1.
+        </div>
+        <div class="note">
+            <strong>Fairness note:</strong>
+            These are existing results from two pipelines. The task is the same binary Fall / Not_Fall task,
+            but sample counts are not exactly identical. Phase 4 clean binary uses 2965 test samples and 812 videos,
+            while the Lin-style YOLOv8 test split uses 2032 sequences and 823 videos.
+        </div>
+        
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Family</th>
+                    <th>Model</th>
+                    <th>Aggregation</th>
+                    <th>Input</th>
+                    <th>Accuracy</th>
+                    <th>Macro F1</th>
+                    <th>Fall Recall</th>
+                    <th>Fall F1</th>
+                    <th>Test Samples</th>
+                    <th>Test Videos</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr class="best-row">
+            <td class="rank">1</td>
+            <td><span class="badge">Phase 4</span></td>
+            <td class="model-cell">Phase 4 - Quality-Concat</td>
+            <td>Sample-level</td>
+            <td>2D pose + estimated 3D pose + quality features</td>
+            <td class="num">96.16%</td>
+            <td class="num strong">95.46%</td>
+            <td class="num">N/A</td>
+            <td class="num">N/A</td>
+            <td class="num">2965</td>
+            <td class="num">812</td>
+        </tr>
+        
+        <tr class="">
+            <td class="rank">2</td>
+            <td><span class="badge">Phase 4</span></td>
+            <td class="model-cell">Phase 4 - Quality-Gated</td>
+            <td>Sample-level</td>
+            <td>2D pose + estimated 3D pose + quality features</td>
+            <td class="num">95.35%</td>
+            <td class="num strong">94.50%</td>
+            <td class="num">N/A</td>
+            <td class="num">N/A</td>
+            <td class="num">2965</td>
+            <td class="num">812</td>
+        </tr>
+        
+        <tr class="">
+            <td class="rank">3</td>
+            <td><span class="badge">Paper-style baseline</span></td>
+            <td class="model-cell">Lin-style YOLOv8 + GRU</td>
+            <td>Sequence-level</td>
+            <td>YOLOv8 2D skeleton sequence, 15 joints x 2 coordinates</td>
+            <td class="num">93.80%</td>
+            <td class="num strong">93.12%</td>
+            <td class="num">92.55%</td>
+            <td class="num">90.96%</td>
+            <td class="num">2032</td>
+            <td class="num">823</td>
+        </tr>
+        
+            </tbody>
+        </table>
+    </div>
+    
+    </section>
+
+    <section class="section">
+        <h2>Macro F1 Ranking</h2>
+        
+        <div class="bar-row">
+            <div class="bar-label">
+                <strong>Phase 4 - Quality-Concat</strong>
+                <span>Sample-level</span>
+            </div>
+            
+    <div class="bar-track">
+        <div class="bar-fill" style="width:100.00%; background:#16a34a;"></div>
+    </div>
+    
+            <div class="bar-value">95.46%</div>
+        </div>
+        
+        <div class="bar-row">
+            <div class="bar-label">
+                <strong>Phase 4 - Quality-Gated</strong>
+                <span>Sample-level</span>
+            </div>
+            
+    <div class="bar-track">
+        <div class="bar-fill" style="width:98.99%; background:#7c3aed;"></div>
+    </div>
+    
+            <div class="bar-value">94.50%</div>
+        </div>
+        
+        <div class="bar-row">
+            <div class="bar-label">
+                <strong>Lin-style YOLOv8 + GRU</strong>
+                <span>Sequence-level</span>
+            </div>
+            
+    <div class="bar-track">
+        <div class="bar-fill" style="width:97.55%; background:#2563eb;"></div>
+    </div>
+    
+            <div class="bar-value">93.12%</div>
+        </div>
+        
+    </section>
+
+    <section class="section">
+        <h2>Delta Compared with Paper-style Pipeline</h2>
+        <p>This table uses the best sequence-level paper-style model as the comparison baseline.</p>
+        
+    <div class="table-wrap compact">
+        <table>
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Accuracy</th>
+                    <th>Macro F1</th>
+                    <th>Δ Accuracy vs Paper Pipeline</th>
+                    <th>Δ Macro F1 vs Paper Pipeline</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr>
+            <td class="model-cell">Phase 4 - Quality-Concat</td>
+            <td class="num">96.16%</td>
+            <td class="num strong">95.46%</td>
+            <td class="num">+2.36 pp</td>
+            <td class="num">+2.34 pp</td>
+        </tr>
+        
+        <tr>
+            <td class="model-cell">Phase 4 - Quality-Gated</td>
+            <td class="num">95.35%</td>
+            <td class="num strong">94.50%</td>
+            <td class="num">+1.55 pp</td>
+            <td class="num">+1.38 pp</td>
+        </tr>
+        
+        <tr>
+            <td class="model-cell">Lin-style YOLOv8 + GRU</td>
+            <td class="num">93.80%</td>
+            <td class="num strong">93.12%</td>
+            <td class="num">+0.00 pp</td>
+            <td class="num">+0.00 pp</td>
+        </tr>
+        
+            </tbody>
+        </table>
+    </div>
+    
+    </section>
+
+    <section class="section">
+        <h2>Internal Paper-style Model Ranking</h2>
+        <p>Among RNN, LSTM and GRU, GRU is the best in the adapted Lin-style YOLOv8 pipeline.</p>
+        
+    <div class="table-wrap compact">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Paper-style Model</th>
+                    <th>Seq Acc</th>
+                    <th>Seq Macro F1</th>
+                    <th>Seq Fall Recall</th>
+                    <th>Seq Fall F1</th>
+                    <th>Video Acc</th>
+                    <th>Video Macro F1</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr>
+            <td class="rank">1</td>
+            <td class="model-cell">GRU</td>
+            <td class="num">93.80%</td>
+            <td class="num strong">93.12%</td>
+            <td class="num">92.55%</td>
+            <td class="num">90.96%</td>
+            <td class="num">94.41%</td>
+            <td class="num">94.35%</td>
+        </tr>
+        
+        <tr>
+            <td class="rank">2</td>
+            <td class="model-cell">LSTM</td>
+            <td class="num">90.11%</td>
+            <td class="num strong">89.32%</td>
+            <td class="num">93.28%</td>
+            <td class="num">86.41%</td>
+            <td class="num">91.62%</td>
+            <td class="num">91.50%</td>
+        </tr>
+        
+        <tr>
+            <td class="rank">3</td>
+            <td class="model-cell">RNN</td>
+            <td class="num">82.38%</td>
+            <td class="num strong">81.78%</td>
+            <td class="num">95.18%</td>
+            <td class="num">78.46%</td>
+            <td class="num">85.42%</td>
+            <td class="num">84.84%</td>
+        </tr>
+        
+            </tbody>
+        </table>
+    </div>
+    
+    </section>
+
+    <section class="section">
+        <h2>Recommended Wording for Report</h2>
+        <div class="note">
+            The original Lin et al. pipeline is adapted in this project because OpenPose failed to extract valid
+            skeletons on the dataset. Therefore, YOLOv8-Pose keypoints are used while keeping the skeleton-sequence
+            preprocessing and RNN/LSTM/GRU temporal classification procedure. Under this adapted setting, GRU is the
+            best paper-style recurrent baseline. However, the strongest binary Fall/Not_Fall model among the available
+            results remains Phase 4 Quality-Concat.
+        </div>
+    </section>
+
+    <div class="footer">
+        Output file: C:\Users\ASUS\Downloads\3D_Human_Pose_NCKH\paper_baselines\lin2021_yolov8_lstm_gru\outputs\reports\08_compare_paper_pipeline_with_phase4_binary.html
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,4 @@
+family,model,input,aggregation,accuracy,macro_f1,fall_recall,fall_f1,not_fall_f1,tn,fp,fn,tp,test_samples,test_videos,source,note
+Phase 4,Phase 4 - Quality-Concat,2D pose + estimated 3D pose + quality features,Sample-level,0.9616,0.9546,,,,,,,,2965,812,phase4_dashboard.html,Best clean binary model in Phase 4 dashboard.
+Phase 4,Phase 4 - Quality-Gated,2D pose + estimated 3D pose + quality features,Sample-level,0.9535,0.945,,,,,,,,2965,812,phase4_dashboard.html,Second-best clean binary model in Phase 4 dashboard.
+Paper-style baseline,Lin-style YOLOv8 + GRU,"YOLOv8 2D skeleton sequence, 15 joints x 2 coordinates",Sequence-level,0.937992125984252,0.9312108071510325,0.9255474452554745,0.9096126255380201,0.952808988764045,1272.0,75.0,51.0,634.0,2032,823,C:\Users\ASUS\Downloads\3D_Human_Pose_NCKH\paper_baselines\lin2021_yolov8_lstm_gru\outputs\reports\07_evaluate_rnn_lstm_gru_report.json,Best RNN/LSTM/GRU model from adapted Lin-style pipeline.

@@ -1,0 +1,106 @@
+{
+    "status": "completed",
+    "pipeline_note": "RNN, LSTM, and GRU are trained on fixed-length normalized skeleton sequences. This corresponds to the recurrent temporal classification stage of the Lin-style pipeline.",
+    "train_npz": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_train_sequences.npz",
+    "val_npz": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_val_sequences.npz",
+    "train_shape": [
+        9040,
+        100,
+        30
+    ],
+    "val_shape": [
+        1948,
+        100,
+        30
+    ],
+    "device": "cuda",
+    "models_trained": [
+        "rnn",
+        "lstm",
+        "gru"
+    ],
+    "training_args": {
+        "train_npz": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_train_sequences.npz",
+        "val_npz": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_val_sequences.npz",
+        "checkpoint_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\checkpoints",
+        "metrics_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\metrics",
+        "reports_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\reports",
+        "models": "rnn,lstm,gru",
+        "epochs": 50,
+        "batch_size": 64,
+        "hidden_size": 128,
+        "num_layers": 2,
+        "dropout": 0.3,
+        "learning_rate": 0.001,
+        "weight_decay": 0.0001,
+        "patience": 10,
+        "seed": 42,
+        "device": "auto",
+        "num_workers": 0,
+        "bidirectional": false,
+        "no_class_weight": false
+    },
+    "summaries": [
+        {
+            "model_type": "rnn",
+            "best_epoch": 18,
+            "best_val_macro_f1": 0.8518335460015491,
+            "best_val_accuracy": 0.8578028747433265,
+            "best_val_fall_recall": 0.9523809523809523,
+            "best_val_fall_f1": 0.8220937700706487,
+            "best_val_tn": 1031,
+            "best_val_fp": 245,
+            "best_val_fn": 32,
+            "best_val_tp": 640,
+            "epochs_ran": 28,
+            "elapsed_seconds": 24.963529348373413,
+            "best_checkpoint": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\checkpoints\\best_rnn.pt",
+            "last_checkpoint": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\checkpoints\\last_rnn.pt",
+            "history_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\metrics\\rnn_training_history.csv"
+        },
+        {
+            "model_type": "lstm",
+            "best_epoch": 41,
+            "best_val_macro_f1": 0.92785143432543,
+            "best_val_accuracy": 0.9342915811088296,
+            "best_val_fall_recall": 0.9211309523809523,
+            "best_val_fall_f1": 0.9062957540263543,
+            "best_val_tn": 1201,
+            "best_val_fp": 75,
+            "best_val_fn": 53,
+            "best_val_tp": 619,
+            "epochs_ran": 50,
+            "elapsed_seconds": 55.66900897026062,
+            "best_checkpoint": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\checkpoints\\best_lstm.pt",
+            "last_checkpoint": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\checkpoints\\last_lstm.pt",
+            "history_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\metrics\\lstm_training_history.csv"
+        },
+        {
+            "model_type": "gru",
+            "best_epoch": 24,
+            "best_val_macro_f1": 0.9308556632044456,
+            "best_val_accuracy": 0.9373716632443532,
+            "best_val_fall_recall": 0.9136904761904762,
+            "best_val_fall_f1": 0.9096296296296297,
+            "best_val_tn": 1212,
+            "best_val_fp": 64,
+            "best_val_fn": 58,
+            "best_val_tp": 614,
+            "epochs_ran": 34,
+            "elapsed_seconds": 31.526462078094482,
+            "best_checkpoint": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\checkpoints\\best_gru.pt",
+            "last_checkpoint": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\checkpoints\\last_gru.pt",
+            "history_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\metrics\\gru_training_history.csv"
+        }
+    ],
+    "summary_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\metrics\\lin2021_yolov8_training_summary.csv",
+    "best_model_by_val_macro_f1": {
+        "model_type": "gru",
+        "best_epoch": 24,
+        "best_val_macro_f1": 0.9308556632044456,
+        "best_val_accuracy": 0.9373716632443532,
+        "best_val_fall_recall": 0.9136904761904762,
+        "best_val_fall_f1": 0.9096296296296297,
+        "best_checkpoint": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\outputs\\checkpoints\\best_gru.pt"
+    }
+}

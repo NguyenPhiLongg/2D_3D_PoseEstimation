@@ -1,0 +1,84 @@
+{
+    "status": "completed",
+    "pipeline_note": "This split is created at video level to avoid leakage between train, validation, and test sequences.",
+    "split_mode": "created_new_stratified_video_level_split",
+    "split_source": "generated_by_file_05",
+    "seed": 42,
+    "train_ratio": 0.7,
+    "val_ratio": 0.15,
+    "test_ratio": 0.15,
+    "input_npz": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\sequences\\lin2021_yolov8_lstm_gru_sequences.npz",
+    "input_manifest": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\sequences\\lin2021_yolov8_sequence_manifest.csv",
+    "output_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits",
+    "X_shape": [
+        13020,
+        100,
+        30
+    ],
+    "total_sequences": 13020,
+    "total_videos": 5483,
+    "video_level_split_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_video_level_split.csv",
+    "sequence_manifest_with_split": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_sequence_manifest_with_split.csv",
+    "train_npz": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_train_sequences.npz",
+    "val_npz": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_val_sequences.npz",
+    "test_npz": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_test_sequences.npz",
+    "train_manifest": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_train_manifest.csv",
+    "val_manifest": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_val_manifest.csv",
+    "test_manifest": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\splits\\lin2021_yolov8_test_manifest.csv",
+    "summary": {
+        "train": {
+            "split": "train",
+            "num_sequences": 9040,
+            "num_videos": 3838,
+            "label_counts_by_sequence": {
+                "Not_Fall": 5882,
+                "Fall": 3158
+            },
+            "label_counts_by_video": {
+                "Fall": 2099,
+                "Not_Fall": 1739
+            },
+            "padded_sequences": 2286,
+            "all_zero_sequences": 0
+        },
+        "val": {
+            "split": "val",
+            "num_sequences": 1948,
+            "num_videos": 822,
+            "label_counts_by_sequence": {
+                "Not_Fall": 1276,
+                "Fall": 672
+            },
+            "label_counts_by_video": {
+                "Fall": 449,
+                "Not_Fall": 373
+            },
+            "padded_sequences": 492,
+            "all_zero_sequences": 0
+        },
+        "test": {
+            "split": "test",
+            "num_sequences": 2032,
+            "num_videos": 823,
+            "label_counts_by_sequence": {
+                "Not_Fall": 1347,
+                "Fall": 685
+            },
+            "label_counts_by_video": {
+                "Fall": 450,
+                "Not_Fall": 373
+            },
+            "padded_sequences": 498,
+            "all_zero_sequences": 0
+        }
+    },
+    "leakage_report": {
+        "valid": true,
+        "train_val_overlap_count": 0,
+        "train_test_overlap_count": 0,
+        "val_test_overlap_count": 0,
+        "train_val_overlap_examples": [],
+        "train_test_overlap_examples": [],
+        "val_test_overlap_examples": []
+    }
+}

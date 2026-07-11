@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Final Comparison Report</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Segoe UI, Arial, sans-serif;
+    background: #f5f7fb;
+    color: #172033;
+}
+.page {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 28px;
+}
+.hero {
+    background: linear-gradient(135deg, #111827, #1e3a8a);
+    color: white;
+    padding: 30px;
+    border-radius: 22px;
+    margin-bottom: 22px;
+}
+.section {
+    background: white;
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+    margin-bottom: 22px;
+}
+.note {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 14px;
+    padding: 14px;
+    margin: 14px 0;
+}
+.good {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 14px;
+    padding: 14px;
+    margin: 14px 0;
+}
+.table-wrap {
+    overflow-x: auto;
+}
+.result-table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 1250px;
+    font-size: 14px;
+}
+.result-table th {
+    background: #f8fafc;
+    color: #475569;
+    text-transform: uppercase;
+    font-size: 12px;
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+.result-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+.result-table tr:nth-child(even) td {
+    background: #fafafa;
+}
+.code {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 12px;
+    padding: 14px;
+    white-space: pre-wrap;
+    font-family: Consolas, monospace;
+}
+</style>
+
+</head>
+<body>
+<main class="page">
+    <section class="hero">
+        <h1>Final Ranking - Binary Fall Detection</h1>
+        <p>Comparison of Phase 4 fusion models, Lin-style recurrent baseline, and Chen2020-style threshold baseline.</p>
+    </section>
+
+    <section class="section">
+        <h2>Main Conclusion</h2>
+        <div class="good">
+            Best model: <strong>Phase 4 - Quality-Concat</strong><br>
+            Accuracy: <strong>96.16%</strong><br>
+            Macro F1: <strong>95.46%</strong>
+        </div>
+        <div class="note">
+            Phase 4 metrics are sample-level. Chen2020-style and Lin-style metrics are video-level.
+            Therefore, both Test Samples and Test Videos are reported to make the comparison transparent.
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Final Ranking</h2>
+        <div class="table-wrap">
+            <table border="1" class="dataframe result-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Rank</th>
+      <th>Family</th>
+      <th>Model</th>
+      <th>Method Type</th>
+      <th>Aggregation</th>
+      <th>Accuracy</th>
+      <th>Macro F1</th>
+      <th>Fall Recall</th>
+      <th>Specificity</th>
+      <th>Fall F1</th>
+      <th>Not-Fall F1</th>
+      <th>TN</th>
+      <th>FP</th>
+      <th>FN</th>
+      <th>TP</th>
+      <th>Test Samples</th>
+      <th>Test Videos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Phase 4</td>
+      <td>Phase 4 - Quality-Concat</td>
+      <td>2D + 3D + quality feature fusion</td>
+      <td>Sample-level</td>
+      <td>96.16%</td>
+      <td>95.46%</td>
+      <td>92.76%</td>
+      <td>97.66%</td>
+      <td>93.69%</td>
+      <td>97.24%</td>
+      <td>2005</td>
+      <td>48</td>
+      <td>66</td>
+      <td>846</td>
+      <td>2965</td>
+      <td>812</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Phase 4</td>
+      <td>Phase 4 - Quality-Gated</td>
+      <td>2D + 3D + quality-gated fusion</td>
+      <td>Sample-level</td>
+      <td>95.35%</td>
+      <td>94.50%</td>
+      <td>91.34%</td>
+      <td>97.13%</td>
+      <td>92.35%</td>
+      <td>96.66%</td>
+      <td>1994</td>
+      <td>59</td>
+      <td>79</td>
+      <td>833</td>
+      <td>2965</td>
+      <td>812</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Lin2021-style baseline</td>
+      <td>Lin-style YOLOv8 + GRU</td>
+      <td>Recurrent skeleton sequence model</td>
+      <td>Video-level mean probability</td>
+      <td>94.41%</td>
+      <td>94.35%</td>
+      <td>95.56%</td>
+      <td>93.03%</td>
+      <td>94.92%</td>
+      <td>93.78%</td>
+      <td>347</td>
+      <td>26</td>
+      <td>20</td>
+      <td>430</td>
+      <td>823</td>
+      <td>823</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Chen2020-style baseline</td>
+      <td>Chen2020-style YOLOv8 Three-Thresholds</td>
+      <td>Rule-based geometric thresholds</td>
+      <td>Video-level</td>
+      <td>81.53%</td>
+      <td>81.52%</td>
+      <td>76.67%</td>
+      <td>87.40%</td>
+      <td>81.95%</td>
+      <td>81.09%</td>
+      <td>326</td>
+      <td>47</td>
+      <td>105</td>
+      <td>345</td>
+      <td>823</td>
+      <td>823</td>
+    </tr>
+  </tbody>
+</table>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Interpretation</h2>
+        <div class="code">Chen2020-style is the most interpretable but weakest baseline because it relies on fixed geometric rules.
+Lin-style YOLOv8 + GRU is stronger because it learns temporal skeleton patterns.
+Phase 4 is strongest because it uses 2D pose, 3D pose, and pose quality features.</div>
+    </section>
+
+    <section class="section">
+        <h2>Output</h2>
+        <div class="code">C:\Users\ASUS\Downloads\3D_Human_Pose_NCKH\paper_baselines\chen2020_yolov8_three_thresholds\outputs\reports\08_chen2020_yolov8_final_report.html</div>
+    </section>
+</main>
+</body>
+</html>

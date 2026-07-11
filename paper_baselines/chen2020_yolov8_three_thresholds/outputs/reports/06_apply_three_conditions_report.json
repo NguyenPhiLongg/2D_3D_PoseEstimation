@@ -1,0 +1,72 @@
+{
+    "status": "completed",
+    "pipeline_note": "Three Chen et al. 2020-style conditions were applied: hip descent velocity, body centerline angle, and width/height ratio. Stand-up checking is diagnostic unless --use-stand-up-filter is enabled.",
+    "thresholds": {
+        "velocity_threshold": 19.0047,
+        "angle_threshold": 45.0,
+        "ratio_threshold": 1.0,
+        "min_event_frames": 1,
+        "source_json": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\outputs\\metrics\\05_best_thresholds.json"
+    },
+    "use_stand_up_filter": false,
+    "save_frame_predictions": false,
+    "check_after_frames": 60,
+    "stand_angle_threshold": 45.0,
+    "stand_ratio_threshold": 1.0,
+    "splits": {
+        "train": {
+            "summary": {
+                "split": "train",
+                "num_videos": 3838,
+                "num_true_fall": 2099,
+                "num_true_not_fall": 1739,
+                "num_pred_fall": 1850,
+                "num_pred_not_fall": 1988,
+                "num_raw_pred_fall": 1850,
+                "num_raw_pred_not_fall": 1988,
+                "videos_with_event": 1850,
+                "total_event_frames": 23714,
+                "use_stand_up_filter": 0,
+                "videos_can_stand_after_event": 589,
+                "prediction_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\outputs\\predictions\\06_train_video_predictions.csv"
+            },
+            "prediction_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\outputs\\predictions\\06_train_video_predictions.csv"
+        },
+        "val": {
+            "summary": {
+                "split": "val",
+                "num_videos": 822,
+                "num_true_fall": 449,
+                "num_true_not_fall": 373,
+                "num_pred_fall": 384,
+                "num_pred_not_fall": 438,
+                "num_raw_pred_fall": 384,
+                "num_raw_pred_not_fall": 438,
+                "videos_with_event": 384,
+                "total_event_frames": 4887,
+                "use_stand_up_filter": 0,
+                "videos_can_stand_after_event": 104,
+                "prediction_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\outputs\\predictions\\06_val_video_predictions.csv"
+            },
+            "prediction_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\outputs\\predictions\\06_val_video_predictions.csv"
+        },
+        "test": {
+            "summary": {
+                "split": "test",
+                "num_videos": 823,
+                "num_true_fall": 450,
+                "num_true_not_fall": 373,
+                "num_pred_fall": 392,
+                "num_pred_not_fall": 431,
+                "num_raw_pred_fall": 392,
+                "num_raw_pred_not_fall": 431,
+                "videos_with_event": 392,
+                "total_event_frames": 5100,
+                "use_stand_up_filter": 0,
+                "videos_can_stand_after_event": 133,
+                "prediction_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\outputs\\predictions\\06_test_video_predictions.csv"
+            },
+            "prediction_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\chen2020_yolov8_three_thresholds\\outputs\\predictions\\06_test_video_predictions.csv"
+        }
+    }
+}

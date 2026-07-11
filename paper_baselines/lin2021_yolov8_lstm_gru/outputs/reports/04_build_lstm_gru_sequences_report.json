@@ -1,0 +1,35 @@
+{
+    "status": "completed",
+    "pipeline_note": "This step builds fixed-length skeleton sequences for RNN/LSTM/GRU, following the temporal modeling stage of the Lin-style pipeline.",
+    "input_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\processed",
+    "output_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\sequences",
+    "num_input_csv": 5483,
+    "num_success_csv": 5483,
+    "num_failed_csv": 0,
+    "sequence_length": 100,
+    "stride": 30,
+    "X_shape": [
+        13020,
+        100,
+        30
+    ],
+    "y_shape": [
+        13020
+    ],
+    "feature_dim": 30,
+    "num_sequences": 13020,
+    "num_videos": 5483,
+    "label_counts_by_sequence": {
+        "Not_Fall": 8505,
+        "Fall": 4515
+    },
+    "label_counts_by_video": {
+        "Fall": 2998,
+        "Not_Fall": 2485
+    },
+    "all_zero_sequences": 0,
+    "padded_sequences": 3276,
+    "npz_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\sequences\\lin2021_yolov8_lstm_gru_sequences.npz",
+    "manifest_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\lin2021_yolov8_lstm_gru\\data\\sequences\\lin2021_yolov8_sequence_manifest.csv",
+    "failed": []
+}

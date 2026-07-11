@@ -1,0 +1,27 @@
+{
+    "velocity_threshold": 19.0047,
+    "angle_threshold": 45.0,
+    "ratio_threshold": 1.0,
+    "min_event_frames": 1,
+    "paper_defaults": {
+        "angle_threshold": 45.0,
+        "ratio_threshold": 1.0,
+        "rule": "velocity >= critical_velocity AND angle < 45 AND width_height_ratio > 1"
+    },
+    "validation_metrics": {
+        "accuracy": 0.8309002433090025,
+        "sensitivity_fall_recall": 0.7728285077951003,
+        "specificity_not_fall_recall": 0.900804289544236,
+        "macro_f1": 0.8308699558738415,
+        "fall_precision": 0.9036458333333334,
+        "fall_recall": 0.7728285077951003,
+        "fall_f1": 0.8331332533013205,
+        "not_fall_precision": 0.7671232876712328,
+        "not_fall_recall": 0.900804289544236,
+        "not_fall_f1": 0.8286066584463625,
+        "tn": 336,
+        "fp": 37,
+        "fn": 102,
+        "tp": 347
+    }
+}

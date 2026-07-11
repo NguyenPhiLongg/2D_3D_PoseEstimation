@@ -243,3 +243,48 @@ phase5_external_generalization/outputs/external_finetuning/external_finetuned_al
 !docs/images/*.jpg
 !docs/images/*.jpeg
 !docs/images/*.gif
+
+# ============================================================
+# Paper baseline generated data / checkpoints
+# Keep scripts, configs, reports, metrics.
+# Ignore regenerated data, checkpoints, raw predictions.
+# ============================================================
+
+# Chen2020-style generated data
+paper_baselines/chen2020_yolov8_three_thresholds/data/raw_yolov8_keypoints/
+paper_baselines/chen2020_yolov8_three_thresholds/data/chen_nodes/
+paper_baselines/chen2020_yolov8_three_thresholds/data/rule_features/
+paper_baselines/chen2020_yolov8_three_thresholds/data/predictions/
+paper_baselines/chen2020_yolov8_three_thresholds/outputs/predictions/
+paper_baselines/chen2020_yolov8_three_thresholds/outputs/checkpoints/
+
+# Lin2021-style generated data
+paper_baselines/lin2021_yolov8_lstm_gru/data/raw_yolov8_keypoints/
+paper_baselines/lin2021_yolov8_lstm_gru/data/lin15_skeleton/
+paper_baselines/lin2021_yolov8_lstm_gru/data/sequences/
+paper_baselines/lin2021_yolov8_lstm_gru/data/predictions/
+paper_baselines/lin2021_yolov8_lstm_gru/outputs/predictions/
+paper_baselines/lin2021_yolov8_lstm_gru/outputs/checkpoints/
+
+# Yadav2021-style generated data
+paper_baselines/yadav2021_convlstm_guided_features/data/raw_3d_skeleton/
+paper_baselines/yadav2021_convlstm_guided_features/data/yadav17_skeleton/
+paper_baselines/yadav2021_convlstm_guided_features/data/guided_features/
+paper_baselines/yadav2021_convlstm_guided_features/data/sequences/
+paper_baselines/yadav2021_convlstm_guided_features/data/predictions/
+paper_baselines/yadav2021_convlstm_guided_features/outputs/predictions/
+paper_baselines/yadav2021_convlstm_guided_features/outputs/checkpoints/
+
+# Keep lightweight baseline metrics and reports
+!paper_baselines/**/outputs/metrics/
+!paper_baselines/**/outputs/metrics/**/*.csv
+!paper_baselines/**/outputs/metrics/**/*.json
+!paper_baselines/**/outputs/reports/
+!paper_baselines/**/outputs/reports/**/*.html
+!paper_baselines/**/outputs/reports/**/*.json
+!paper_baselines/**/outputs/reports/**/*.md
+!paper_baselines/**/outputs/plots/
+!paper_baselines/**/outputs/plots/**/*.png
+!paper_baselines/**/outputs/plots/**/*.jpg
+!paper_baselines/**/outputs/plots/**/*.jpeg
+

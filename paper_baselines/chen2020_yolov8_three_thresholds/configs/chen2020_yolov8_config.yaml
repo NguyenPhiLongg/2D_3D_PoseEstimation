@@ -1,0 +1,92 @@
+﻿project:
+  name: chen2020_yolov8_three_thresholds
+  description: Chen et al. 2020-style rule-based fall detection using YOLOv8-Pose keypoints.
+
+data:
+  source_yolov8_candidates:
+    - data/5_extracted_2d_confidence
+    - data/2_extracted_2d
+    - data/master_dataset.csv
+
+  raw_yolov8_keypoints_dir: paper_baselines/chen2020_yolov8_three_thresholds/data/raw_yolov8_keypoints
+  chen_nodes_dir: paper_baselines/chen2020_yolov8_three_thresholds/data/chen_nodes
+  rule_features_dir: paper_baselines/chen2020_yolov8_three_thresholds/data/rule_features
+  splits_dir: paper_baselines/chen2020_yolov8_three_thresholds/data/splits
+  predictions_dir: paper_baselines/chen2020_yolov8_three_thresholds/data/predictions
+
+skeleton:
+  source_format: yolov8_coco17
+  target_format: chen2020_node_model
+  num_source_joints: 17
+  num_target_nodes: 14
+
+chen_nodes:
+  s0: head_or_nose
+  s1: shoulder_center
+  s2: right_shoulder
+  s3: right_elbow
+  s4: right_hand
+  s5: left_shoulder
+  s6: left_elbow
+  s7: left_hand
+  s8: right_hip
+  s9: right_knee
+  s10: right_ankle
+  s11: left_hip
+  s12: left_knee
+  s13: left_ankle
+
+features:
+  hip_center:
+    right_hip_node: s8
+    left_hip_node: s11
+
+  body_centerline:
+    top_node: s0
+    bottom_node_mode: midpoint_of_ankles
+    right_ankle_node: s10
+    left_ankle_node: s13
+
+  external_rectangle:
+    use_valid_nodes_only: true
+    min_valid_nodes: 5
+
+thresholds:
+  # Paper condition 1:
+  # hip center descent velocity.
+  # Because YOLOv8 gives pixel coordinates, this value should usually be tuned on validation set.
+  hip_velocity_threshold: auto
+
+  # Paper condition 2:
+  # body centerline angle with the ground < 45 degrees.
+  angle_threshold_degrees: 45.0
+
+  # Paper condition 3:
+  # external rectangle width / height >= 1.
+  width_height_ratio_threshold: 1.0
+
+  # Paper checks every 5 adjacent frames, approximately 0.25s.
+  velocity_window_frames: 5
+
+stand_up_check:
+  enabled: true
+  check_after_fall_frames: 60
+  stand_angle_threshold_degrees: 45.0
+  height_width_ratio_threshold: 1.0
+
+split:
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  split_level: video
+  seed: 42
+
+evaluation:
+  primary_metrics:
+    - sensitivity
+    - specificity
+    - accuracy
+  extra_metrics:
+    - macro_f1
+    - fall_recall
+    - fall_f1

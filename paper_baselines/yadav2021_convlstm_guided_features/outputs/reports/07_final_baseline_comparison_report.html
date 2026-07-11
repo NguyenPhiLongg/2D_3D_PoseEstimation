@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Final Baseline Comparison</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 28px;
+    color: #222;
+}
+h1, h2 {
+    color: #111;
+}
+.note {
+    background: #fff7d6;
+    border-left: 4px solid #d69e2e;
+    padding: 12px 16px;
+    margin: 14px 0 22px 0;
+}
+.metric-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 13px;
+    margin-bottom: 30px;
+}
+.metric-table th {
+    background: #222;
+    color: white;
+    padding: 8px;
+    border: 1px solid #555;
+    text-align: left;
+}
+.metric-table td {
+    padding: 7px;
+    border: 1px solid #ccc;
+}
+.metric-table tr:nth-child(even) {
+    background: #f7f7f7;
+}
+</style>
+</head>
+<body>
+<h1>Final Baseline Comparison Report</h1>
+
+<h2>1. Main comparison: Phase 4 vs best model from each paper</h2>
+<table border="1" class="dataframe metric-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>rank</th>
+      <th>family</th>
+      <th>model_name</th>
+      <th>method_type</th>
+      <th>level</th>
+      <th>aggregation</th>
+      <th>accuracy</th>
+      <th>macro_f1</th>
+      <th>fall_recall</th>
+      <th>fall_f1</th>
+      <th>specificity</th>
+      <th>tn</th>
+      <th>fp</th>
+      <th>fn</th>
+      <th>tp</th>
+      <th>num_samples</th>
+      <th>num_videos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Phase 4</td>
+      <td>Quality-Concat</td>
+      <td>quality_aware_fusion</td>
+      <td>sample</td>
+      <td>none</td>
+      <td>96.16%</td>
+      <td>95.46%</td>
+      <td>92.76%</td>
+      <td>93.69%</td>
+      <td>97.66%</td>
+      <td>2005</td>
+      <td>48</td>
+      <td>66</td>
+      <td>846</td>
+      <td>2965</td>
+      <td>812</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Lin2021-style</td>
+      <td>GRU</td>
+      <td>rnn_lstm_gru_temporal_skeleton</td>
+      <td>video</td>
+      <td>majority_vote</td>
+      <td>94.65%</td>
+      <td>94.61%</td>
+      <td>94.89%</td>
+      <td>95.10%</td>
+      <td>94.37%</td>
+      <td>352</td>
+      <td>21</td>
+      <td>23</td>
+      <td>427</td>
+      <td>823</td>
+      <td>823</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Phase 4</td>
+      <td>Quality-Gated</td>
+      <td>quality_aware_fusion</td>
+      <td>sample</td>
+      <td>none</td>
+      <td>95.35%</td>
+      <td>94.50%</td>
+      <td>91.34%</td>
+      <td>92.35%</td>
+      <td>97.13%</td>
+      <td>1994</td>
+      <td>59</td>
+      <td>79</td>
+      <td>833</td>
+      <td>2965</td>
+      <td>812</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Yadav2021-style</td>
+      <td>CNN</td>
+      <td>guided_features_deep_learning</td>
+      <td>video</td>
+      <td>majority_vote</td>
+      <td>91.85%</td>
+      <td>91.74%</td>
+      <td>92.60%</td>
+      <td>92.68%</td>
+      <td>90.91%</td>
+      <td>420</td>
+      <td>42</td>
+      <td>43</td>
+      <td>538</td>
+      <td>6406</td>
+      <td>1043</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Chen2020-style</td>
+      <td>YOLOv8 three-threshold rule</td>
+      <td>rule_based_geometric_threshold</td>
+      <td>video</td>
+      <td>threshold_rule</td>
+      <td>81.53%</td>
+      <td>81.52%</td>
+      <td>76.67%</td>
+      <td>81.95%</td>
+      <td>87.40%</td>
+      <td>326</td>
+      <td>47</td>
+      <td>105</td>
+      <td>345</td>
+      <td>823</td>
+      <td>823</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Chen2020-style internal table</h2>
+<table border="1" class="dataframe metric-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>family</th>
+      <th>model_name</th>
+      <th>split</th>
+      <th>level</th>
+      <th>aggregation</th>
+      <th>accuracy</th>
+      <th>macro_f1</th>
+      <th>fall_recall</th>
+      <th>fall_f1</th>
+      <th>specificity</th>
+      <th>tn</th>
+      <th>fp</th>
+      <th>fn</th>
+      <th>tp</th>
+      <th>num_samples</th>
+      <th>num_videos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Chen2020-style</td>
+      <td>YOLOv8 three-threshold rule</td>
+      <td>test</td>
+      <td>video</td>
+      <td>threshold_rule</td>
+      <td>81.53%</td>
+      <td>81.52%</td>
+      <td>76.67%</td>
+      <td>81.95%</td>
+      <td>87.40%</td>
+      <td>326</td>
+      <td>47</td>
+      <td>105</td>
+      <td>345</td>
+      <td>823</td>
+      <td>823</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Lin2021-style internal table</h2>
+<table border="1" class="dataframe metric-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>rank</th>
+      <th>family</th>
+      <th>model_name</th>
+      <th>split</th>
+      <th>level</th>
+      <th>aggregation</th>
+      <th>accuracy</th>
+      <th>macro_f1</th>
+      <th>fall_recall</th>
+      <th>fall_f1</th>
+      <th>specificity</th>
+      <th>tn</th>
+      <th>fp</th>
+      <th>fn</th>
+      <th>tp</th>
+      <th>num_samples</th>
+      <th>num_videos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Lin2021-style</td>
+      <td>GRU</td>
+      <td>test</td>
+      <td>video</td>
+      <td>majority_vote</td>
+      <td>94.65%</td>
+      <td>94.61%</td>
+      <td>94.89%</td>
+      <td>95.10%</td>
+      <td>94.37%</td>
+      <td>352</td>
+      <td>21</td>
+      <td>23</td>
+      <td>427</td>
+      <td>823</td>
+      <td>823</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Lin2021-style</td>
+      <td>LSTM</td>
+      <td>test</td>
+      <td>video</td>
+      <td>majority_vote</td>
+      <td>91.62%</td>
+      <td>91.51%</td>
+      <td>94.22%</td>
+      <td>92.48%</td>
+      <td>88.47%</td>
+      <td>330</td>
+      <td>43</td>
+      <td>26</td>
+      <td>424</td>
+      <td>823</td>
+      <td>823</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Lin2021-style</td>
+      <td>RNN</td>
+      <td>test</td>
+      <td>video</td>
+      <td>majority_vote</td>
+      <td>85.54%</td>
+      <td>84.97%</td>
+      <td>96.00%</td>
+      <td>87.89%</td>
+      <td>72.92%</td>
+      <td>272</td>
+      <td>101</td>
+      <td>18</td>
+      <td>432</td>
+      <td>823</td>
+      <td>823</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>4. Yadav2021-style internal table</h2>
+<table border="1" class="dataframe metric-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>rank</th>
+      <th>family</th>
+      <th>model_name</th>
+      <th>split</th>
+      <th>level</th>
+      <th>aggregation</th>
+      <th>accuracy</th>
+      <th>macro_f1</th>
+      <th>fall_recall</th>
+      <th>fall_f1</th>
+      <th>specificity</th>
+      <th>tn</th>
+      <th>fp</th>
+      <th>fn</th>
+      <th>tp</th>
+      <th>num_samples</th>
+      <th>num_videos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Yadav2021-style</td>
+      <td>CNN</td>
+      <td>test</td>
+      <td>video</td>
+      <td>majority_vote</td>
+      <td>91.85%</td>
+      <td>91.74%</td>
+      <td>92.60%</td>
+      <td>92.68%</td>
+      <td>90.91%</td>
+      <td>420</td>
+      <td>42</td>
+      <td>43</td>
+      <td>538</td>
+      <td>6406</td>
+      <td>1043</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Yadav2021-style</td>
+      <td>CONVLSTM</td>
+      <td>test</td>
+      <td>video</td>
+      <td>majority_vote</td>
+      <td>91.28%</td>
+      <td>91.16%</td>
+      <td>92.25%</td>
+      <td>92.18%</td>
+      <td>90.04%</td>
+      <td>416</td>
+      <td>46</td>
+      <td>45</td>
+      <td>536</td>
+      <td>6406</td>
+      <td>1043</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Yadav2021-style</td>
+      <td>LSTM</td>
+      <td>test</td>
+      <td>video</td>
+      <td>majority_vote</td>
+      <td>91.08%</td>
+      <td>90.97%</td>
+      <td>91.91%</td>
+      <td>91.99%</td>
+      <td>90.04%</td>
+      <td>416</td>
+      <td>46</td>
+      <td>47</td>
+      <td>534</td>
+      <td>6406</td>
+      <td>1043</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+</body>
+</html>

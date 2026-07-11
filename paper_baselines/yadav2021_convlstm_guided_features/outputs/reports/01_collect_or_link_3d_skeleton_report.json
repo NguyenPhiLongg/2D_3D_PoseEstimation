@@ -1,0 +1,24 @@
+{
+    "status": "completed",
+    "pipeline_note": "Original Yadav et al. uses Kinect-v2 to acquire 3D skeleton coordinates. This adapted implementation collects estimated 3D pose CSVs already available in the project.",
+    "candidate_dirs": [
+        "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\data\\3_extracted_3d"
+    ],
+    "output_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\raw_3d_skeleton",
+    "mode": "copy",
+    "scan_only": false,
+    "num_csv_discovered": 5409,
+    "num_valid_3d_csv": 5402,
+    "num_invalid_csv": 7,
+    "total_frames": 509587,
+    "label_counts_by_video": {
+        "Fall": 2960,
+        "Not_Fall": 2442
+    },
+    "label_counts_by_frames": {
+        "Fall": 191955,
+        "Not_Fall": 317632
+    },
+    "index_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\raw_3d_skeleton\\raw_3d_skeleton_index.csv",
+    "invalid_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\raw_3d_skeleton\\raw_3d_skeleton_invalid_files.csv"
+}

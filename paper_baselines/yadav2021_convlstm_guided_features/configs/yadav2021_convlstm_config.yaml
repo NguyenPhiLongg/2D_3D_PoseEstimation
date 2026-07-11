@@ -1,0 +1,117 @@
+﻿project:
+  name: yadav2021_convlstm_guided_features
+  description: "Adapted Yadav2021-style ConvLSTM guided feature baseline"
+  task: binary_fall_detection
+
+paper:
+  title: "Skeleton-based human activity recognition using ConvLSTM and guided feature learning"
+  original_sensor: "Kinect-v2"
+  original_model: "Sequential CNN + LSTM + Fully Connected + Softmax"
+  original_features:
+    - raw_3d_skeleton_coordinates
+    - velocity
+    - acceleration
+    - joint_angles
+    - floor_distance
+    - height
+    - width
+  original_split:
+    train: 0.60
+    val: 0.20
+    test: 0.20
+  original_epochs: 200
+  original_loss: categorical_cross_entropy
+
+adaptation:
+  source_3d_pose_candidates:
+    - data/4_normalized_3d
+    - data/3_extracted_3d
+    - phase2_3d_upgrade
+  source_2d_pose_candidates:
+    - data/5_extracted_2d_confidence
+    - data/2_extracted_2d
+  note: "Kinect-v2 3D skeleton is replaced by YOLOv8-Pose + estimated 3D pose."
+
+paths:
+  raw_3d_skeleton_dir: paper_baselines/yadav2021_convlstm_guided_features/data/raw_3d_skeleton
+  yadav17_skeleton_dir: paper_baselines/yadav2021_convlstm_guided_features/data/yadav17_skeleton
+  guided_features_dir: paper_baselines/yadav2021_convlstm_guided_features/data/guided_features
+  sequences_dir: paper_baselines/yadav2021_convlstm_guided_features/data/sequences
+  splits_dir: paper_baselines/yadav2021_convlstm_guided_features/data/splits
+  checkpoints_dir: paper_baselines/yadav2021_convlstm_guided_features/outputs/checkpoints
+  metrics_dir: paper_baselines/yadav2021_convlstm_guided_features/outputs/metrics
+  predictions_dir: paper_baselines/yadav2021_convlstm_guided_features/outputs/predictions
+  reports_dir: paper_baselines/yadav2021_convlstm_guided_features/outputs/reports
+  plots_dir: paper_baselines/yadav2021_convlstm_guided_features/outputs/plots
+
+skeleton:
+  source_format: poseformer_coco17_estimated_3d
+  adapted_yadav_joints:
+    - head
+    - spine_mid
+    - spine_base
+    - left_shoulder
+    - right_shoulder
+    - left_elbow
+    - right_elbow
+    - left_wrist
+    - right_wrist
+    - left_hip
+    - right_hip
+    - left_knee
+    - right_knee
+    - left_ankle
+    - right_ankle
+    - left_foot_proxy
+    - right_foot_proxy
+
+features:
+  raw_joint_coordinates: true
+  guided_features:
+    - velocity_x
+    - velocity_y
+    - velocity_z
+    - acceleration_x
+    - acceleration_y
+    - acceleration_z
+    - left_leg_angle
+    - right_leg_angle
+    - body_standing_angle
+    - sitting_angle_left
+    - sitting_angle_right
+    - height
+    - width
+    - floor_distance_proxy
+  normalize: minmax
+
+sequence:
+  sequence_length: 30
+  stride: 15
+  min_valid_frames: 10
+  padding: true
+
+split:
+  mode: video_level
+  train_ratio: 0.60
+  val_ratio: 0.20
+  test_ratio: 0.20
+  seed: 42
+
+training:
+  batch_size: 64
+  epochs: 80
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  dropout: 0.30
+  optimizer: adam
+  loss: cross_entropy
+  early_stopping_patience: 15
+
+models:
+  train_cnn: true
+  train_lstm: true
+  train_convlstm: true
+  num_classes: 2
+  class_names:
+    - Not_Fall
+    - Fall

@@ -1,0 +1,65 @@
+﻿project:
+  name: lin2021_yolov8_lstm_gru
+  description: Lin-style skeleton RNN/LSTM/GRU baseline using YOLOv8-Pose keypoints instead of OpenPose.
+
+data:
+  raw_video_root: data/1_raw_videos
+  source_yolov8_candidates:
+    - data/master_dataset.csv
+    - data/2_extracted_2d
+    - data/5_extracted_2d_confidence
+  raw_yolov8_keypoints_dir: paper_baselines/lin2021_yolov8_lstm_gru/data/raw_yolov8_keypoints
+  paper_skeleton_csv_dir: paper_baselines/lin2021_yolov8_lstm_gru/data/paper_skeleton_csv
+  processed_dir: paper_baselines/lin2021_yolov8_lstm_gru/data/processed
+  sequences_dir: paper_baselines/lin2021_yolov8_lstm_gru/data/sequences
+  splits_dir: paper_baselines/lin2021_yolov8_lstm_gru/data/splits
+
+skeleton:
+  source_format: yolov8_coco17
+  target_format: paper15
+  num_source_joints: 17
+  num_target_joints: 15
+  feature_dim: 30
+  use_confidence_for_missing_detection: true
+  remove_confidence_before_training: true
+
+preprocessing:
+  normalization: relative_position
+  interpolation: linear
+  fill_remaining_missing_with_zero: true
+
+sequence:
+  sequence_length: 100
+  stride: 30
+  pad_last: true
+
+split:
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  seed: 42
+  split_level: video
+  prevent_video_leakage: true
+
+training:
+  models:
+    - rnn
+    - lstm
+    - gru
+  input_size: 30
+  hidden_size: 128
+  num_layers: 2
+  dropout: 0.3
+  bidirectional: false
+  num_classes: 2
+  batch_size: 64
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  epochs: 50
+  patience: 10
+  class_weight: balanced
+  device: auto
+
+labels:
+  0: Not_Fall
+  1: Fall

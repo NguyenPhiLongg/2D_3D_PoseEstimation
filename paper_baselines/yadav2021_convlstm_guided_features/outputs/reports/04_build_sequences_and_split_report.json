@@ -1,0 +1,102 @@
+{
+    "status": "completed",
+    "pipeline_note": "Build fixed-length sequence tensors from raw skeleton coordinates plus guided features, then create a video-level 60:20:20 train/val/test split following the original paper's experimental setup.",
+    "input_index_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\guided_features\\guided_features_index.csv",
+    "output_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\sequences",
+    "split_dir": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\splits",
+    "sequence_length": 30,
+    "stride": 15,
+    "min_valid_frames": 10,
+    "padding_enabled": true,
+    "train_ratio": 0.6,
+    "val_ratio": 0.2,
+    "test_ratio": 0.2,
+    "seed": 42,
+    "num_input_videos": 5402,
+    "num_videos_with_sequences": 5211,
+    "num_sequences": 32199,
+    "x_shape": [
+        32199,
+        30,
+        65
+    ],
+    "y_shape": [
+        32199
+    ],
+    "num_features_per_frame": 65,
+    "num_failed_videos": 0,
+    "num_skipped_too_short": 191,
+    "x_sequences_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\sequences\\X_sequences.npy",
+    "y_sequences_path": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\sequences\\y_sequences.npy",
+    "sequence_metadata_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\sequences\\sequence_metadata.csv",
+    "feature_columns_json": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\sequences\\feature_columns.json",
+    "video_split_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\splits\\yadav2021_video_level_split.csv",
+    "sequence_split_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\splits\\yadav2021_sequence_level_split.csv",
+    "failed_csv": "C:\\Users\\ASUS\\Downloads\\3D_Human_Pose_NCKH\\paper_baselines\\yadav2021_convlstm_guided_features\\data\\sequences\\sequence_build_failed_files.csv",
+    "split_summary": {
+        "video_summary": [
+            {
+                "split": "test",
+                "label_name": "Fall",
+                "num_videos": 581
+            },
+            {
+                "split": "test",
+                "label_name": "Not_Fall",
+                "num_videos": 462
+            },
+            {
+                "split": "train",
+                "label_name": "Fall",
+                "num_videos": 1742
+            },
+            {
+                "split": "train",
+                "label_name": "Not_Fall",
+                "num_videos": 1384
+            },
+            {
+                "split": "val",
+                "label_name": "Fall",
+                "num_videos": 581
+            },
+            {
+                "split": "val",
+                "label_name": "Not_Fall",
+                "num_videos": 461
+            }
+        ],
+        "sequence_summary": [
+            {
+                "split": "test",
+                "label_name": "Fall",
+                "num_sequences": 2308
+            },
+            {
+                "split": "test",
+                "label_name": "Not_Fall",
+                "num_sequences": 4098
+            },
+            {
+                "split": "train",
+                "label_name": "Fall",
+                "num_sequences": 7177
+            },
+            {
+                "split": "train",
+                "label_name": "Not_Fall",
+                "num_sequences": 12297
+            },
+            {
+                "split": "val",
+                "label_name": "Fall",
+                "num_sequences": 2391
+            },
+            {
+                "split": "val",
+                "label_name": "Not_Fall",
+                "num_sequences": 3928
+            }
+        ]
+    }
+}
